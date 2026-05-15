@@ -158,12 +158,36 @@ const chatCompletionSchema = z.object({
 
 function isRetryableError(err: any): boolean {
   const msg = (err.message ?? '').toLowerCase();
-  return msg.includes('429') || msg.includes('rate limit') || msg.includes('too many requests')
+
+  // Rate limits and server errors: definitely retryable
+  if (msg.includes('429') || msg.includes('rate limit') || msg.includes('too many requests')
     || msg.includes('quota') || msg.includes('resource_exhausted')
-    || msg.includes('aborted') || msg.includes('timeout') || msg.includes('etimedout')
-    || msg.includes('econnrefused') || msg.includes('econnreset')
     || msg.includes('503') || msg.includes('unavailable')
-    || msg.includes('500') || msg.includes('internal server error');
+    || msg.includes('500') || msg.includes('internal server error')
+    || msg.includes('502') || msg.includes('bad gateway')) {
+    return true;
+  }
+
+  // Network errors: retryable (different provider may have different connectivity)
+  if (msg.includes('aborted') || msg.includes('timeout') || msg.includes('etimedout')
+    || msg.includes('econnrefused') || msg.includes('econnreset')
+    || msg.includes('econnaborted') || msg.includes('eai_again')
+    || msg.includes('enotfound') || msg.includes('enotreachable')) {
+    return true;
+  }
+
+  // Provider 400/404 errors (bad request / schema validation / model not found):
+  // retryable because they are often provider-specific. A 400 from Gemini about
+  // schema fields won't affect OpenRouter or SambaNova; a 404 from one model
+  // (removed from free tier) doesn't mean the next model will also 404.
+  // Genuinely bad client requests are caught by Zod validation before reaching
+  // the provider loop — so any 4xx from a provider is likely provider-specific.
+  // 401/403 are NOT retryable — wrong API key won't work on a different model.
+  if (msg.includes('400') || msg.includes('404') || msg.includes('bad request') || msg.includes('invalid payload')) {
+    return true;
+  }
+
+  return false;
 }
 
 proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {

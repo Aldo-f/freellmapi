@@ -67,6 +67,76 @@ function toGeminiFinishReason(finishReason?: string): string {
   return 'stop';
 }
 
+/** Fields that Gemini's function declaration API does NOT support in schema objects. */
+const GEMINI_INCOMPATIBLE_PARAM_KEYS = new Set([
+  '$schema',
+  'additionalProperties',
+  'default',
+  'title',
+  'examples',
+  '$comment',
+  'deprecated',
+  'writeOnly',
+  'readOnly',
+  'propertyNames',
+  'patternProperties',
+  'definitions',
+  '$defs',
+  'const',
+]);
+
+/**
+ * Recursively strip JSON Schema keywords that Gemini's API doesn't support
+ * from a tool parameter schema object. Operates on a clone to avoid mutating
+ * the caller's reference.
+ */
+function sanitizeGeminiParams(schema: unknown): unknown {
+  if (schema === null || schema === undefined) return schema;
+  if (typeof schema !== 'object') return schema;
+  if (Array.isArray(schema)) return schema.map(sanitizeGeminiParams);
+
+  const src = schema as Record<string, unknown>;
+  const cleaned: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(src)) {
+    // Skip fields that Gemini rejects
+    if (GEMINI_INCOMPATIBLE_PARAM_KEYS.has(key)) continue;
+
+    // Recurse into known schema containers
+    if (key === 'properties' && typeof value === 'object' && !Array.isArray(value)) {
+      const props: Record<string, unknown> = {};
+      for (const [propName, propSchema] of Object.entries(value as Record<string, unknown>)) {
+        props[propName] = sanitizeGeminiParams(propSchema);
+      }
+      cleaned.properties = props;
+      continue;
+    }
+
+    // Recurse into array item schemas
+    if (key === 'items' && typeof value === 'object') {
+      cleaned.items = sanitizeGeminiParams(value);
+      continue;
+    }
+
+    // Recurse into anyOf/oneOf/allOf (combinators Gemini partially supports)
+    if ((key === 'anyOf' || key === 'oneOf' || key === 'allOf') && Array.isArray(value)) {
+      cleaned[key] = value.map(sanitizeGeminiParams);
+      continue;
+    }
+
+    // Recurse into "not" / "if" / "then" / "else" (conditional schemas)
+    if ((key === 'not' || key === 'if' || key === 'then' || key === 'else') && typeof value === 'object') {
+      cleaned[key] = sanitizeGeminiParams(value);
+      continue;
+    }
+
+    // Pass everything else through unchanged
+    cleaned[key] = value;
+  }
+
+  return cleaned;
+}
+
 function toGeminiTools(tools?: ChatToolDefinition[]): Array<{ functionDeclarations: Array<Record<string, unknown>> }> | undefined {
   if (!tools || tools.length === 0) return undefined;
 
@@ -74,7 +144,7 @@ function toGeminiTools(tools?: ChatToolDefinition[]): Array<{ functionDeclaratio
     functionDeclarations: tools.map(t => ({
       name: t.function.name,
       description: t.function.description,
-      parameters: t.function.parameters,
+      parameters: t.function.parameters ? sanitizeGeminiParams(t.function.parameters) : undefined,
     })),
   }];
 }
