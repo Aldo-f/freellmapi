@@ -139,6 +139,29 @@ export default function KeysPage() {
     refetchInterval: 30000,
   })
 
+  // Hermes import state
+  const { data: importStatus } = useQuery<{
+    auth_json_path: string
+    pools: Record<string, { supported: boolean; platform: string | null; count: number }>
+    total_supported: number
+    total_credentials: number
+  }>({
+    queryKey: ['import-status'],
+    queryFn: () => apiFetch('/api/import/status'),
+    // Only try to fetch if hermes auth.json exists; the endpoint returns 404 if not found
+    throwOnError: false,
+  })
+
+  const importHermes = useMutation({
+    mutationFn: () => apiFetch<{ success: boolean; message: string; details: unknown[] }>('/api/import/hermes', { method: 'POST' }),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['keys'] })
+      queryClient.invalidateQueries({ queryKey: ['health'] })
+      queryClient.invalidateQueries({ queryKey: ['import-status'] })
+      alert(data.message)
+    },
+  })
+
   const addKey = useMutation({
     mutationFn: (body: { platform: string; key: string; label?: string }) =>
       apiFetch('/api/keys', { method: 'POST', body: JSON.stringify(body) }),
@@ -211,6 +234,41 @@ export default function KeysPage() {
 
       <div className="space-y-8">
         <UnifiedKeySection />
+
+        {/* Hermes Import Section */}
+        {importStatus && (
+          <section className="rounded-lg border border-dashed p-4 bg-card">
+            <div className="flex items-start justify-between gap-4 mb-3">
+              <div>
+                <h2 className="text-sm font-medium">Import from Hermes</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Found {importStatus.total_credentials} credentials in{' '}
+                  {importStatus.total_supported} supported pools (google, openrouter, nvidia).
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => importHermes.mutate()}
+                disabled={importHermes.isPending || importStatus.total_supported === 0}
+              >
+                {importHermes.isPending ? 'Importing…' : 'Import keys'}
+              </Button>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              {Object.entries(importStatus.pools).map(([poolName, info]) => (
+                <div key={poolName} className="flex items-center gap-2 px-2 py-1 rounded bg-muted/50">
+                  <span className={info.supported ? 'text-emerald-500' : 'text-muted-foreground'}>
+                    {info.supported ? '✓' : '✗'}
+                  </span>
+                  <span className="font-mono truncate" title={poolName}>{poolName}</span>
+                  <span className="ml-auto text-muted-foreground">{info.count}</span>
+                  {info.platform && <span className="text-muted-foreground">→ {info.platform}</span>}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section>
           <h2 className="text-sm font-medium mb-3">Add a provider key</h2>

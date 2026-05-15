@@ -1,0 +1,37 @@
+services:
+  freellmapi:
+    image: freellmapi:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: freellmapi
+    restart: unless-stopped
+    networks:
+      - docker-stack_core-network
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - freellmapi-data:/app/server/data
+      - /home/aldo/.hermes/auth.json:/hermes/auth.json:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.freellmapi.rule=Host(`freellm.${DOMAIN}`)"
+      - "traefik.http.routers.freellmapi.entrypoints=websecure"
+      - "traefik.http.routers.freellmapi.tls=true"
+      - "traefik.http.services.freellmapi.loadbalancer.server.port=3001"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3001/api/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  docker-stack_core-network:
+    external: true
+
+volumes:
+  freellmapi-data:
+    driver: local
