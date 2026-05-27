@@ -1,0 +1,62 @@
+.sisyphus/opencode.jsonc
+  s_c36bb4bc7333d2::t_a2c12986780dff 1-12
+server/src/providers/proxy.ts
+  s_c36bb4bc7333d2::t_df0c814744f02e 1-34
+server/src/routes/proxy.ts
+  s_c36bb4bc7333d2::t_617c2531571450 401
+  s_c36bb4bc7333d2::t_4a3ac33cb9d025 355
+  s_d12dd86d5e65f3::t_177ec118bb16d5 69-76,88
+  s_c36bb4bc7333d2::t_3112823e8147d0 248
+  s_c36bb4bc7333d2::t_3d8981e24e5d0b 181
+server/src/routes/keys.ts
+  s_c36bb4bc7333d2::t_6df525b4e5de33 15
+server/src/providers/base.ts
+  s_c36bb4bc7333d2::t_9387f211327bf8 18
+server/src/db/index.ts
+  s_c36bb4bc7333d2::t_3744084bf4ea5e 47
+  s_c36bb4bc7333d2::t_7b7c83105f9212 780-849
+client/src/pages/KeysPage.tsx
+  s_c36bb4bc7333d2::t_bff3924d796cf1 14,23
+server/src/providers/openai-compat.ts
+  s_c36bb4bc7333d2::t_5d0399898a51c4 63,100
+tests/unit/migrateModelsV10.test.ts
+  s_c36bb4bc7333d2::t_b799f91ff77f73 1-94
+Dockerfile
+  s_d12dd86d5e65f3::t_a5281674d139ba 17-19,21
+tests/integration/reasoning_effort.test.ts
+  s_c36bb4bc7333d2::t_ab3586f332a3f0 1-17
+tests/test_opencode_zen.py
+  s_c36bb4bc7333d2::t_4974bfb95d7413 23-28
+  s_c36bb4bc7333d2::t_b0707c359391c6 29
+server/src/providers/opencode.ts
+  s_c36bb4bc7333d2::t_6863d4b9101354 24
+  s_c36bb4bc7333d2::t_63d929c8d5b6a7 66
+docker-compose.yml
+  s_d12dd86d5e65f3::t_e4c00a585e430f 12-13
+shared/types.ts
+  s_c36bb4bc7333d2::t_a77a0b4d11636d 18-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "49f4f8300a8d2b0566b9b783ea4973d86c79d4b3",
+  "prompts": {},
+  "sessions": {
+    "s_c36bb4bc7333d2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_1cd54e38effev6e59JWURkYad6",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_d12dd86d5e65f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_1cd949d6fffetQpJjBuciu3aRa",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
