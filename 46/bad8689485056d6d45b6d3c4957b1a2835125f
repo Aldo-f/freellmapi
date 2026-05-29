@@ -1,0 +1,19 @@
+AGENTS.md
+  s_e5cd53d1b57c50::t_2d381f073c3e78 1-101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "46bad8689485056d6d45b6d3c4957b1a2835125f",
+  "prompts": {},
+  "sessions": {
+    "s_e5cd53d1b57c50": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_18c29b7b2ffeLA4WbOpbNvLLFy",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
