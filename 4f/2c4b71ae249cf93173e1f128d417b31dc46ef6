@@ -1,0 +1,31 @@
+server/src/routes/AGENTS.md
+  s_e5cd53d1b57c50::t_9424214461b199 1-46
+shared/AGENTS.md
+  s_e5cd53d1b57c50::t_32dcb484a0c9cf 1-39
+AGENTS.md
+  s_e5cd53d1b57c50::t_b9844c9df966a4 12,18,20,22,26,35,43
+server/src/db/AGENTS.md
+  s_e5cd53d1b57c50::t_82bec13ea5dd4a 1-42
+server/src/providers/AGENTS.md
+  s_e5cd53d1b57c50::t_70c66056e08bd7 1-46
+client/src/AGENTS.md
+  s_e5cd53d1b57c50::t_f31ab7101454ae 1-51
+server/src/services/AGENTS.md
+  s_e5cd53d1b57c50::t_9fd34c75cb4ee7 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "4f2c4b71ae249cf93173e1f128d417b31dc46ef6",
+  "prompts": {},
+  "sessions": {
+    "s_e5cd53d1b57c50": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_18c29b7b2ffeLA4WbOpbNvLLFy",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
