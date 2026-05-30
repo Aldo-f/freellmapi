@@ -1,0 +1,19 @@
+server/src/providers/index.ts
+  s_3596ac5903db1c::t_365890d5a02f31 146-155
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "bf580479b0b20e7902e1aaeaf281894a06ee5898",
+  "prompts": {},
+  "sessions": {
+    "s_3596ac5903db1c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_18b48d4baffeHGGUrPzXjSIpT4",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}

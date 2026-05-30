@@ -1,0 +1,19 @@
+client/src/pages/KeysPage.tsx
+  s_41d8826a33426b::t_78f27c6a089560 29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "7e24e1a6e84bf0f091495000c2219a301b252f58",
+  "prompts": {},
+  "sessions": {
+    "s_41d8826a33426b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_18b48bce8ffe2qdWXXFlvr4Yto",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}

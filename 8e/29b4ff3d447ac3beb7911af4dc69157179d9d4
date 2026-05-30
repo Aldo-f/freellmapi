@@ -1,0 +1,21 @@
+server/src/db/index.ts
+  s_ae18ccd0da3818::t_db4e5f70ad27ee 52
+  s_ae18ccd0da3818::t_b80c22ae3650ce 1267-1275,1277-1308
+  s_ae18ccd0da3818::t_0837a6b780ea31 1276
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8e29b4ff3d447ac3beb7911af4dc69157179d9d4",
+  "prompts": {},
+  "sessions": {
+    "s_ae18ccd0da3818": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_18b48950dffeU621z9XQHitS4Y",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
