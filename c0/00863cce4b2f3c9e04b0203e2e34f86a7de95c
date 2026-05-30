@@ -1,0 +1,19 @@
+.github/workflows/ci.yml
+  s_f1c7dd0ae81952::t_10c136057610af 24-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c000863cce4b2f3c9e04b0203e2e34f86a7de95c",
+  "prompts": {},
+  "sessions": {
+    "s_f1c7dd0ae81952": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_185e6abd5ffeF0EoBSc5qeb4Wa",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
