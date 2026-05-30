@@ -1,0 +1,19 @@
+server/src/routes/keys.ts
+  s_3bf4a97376f7b1::t_5051212837bd01 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "7ff430709af8d2e8146483c0eb457fe6c6092596",
+  "prompts": {},
+  "sessions": {
+    "s_3bf4a97376f7b1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_18b48c8a9ffeopaJLAvepeY6Wj",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
