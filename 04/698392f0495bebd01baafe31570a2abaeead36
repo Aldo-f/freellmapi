@@ -1,0 +1,19 @@
+server/src/__tests__/providers/openai-compat.test.ts
+  s_88c0098f91e827::t_6d2c9a1f104064 250
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "04698392f0495bebd01baafe31570a2abaeead36",
+  "prompts": {},
+  "sessions": {
+    "s_88c0098f91e827": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_18b488761ffe38qFAxSj8cOfSY",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
