@@ -1,0 +1,19 @@
+server/src/__tests__/lib/key-parser.test.ts
+  s_8a510244543af7::t_82616ff47022d1 669
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "068b0e397b5b773d1a9264a7d9465b2dbb7481f7",
+  "prompts": {},
+  "sessions": {
+    "s_8a510244543af7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_185760073ffeVLom4H2pWnt7t0",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
