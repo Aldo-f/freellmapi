@@ -1,20 +1,17 @@
-server/src/__tests__/lib/key-parser.test.ts
-  s_8a510244543af7::t_97c5a3d5833cf5 313-322
-  s_8a510244543af7::t_2164421728a318 331
+client/src/pages/KeysPage.tsx
+  s_4647781943fe67::t_e6b059400898c7 32-38,142-224,313-334,370
+  s_4647781943fe67::t_e7e0d9e314645d 298-310
+  s_a1f18326cac1a2::t_e5159c789308e9 374-375,377-379
+  s_08b312e0968aa7::t_53634600983f80 380
+  s_a1f18326cac1a2::t_8bce07e98a76d5 415,422,431,522-549,551-594,596-597
+  s_a1f18326cac1a2::t_685cb8d2d48d85 550
+  s_a1f18326cac1a2::t_063149757ffbb2 595
+client/src/components/import-preview-table.tsx
+  s_a1d28c30660804::t_2c8ecbfd62c429 1-195
 ---
 {
   "schema_version": "authorship/3.0.0",
   "git_ai_version": "1.5.2",
   "base_commit_sha": "b94cfeaf235cbcf97475a72e22283473caeb53dc",
-  "prompts": {},
-  "sessions": {
-    "s_8a510244543af7": {
-      "agent_id": {
-        "tool": "claude",
-        "id": "ses_185760073ffeVLom4H2pWnt7t0",
-        "model": "unknown"
-      },
-      "human_author": "Aldo <aldo.fieuw@gmail.com>"
-    }
-  }
+  "prompts": {}
 }

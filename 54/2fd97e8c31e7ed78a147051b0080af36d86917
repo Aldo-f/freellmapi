@@ -1,0 +1,9 @@
+client/src/components/ui/dialog.tsx
+  s_9babb423335cc7::t_2b93c5dad5e749 1-150
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "542fd97e8c31e7ed78a147051b0080af36d86917",
+  "prompts": {}
+}

@@ -1,0 +1,34 @@
+shared/types.ts
+  s_4ebea8327c5782::t_d7a50295e9238b 1-15
+  s_8a510244543af7::t_05b8312891c2d6 16-21,26-32
+  s_8a510244543af7::t_a97fedbac6fbe6 22-25
+client/src/pages/KeysPage.tsx
+  s_4647781943fe67::t_e6b059400898c7 35-41,145-227,369-390,432,436-437
+  s_4647781943fe67::t_e7e0d9e314645d 354-366,253,261-262,265,268-269,283-285,287,289,292-293
+  s_a1f18326cac1a2::t_e5159c789308e9 453-454,456-458,423-425,446,449,455
+  s_08b312e0968aa7::t_53634600983f80 459
+  s_a1f18326cac1a2::t_8bce07e98a76d5 494,501,510,601-628,630-673,675-676,250,270,294,421-422,426,433-434,450
+  s_a1f18326cac1a2::t_685cb8d2d48d85 629
+  s_a1f18326cac1a2::t_063149757ffbb2 674
+  s_a1f18326cac1a2::t_fa88bb5713ad35 10,13-14
+  s_a1f18326cac1a2::t_f2c7ab884ca4b7 12
+  s_a1f18326cac1a2::t_efffaf776bd171 242-249,251-252,254-255,257,260,263-264,267,271-273,275-276,282,286,291
+  s_7b880649db4b34::t_b27673ba75c38e 256,258-259,266,274,277-281,288,290
+  s_a1f18326cac1a2::t_2b4ee1c7cccc87 411-420,427-428,438
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "b6a7ed8b8b3ca39c65b838016b13750ec9de9c52",
+  "prompts": {},
+  "sessions": {
+    "s_8a510244543af7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_185760073ffeVLom4H2pWnt7t0",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
