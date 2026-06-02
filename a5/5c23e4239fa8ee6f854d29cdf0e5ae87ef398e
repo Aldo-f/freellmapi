@@ -1,0 +1,59 @@
+server/src/routes/keys.ts
+  s_8a510244543af7::t_b0c0a6d55bef12 16
+  s_54cd2b5d57137b::t_2ceb5496ac897e 309-317,319-360
+  s_ba984edabc0d87::t_fd428940d6ffae 25
+  s_ba984edabc0d87::t_a92d1f1e490938 151-234
+  s_f0ecb1b8f65511::t_b1be111041353a 21
+  s_54cd2b5d57137b::t_8aaa000e758f52 318
+  s_ba984edabc0d87::t_319ee3c16d50c9 4-5,8,13-15,17-20,22-24,26-29
+  s_f0ecb1b8f65511::t_e538332f3537cd 12
+  s_994c273072a107::t_2cb146702c7517 235-308
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "a55c23e4239fa8ee6f854d29cdf0e5ae87ef398e",
+  "prompts": {},
+  "sessions": {
+    "s_54cd2b5d57137b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_1809ded41ffe3L7XQYi3G1eL4l",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_8a510244543af7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_185760073ffeVLom4H2pWnt7t0",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_994c273072a107": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_180bd844cffeGrFm5NURh7W2sU",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_ba984edabc0d87": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_184a96ccdffeWmUdpGGLGjSw4d",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_f0ecb1b8f65511": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_180ca3351ffeAqgyeG9sY9OL79",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
