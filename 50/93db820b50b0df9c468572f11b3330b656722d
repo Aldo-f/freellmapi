@@ -1,0 +1,65 @@
+client/src/pages/KeysPage.tsx
+  s_a1f18326cac1a2::t_fa88bb5713ad35 10,12-13
+  s_a1f18326cac1a2::t_f2c7ab884ca4b7 11
+  s_a1f18326cac1a2::t_efffaf776bd171 150-157,159-160,162-177,179-181,183-184,190,194,199
+  s_4647781943fe67::t_e7e0d9e314645d 158,161,191-193,195,197,200-202
+  s_7b880649db4b34::t_b27673ba75c38e 178,182,185-189,196,198
+  s_a1f18326cac1a2::t_685cb8d2d48d85 497
+  s_a1f18326cac1a2::t_2b4ee1c7cccc87 284-295,299-301
+  s_4647781943fe67::t_e6b059400898c7 306-307,309-311
+  s_a1f18326cac1a2::t_e5159c789308e9 296-298
+  s_a1f18326cac1a2::t_8bce07e98a76d5 469-496,498-541,543-550
+  s_a1f18326cac1a2::t_063149757ffbb2 542
+shared/types.ts
+  s_8a510244543af7::t_a97fedbac6fbe6 22-25
+  s_4ebea8327c5782::t_d7a50295e9238b 1-15
+  s_8a510244543af7::t_05b8312891c2d6 16-21,26-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "5093db820b50b0df9c468572f11b3330b656722d",
+  "prompts": {},
+  "sessions": {
+    "s_4647781943fe67": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_184a43cd4ffetcyV98a1xIBqkK",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_4ebea8327c5782": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_180bd5bafffeRNTY2rGsirR7KO",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_7b880649db4b34": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_184a2caaaffejVC0lQbd4fUVtM",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_8a510244543af7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_185760073ffeVLom4H2pWnt7t0",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_a1f18326cac1a2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_1809b5daeffeVk9jjCMEk3dSnT",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
