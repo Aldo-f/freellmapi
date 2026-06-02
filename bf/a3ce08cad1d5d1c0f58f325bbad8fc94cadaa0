@@ -1,0 +1,60 @@
+README.md
+  s_6c1e4bbbcc23ad::t_1ed81c5914daa6 292
+  s_6c1e4bbbcc23ad::t_33a504991bef96 211-221
+docs/Health.md
+  s_6c1e4bbbcc23ad::t_b4ac972388dd58 1-2,4-9,12-19,21-33,36-39,43-46,48-50,52,54-55
+  s_4783b3a78667c5::t_12bd29eda20c92 57-72,75-133
+  s_8a510244543af7::t_82d8194c58d875 34-35,40-42,47,51,53,56
+  s_4783b3a78667c5::t_4a179d093c275a 3
+  s_df77ebbcc798f8::t_480adf26f83a7d 73-74
+  s_8a510244543af7::t_4b15bc2a9e2cc3 10-11
+  s_4a0bd7928ba043::t_89b3549fc93790 20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "bfa3ce08cad1d5d1c0f58f325bbad8fc94cadaa0",
+  "prompts": {},
+  "sessions": {
+    "s_4783b3a78667c5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_18098aba4ffed7a91WDcTgntXE",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_4a0bd7928ba043": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_1849b7e6affe25Ci4k8FVNehbd",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_6c1e4bbbcc23ad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_184a1a9beffeLG2Uo9yR32xgSx",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_8a510244543af7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_185760073ffeVLom4H2pWnt7t0",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_df77ebbcc798f8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_17f7eb3a8ffesE6v0YL1hlI4la",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
