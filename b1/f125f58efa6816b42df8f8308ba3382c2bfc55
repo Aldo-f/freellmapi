@@ -1,0 +1,11 @@
+client/src/components/import-preview-table.tsx
+  s_a1d28c30660804::t_2c8ecbfd62c429 1-195
+client/src/components/ui/dialog.tsx
+  s_9babb423335cc7::t_2b93c5dad5e749 1-150
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "b1f125f58efa6816b42df8f8308ba3382c2bfc55",
+  "prompts": {}
+}
