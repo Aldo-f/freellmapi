@@ -1,0 +1,31 @@
+server/package.json
+  s_84d0e34b2d092c::t_e2554e177bad57 22
+  s_84d0e34b2d092c::t_d67aaca2806e95 15
+package.json
+  s_6300aae1243bf8::t_3e37dcf6d05d49 23
+  s_84d0e34b2d092c::t_88494c017806a8 9-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "401f0c787048c0e0157fa674b74540c7f9f7d083",
+  "prompts": {},
+  "sessions": {
+    "s_6300aae1243bf8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_184a03e0bffe0mSyRgWWZCbvdb",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_84d0e34b2d092c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_18544bfcbffedxwUt45r2JMl3y",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
