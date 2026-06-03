@@ -1,0 +1,59 @@
+client/e2e/playwright.config.ts
+  s_ef8d09fa039197::t_72f7c7b4600b40 9
+  s_19edb1fd7183e4::t_8914c9c204bc49 1-3,5-7,10,12-21
+  s_19edb1fd7183e4::t_fa07d36061a9d4 4
+  s_ef8d09fa039197::t_e51803c4ba4212 11
+  s_dc96b636b47710::t_c400c46233c734 8
+client/e2e/auth.setup.ts
+  s_dc96b636b47710::t_d46089db236c2f 1-3,5-12
+  s_ef8d09fa039197::t_5267e4ecda623e 4
+.specify/specs/analytics-range-persistence.md
+  s_19edb1fd7183e4::t_9f1aaae512e63d 1-21
+client/package.json
+  s_ef8d09fa039197::t_21c9e06ff01461 37
+.specify/constitution.md
+  s_19edb1fd7183e4::t_273b65b05d524a 1-7
+client/e2e/analytics-range.spec.ts
+  s_19edb1fd7183e4::t_3f2679bb26ce8f 1-51
+.gitignore
+  s_ef8d09fa039197::t_58a3c2ebe345c9 15-18
+client/src/lib/use-persisted-state.ts
+  s_19edb1fd7183e4::t_2d04baf01781ae 1
+  s_ef8d09fa039197::t_13b4e6550076df 13,22
+  s_19edb1fd7183e4::t_12b34eb88a2a0e 2-12,14-21,23-28
+client/src/pages/AnalyticsPage.tsx
+  s_19edb1fd7183e4::t_e1dd608b124b2b 1
+  s_dc96b636b47710::t_86b20157d1b35b 47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "00f7d75f942dcc1565a3e9b4ff0e6e8d049762f9",
+  "prompts": {},
+  "sessions": {
+    "s_19edb1fd7183e4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_1732c6fd5ffeU4dyoMXjrjGrzY",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_dc96b636b47710": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_17293261cffeG0zb9lXYvNiPWg",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_ef8d09fa039197": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_1726130a3ffeNkXKN7ytUZhLGu",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
