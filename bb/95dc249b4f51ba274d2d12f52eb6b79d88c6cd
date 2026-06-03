@@ -1,0 +1,20 @@
+client/src/pages/KeysPage.tsx
+  s_8a510244543af7::t_86f0f2cf27b7d6 17-96
+  s_8a510244543af7::t_4fd1d63f20ff2c 711-748
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "bb95dc249b4f51ba274d2d12f52eb6b79d88c6cd",
+  "prompts": {},
+  "sessions": {
+    "s_8a510244543af7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_185760073ffeVLom4H2pWnt7t0",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
