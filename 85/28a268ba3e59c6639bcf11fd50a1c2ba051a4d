@@ -1,0 +1,19 @@
+server/package.json
+  s_8a510244543af7::t_6833a1dc394605 29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8528a268ba3e59c6639bcf11fd50a1c2ba051a4d",
+  "prompts": {},
+  "sessions": {
+    "s_8a510244543af7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_185760073ffeVLom4H2pWnt7t0",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
