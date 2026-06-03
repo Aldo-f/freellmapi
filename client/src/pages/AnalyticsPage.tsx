@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { usePersistedState } from '@/lib/use-persisted-state'
 import { useQuery } from '@tanstack/react-query'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -44,7 +44,7 @@ const gridStyle = 'var(--border)'
 const primaryFill = 'var(--foreground)'
 
 export default function AnalyticsPage() {
-  const [range, setRange] = useState<TimeRange>('7d')
+  const [range, setRange] = usePersistedState<TimeRange>('analytics-time-range', '7d')
 
   const { data: summary } = useQuery({
     queryKey: ['analytics', 'summary', range],

@@ -12,3 +12,7 @@ server/data/
 # Personal deployment scripts (contain keys/credentials — kept local)
 deploy-pi.sh
 update-hermes.sh
+
+# Playwright e2e
+client/e2e/test-results/
+client/e2e/playwright-report/
