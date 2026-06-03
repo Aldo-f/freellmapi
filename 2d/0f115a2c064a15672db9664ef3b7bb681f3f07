@@ -1,0 +1,26 @@
+server/src/lib/key-parser.ts
+  s_8a510244543af7::t_ae207ff28c80c4 141-143
+  s_8a510244543af7::t_5edca9cb35cb73 137-140,144-200
+  s_8a510244543af7::t_48f4bcb2f17e8b 558-561,564
+server/src/routes/keys.ts
+  s_8a510244543af7::t_6c9ef6e7ec0a17 273-283,285,291,293,295
+  s_8a510244543af7::t_d741b7337583b1 352-353,355
+  s_8a510244543af7::t_c0e7bda9871732 8
+  s_8a510244543af7::t_91ffe26aa2fcb2 250-251,253
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "2d0f115a2c064a15672db9664ef3b7bb681f3f07",
+  "prompts": {},
+  "sessions": {
+    "s_8a510244543af7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_185760073ffeVLom4H2pWnt7t0",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
