@@ -1,5 +1,6 @@
 services:
   freellmapi:
+    container_name: freellmapi-dev
     image: ghcr.io/tashfeenahmed/freellmapi:latest
     build:
       context: .
@@ -9,10 +10,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-    # Bound to localhost by default — FreeLLMAPI is single-user and must not be
-    # exposed to the internet. Set HOST_BIND=0.0.0.0 to reach it from your LAN.
-    ports:
-      - "${HOST_BIND:-127.0.0.1}:${PORT:-3001}:3001"
+    # No host port binding — Traefik routes via Docker network (freellmapi-dev:3001)
     volumes:
       - freellmapi-data:/app/server/data
     restart: unless-stopped
@@ -31,3 +29,8 @@ services:
 
 volumes:
   freellmapi-data:
+
+networks:
+  default:
+    name: docker-stack_core-network
+    external: true
