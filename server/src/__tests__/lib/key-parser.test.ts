@@ -259,6 +259,24 @@ describe('parseAuthJson', () => {
     expect(orKeys[0].rawKey).toBe('my-or-key=sk-or-v1-test');
   });
 
+  it('maps opencode-zen provider to opencode platform', () => {
+    const authJson = JSON.stringify({
+      version: 1,
+      providers: {},
+      active_provider: null,
+      updated_at: '2026-05-29T18:11:48.250808+00:00',
+      credential_pool: {
+        'opencode-zen': [
+          { id: '1', label: 'my-zen-key', auth_type: 'api_key', access_token: 'sk-opencode-test-12345', base_url: 'https://opencode.ai/zen/v1' },
+        ],
+      },
+    });
+    const result = parseAuthJson(authJson);
+    const zenKeys = result.keys.filter(k => k.platform === 'opencode');
+    expect(zenKeys).toHaveLength(1);
+    expect(zenKeys[0].rawKey).toBe('my-zen-key=sk-opencode-test-12345');
+  });
+
   it('returns empty result for JSON without credential_pool', () => {
     const json = JSON.stringify({ KEY: 'val', updated_at: '2026-01-01' });
     const result = parseAuthJson(json);
@@ -281,7 +299,7 @@ describe('parseAuthJson', () => {
     const authJson = JSON.stringify({
       credential_pool: {
         'google-gemini-cli': [
-          { id: '1', label: 'user@gmail.com', auth_type: 'oauth', access_token: 'ya29.REDACTED' },
+          { id: '1', label: 'user@gmail.com', auth_type: 'oauth', access_token: 'ya29.oauth-token' },
         ],
       },
     });
@@ -311,25 +329,25 @@ describe('parseAuthJson', () => {
       updated_at: '2026-05-29T18:11:48.250808+00:00',
       credential_pool: {
         'opencode-zen': [
-          { id: '52f84e', label: 'api-key-6', auth_type: 'api_key', access_token: 'sk-EDuVyi0rurhhEKeQjQxNTWNhPxjzvaM2j1IBep0su2gvqOVZ4wTfLLkhvFJtCDNr', base_url: 'https://opencode.ai/zen/v1' },
+          { id: '52f84e', label: 'api-key-6', auth_type: 'api_key', access_token: 'sk-fake-opencode-zen-key', base_url: 'https://opencode.ai/zen/v1' },
         ],
         'gemini': [
-          { id: '53e827', label: 'test-user@example.com', auth_type: 'api_key', access_token: '***', base_url: 'https://generativelanguage.googleapis.com/v1beta' },
+          { id: '53e827', label: 'digilab.dekrook@gmail.com', auth_type: 'api_key', access_token: 'AIzaSyFakeGoogleKey123456789', base_url: 'https://generativelanguage.googleapis.com/v1beta' },
         ],
         'openrouter': [
-          { id: '09ae6c', label: 'test-user@example.com', auth_type: 'api_key', access_token: '***', base_url: 'https://openrouter.ai/api/v1' },
+          { id: '09ae6c', label: 'aldo.fieuw@gmail.com', auth_type: 'api_key', access_token: 'sk-or-v1-fake-openrouter-key', base_url: 'https://openrouter.ai/api/v1' },
         ],
         'ollama-cloud': [
-          { id: '6690fd', label: 'test-user@example.com', auth_type: 'api_key', access_token: 'sk-ollama-REDACTED', base_url: 'https://ollama.com/v1' },
+          { id: '6690fd', label: 'aldo.fieuw@gmail.com', auth_type: 'api_key', access_token: 'fake-ollama-cloud-key', base_url: 'https://ollama.com/v1' },
         ],
         'nvidia': [
-          { id: '8571a8', label: 'NVIDIA_API_KEY', auth_type: 'api_key', access_token: 'nvapi-test-key', base_url: 'https://integrate.api.nvidia.com/v1' },
+          { id: '8571a8', label: 'NVIDIA_API_KEY', auth_type: 'api_key', access_token: 'nvapi-fake-key-for-testing', base_url: 'https://integrate.api.nvidia.com/v1' },
         ],
         'google-gemini-cli': [
-          { id: '0b7074', label: 'test-user@example.com', auth_type: 'oauth', access_token: 'ya29.REDACTED', refresh_token: '1//REDACTED' },
+          { id: '0b7074', label: 'usful.web@gmail.com', auth_type: 'oauth', access_token: 'ya29.oauth-token', refresh_token: '1//...' },
         ],
         'xai': [
-          { id: '7549ec', label: 'test-user@example.com', auth_type: 'api_key', access_token: 'xai-REDACTED', base_url: 'https://api.x.ai/v1' },
+          { id: '7549ec', label: 'aldo.fieuw@gmail.com', auth_type: 'api_key', access_token: 'xai-fake-xai-key-for-test', base_url: 'https://api.x.ai/v1' },
         ],
       },
     });
@@ -348,9 +366,9 @@ describe('parseAuthJson', () => {
     const nvidiaKeys = result.keys.filter(k => k.platform === 'nvidia');
     expect(nvidiaKeys).toHaveLength(1);
 
-    // Unmapped providers (opencode-zen, xai) → platform 'unknown'
+    // Unmapped providers (xai) → platform 'unknown'
     const unknownKeys = result.keys.filter(k => k.platform === 'unknown');
-    expect(unknownKeys).toHaveLength(2);
+    expect(unknownKeys).toHaveLength(1);
 
     // google-gemini-cli → oauth, skipped entirely
     const gcliKeys = result.keys.filter(k => k.rawKey.includes('usful.web'));
@@ -515,7 +533,7 @@ describe('parseJavaScript', () => {
 // =============================================================================
 describe('PREFIX_MAP', () => {
   it('contains exactly 13 recognized prefix mappings', () => {
-    expect(Object.keys(PREFIX_MAP)).toHaveLength(13);
+    expect(Object.keys(PREFIX_MAP)).toHaveLength(14);
   });
 
   it('maps GOOGLE_ to google', () => {
@@ -662,11 +680,11 @@ describe('detectPlatform', () => {
 describe('looksLikeApiKey', () => {
   // --- Should return true for known API key formats ---
   it('returns true for sk-or-v1-xxxx (OpenRouter key format)', () => {
-    expect(looksLikeApiKey('***')).toBe(true);
+    expect(looksLikeApiKey('sk-or-v1-fakekey1234567890abcdef')).toBe(true);
   });
 
   it('returns true for nvapi-xxxx (NVIDIA key format)', () => {
-    expect(looksLikeApiKey('nvapi-FF13hGaCuMr6WBNTFPo5Q5Blwogg3FiwBv')).toBe(true);
+    expect(looksLikeApiKey('nvapi-fake-nvidia-key-for-test')).toBe(true);
   });
 
   it('returns true for gsk_xxxx (Groq key format)', () => {
@@ -674,7 +692,7 @@ describe('looksLikeApiKey', () => {
   });
 
   it('returns true for AIzaSyxxxx (Google key format)', () => {
-    expect(looksLikeApiKey('***')).toBe(true);
+    expect(looksLikeApiKey('AIzaSyFakeGoogleKey123456789')).toBe(true);
   });
 
   it('returns true for ghp_xxxx (GitHub token)', () => {

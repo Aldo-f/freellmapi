@@ -42,6 +42,7 @@ export const PREFIX_MAP: Record<string, string> = {
   ZHIPU_: 'zhipu',
   OLLAMA_: 'ollama',
   HF_: 'huggingface',
+  OPENCODE_: 'opencode',
 };
 
 // ---------------------------------------------------------------------------
@@ -49,10 +50,11 @@ export const PREFIX_MAP: Record<string, string> = {
 // ---------------------------------------------------------------------------
 
 export const AUTH_JSON_PROVIDER_MAP: Record<string, string> = {
-  'gemini': 'google',
-  'openrouter': 'openrouter',
+  gemini: 'google',
+  openrouter: 'openrouter',
   'ollama-cloud': 'ollama',
-  'nvidia': 'nvidia',
+  nvidia: 'nvidia',
+  'opencode-zen': 'opencode',
 };
 
 // ---------------------------------------------------------------------------
@@ -60,7 +62,11 @@ export const AUTH_JSON_PROVIDER_MAP: Record<string, string> = {
 // ---------------------------------------------------------------------------
 
 export function detectPlatform(prefix: string): string | null {
-  return PREFIX_MAP[prefix] ?? null;
+  const platform = PREFIX_MAP[prefix];
+  if (platform != null) {
+    return platform;
+  }
+  return null;
 }
 
 // ---------------------------------------------------------------------------
@@ -125,6 +131,118 @@ export function parseDotEnv(content: string): Array<{ key: string; value: string
   }
 
   return Array.from(resultMap.entries()).map(([key, value]) => ({ key, value }));
+}
+
+// ---------------------------------------------------------------------------
+// stripJsoncComments — strip JSONC comments before JSON.parse
+// ---------------------------------------------------------------------------
+
+/**
+ * Strip JSONC comments (single-line // and block /* * /) from a string,
+ * respecting string literals so that comment-like content inside quotes is
+ * preserved.
+ *
+ * Also removes trailing commas after the last property/element (another JSONC
+ * extension that `JSON.parse` does not accept).
+ */
+export function stripJsoncComments(text: string): string {
+  const out: string[] = [];
+  let i = 0;
+
+  while (i < text.length) {
+    // String literal — copy verbatim
+    if (text[i] === '"') {
+      out.push('"');
+      i++;
+      while (i < text.length) {
+        out.push(text[i]);
+        if (text[i] === '\\') {
+          i++;
+          if (i < text.length) { out.push(text[i]); i++; }
+        } else if (text[i] === '"') {
+          i++;
+          break;
+        } else {
+          i++;
+        }
+      }
+      continue;
+    }
+
+    // Single-line comment  // …
+    if (text[i] === '/' && i + 1 < text.length && text[i + 1] === '/') {
+      i += 2;
+      while (i < text.length && text[i] !== '\n') i++;
+      continue;
+    }
+
+    // Block comment  /* … */
+    if (text[i] === '/' && i + 1 < text.length && text[i + 1] === '*') {
+      i += 2;
+      while (i + 1 < text.length && !(text[i] === '*' && text[i + 1] === '/')) i++;
+      i += 2; // skip the closing */
+      continue;
+    }
+
+    out.push(text[i]);
+    i++;
+  }
+
+  return out.join('');
+}
+
+/**
+ * Strip trailing commas (a JSONC extension).  Handles both `,}` and `,]`.
+ *
+ * Walks the string character by character, tracking JSON string boundaries
+ * so that commas appearing inside string literals (e.g. `"Hello, } world"`)
+ * are **not** treated as trailing commas.
+ */
+export function stripTrailingCommas(text: string): string {
+  const out: string[] = [];
+  let i = 0;
+
+  while (i < text.length) {
+    // String literal — copy verbatim (JSON only uses double quotes)
+    if (text[i] === '"') {
+      out.push('"');
+      i++;
+      while (i < text.length) {
+        out.push(text[i]);
+        if (text[i] === '\\') {
+          i++;
+          if (i < text.length) {
+            out.push(text[i]);
+            i++;
+          }
+        } else if (text[i] === '"') {
+          i++;
+          break;
+        } else {
+          i++;
+        }
+      }
+      continue;
+    }
+
+    // Outside string — check for trailing comma pattern: `,` + whitespace + `}` or `]`
+    if (text[i] === ',') {
+      let j = i + 1;
+      while (j < text.length && (text[j] === ' ' || text[j] === '\t' || text[j] === '\n' || text[j] === '\r')) {
+        j++;
+      }
+      if (j < text.length && (text[j] === '}' || text[j] === ']')) {
+        // Trailing comma found — skip it, keeping the following whitespace and bracket
+        i++;
+        continue;
+      }
+    }
+
+    out.push(text[i]);
+    i++;
+  }
+
+  return out.join('');
 }
 
 // ---------------------------------------------------------------------------
@@ -484,9 +602,13 @@ function parseEnvFile(text: string): ParseResult {
  * not a valid JSON object.
  */
 function parseJsonFile(text: string): ParseResult {
+  // Strip JSONC comments before parsing so .jsonc files (and .json files with
+  // informal comments) work correctly instead of silently falling back to .env.
+  const clean = stripTrailingCommas(stripJsoncComments(text));
+
   let parsed: unknown;
   try {
-    parsed = JSON.parse(text);
+    parsed = JSON.parse(clean);
   } catch {
     return parseEnvFile(text);
   }
@@ -498,7 +620,7 @@ function parseJsonFile(text: string): ParseResult {
 
   // Hermes/OpenCode auth.json detection — delegate to parseAuthJson
   if ('credential_pool' in (parsed as Record<string, unknown>)) {
-    return parseAuthJson(text);
+    return parseAuthJson(clean);
   }
 
   const keys: ParsedKey[] = [];

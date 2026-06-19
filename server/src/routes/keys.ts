@@ -1,11 +1,28 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
+import multer from 'multer';
+import path from 'path';
 import { getDb } from '../db/index.js';
 import { resolveProvider } from '../providers/index.js';
 import { encrypt, decrypt, maskKey } from '../lib/crypto.js';
+import { parseKeysFromFile, stripJsoncComments, stripTrailingCommas } from '../lib/key-parser.js';
 
 export const keysRouter = Router();
+
+const ALLOWED_EXTENSIONS = ['.txt', '.env', '.json', '.jsonc', '.md'];
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024, files: 10 },
+  fileFilter: (_req: any, file: any, cb: any) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (!ALLOWED_EXTENSIONS.includes(ext)) {
+      return cb(new Error('Unsupported file type'));
+    }
+    cb(null, true);
+  },
+});
 
 // Active providers — must match providers/index.ts registrations + shared/types.ts Platform.
 // Moonshot and MiniMax direct integrations were dropped in V4. HuggingFace
@@ -264,7 +281,229 @@ keysRouter.patch('/platform/:platform', (req: Request, res: Response) => {
   res.json({ success: true, enabled, updatedKeys: result.changes });
 });
 
-// Update key (toggle enable/disable or edit label)
+keysRouter.post('/import', (req: Request, res: Response, next: any) => {
+  upload.single('file')(req, res, (err: any) => {
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        res.status(413).json({ error: { message: 'File too large. Maximum size is 5MB' } });
+        return;
+      }
+      if (err.message?.includes('Unsupported file type')) {
+        res.status(400).json({ error: { message: err.message } });
+        return;
+      }
+      next(err);
+      return;
+    }
+
+    try {
+      if (!req.file) {
+        res.status(400).json({ error: { message: 'No file uploaded' } });
+        return;
+      }
+
+      const content = req.file.buffer.toString('utf-8');
+      if (!content || content.trim().length === 0) {
+        res.status(400).json({ error: { message: 'File contains no data' } });
+        return;
+      }
+
+      const isJsonOrJsonc = /\.jsonc?$/i.test(req.file.originalname);
+      if (isJsonOrJsonc) {
+        try {
+          JSON.parse(stripTrailingCommas(stripJsoncComments(content)));
+        } catch {
+          res.status(400).json({ error: { message: 'Invalid JSON format' } });
+          return;
+        }
+      }
+
+      const result = parseKeysFromFile(content, req.file.originalname);
+
+      const imported: Array<{ keyName: string; platform: string }> = [];
+      const errors: Array<{ key: string; error: string }> = [];
+      const unrecognizedSkipped: string[] = [];
+      const db = getDb();
+
+      for (const key of result.keys) {
+        if (!key.platform || key.platform === 'unknown') {
+          unrecognizedSkipped.push(key.rawKey);
+          continue;
+        }
+
+        // rawKey is "KEY=VALUE" — split so we store only the value encrypted
+        // and use the key name as the human-readable label.
+        const eqIdx = key.rawKey.indexOf('=');
+        const keyName = eqIdx >= 0 ? key.rawKey.slice(0, eqIdx) : key.rawKey;
+        const keyValue = eqIdx >= 0 ? key.rawKey.slice(eqIdx + 1) : '';
+
+        if (!keyValue) {
+          errors.push({ key: keyName, error: 'No key value found' });
+          continue;
+        }
+
+        try {
+          const { encrypted, iv, authTag } = encrypt(keyValue);
+
+          const stmt = db.prepare(`
+            INSERT INTO api_keys (platform, label, encrypted_key, iv, auth_tag, base_url, status, enabled)
+            VALUES (?, ?, ?, ?, ?, ?, 'unknown', 1)
+          `);
+          stmt.run(key.platform, keyName, encrypted, iv, authTag, '');
+
+          imported.push({ keyName, platform: key.platform || 'unknown' });
+        } catch (insertErr) {
+          errors.push({ key: keyName, error: (insertErr as Error).message });
+        }
+      }
+
+      res.json({
+        imported: imported.length,
+        skipped: [...result.skipped, ...unrecognizedSkipped],
+        errors,
+        total: result.keys.length + result.skipped.length,
+      });
+    } catch (handlerErr: any) {
+      if (handlerErr.code === 'LIMIT_FILE_SIZE') {
+        res.status(413).json({ error: { message: 'File too large. Maximum size is 5MB' } });
+        return;
+      }
+      if (handlerErr.message?.includes('Unsupported file type')) {
+        res.status(400).json({ error: { message: handlerErr.message } });
+        return;
+      }
+      next(handlerErr);
+    }
+  });
+});
+
+// Preview keys from uploaded files (no DB storage, no encryption)
+keysRouter.post('/preview', (req: Request, res: Response, next: any) => {
+  upload.array('files', 10)(req, res, (err: any) => {
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        res.status(413).json({ error: { message: 'File too large. Maximum size is 5MB' } });
+        return;
+      }
+      if (err.message?.includes('Unsupported file type')) {
+        res.status(400).json({ error: { message: err.message } });
+        return;
+      }
+      next(err);
+      return;
+    }
+
+    try {
+      const files = req.files as Express.Multer.File[] | undefined;
+      if (!files || files.length === 0) {
+        res.status(400).json({ error: { message: 'No files uploaded' } });
+        return;
+      }
+
+      const allKeys: Array<{ keyName: string; keyValue: string; detectedPlatform: string | null; prefix: string }> = [];
+      const allSkipped: string[] = [];
+
+      for (const file of files) {
+        const content = file.buffer.toString('utf-8');
+        if (!content || content.trim().length === 0) {
+          res.status(400).json({ error: { message: 'File contains no data' } });
+          return;
+        }
+
+        const isJsonOrJsonc = /\.jsonc?$/i.test(file.originalname);
+        if (isJsonOrJsonc) {
+          try {
+            JSON.parse(stripTrailingCommas(stripJsoncComments(content)));
+          } catch {
+            res.status(400).json({ error: { message: 'Invalid JSON format' } });
+            return;
+          }
+        }
+
+        const result = parseKeysFromFile(content, file.originalname);
+
+        for (const key of result.keys) {
+          const eqIdx = key.rawKey.indexOf('=');
+          const keyName = eqIdx >= 0 ? key.rawKey.slice(0, eqIdx) : key.rawKey;
+          const keyValue = eqIdx >= 0 ? key.rawKey.slice(eqIdx + 1) : '';
+          allKeys.push({
+            keyName,
+            keyValue,
+            detectedPlatform: key.platform,
+            prefix: key.prefix,
+          });
+        }
+
+        allSkipped.push(...result.skipped);
+      }
+
+      res.json({ keys: allKeys, total: allKeys.length, skipped: allSkipped });
+    } catch (handlerErr: any) {
+      if (handlerErr.code === 'LIMIT_FILE_SIZE') {
+        res.status(413).json({ error: { message: 'File too large. Maximum size is 5MB' } });
+        return;
+      }
+      if (handlerErr.message?.includes('Unsupported file type')) {
+        res.status(400).json({ error: { message: handlerErr.message } });
+        return;
+      }
+      throw handlerErr;
+    }
+  });
+});
+
+// Import selected keys from preview table (encrypt + insert to DB)
+keysRouter.post('/import-selected', (req: Request, res: Response) => {
+  try {
+    const { keys } = req.body;
+    if (!Array.isArray(keys)) {
+      res.status(400).json({ error: { message: 'keys must be an array' } });
+      return;
+    }
+
+    let imported = 0;
+    const errors: Array<{ key: string; error: string }> = [];
+    const db = getDb();
+
+    for (const key of keys) {
+      const platformParse = z.enum(PLATFORMS).safeParse(key.platform);
+      if (!platformParse.success) {
+        res.status(400).json({ error: { message: `Invalid platform: ${key.platform}` } });
+        return;
+      }
+
+      try {
+        const keyValue = key.keyValue ?? '';
+        if (!keyValue) {
+          errors.push({ key: key.keyName, error: 'keyValue must be at least 1 character' });
+          continue;
+        }
+
+        const actualValue = keyValue.trim();
+        const { encrypted, iv, authTag } = encrypt(actualValue);
+
+        const stmt = db.prepare(`
+          INSERT INTO api_keys (platform, label, encrypted_key, iv, auth_tag, base_url, status, enabled)
+          VALUES (?, ?, ?, ?, ?, ?, 'unknown', 1)
+        `);
+        stmt.run(platformParse.data, key.keyName ?? '', encrypted, iv, authTag, '');
+        imported++;
+      } catch (insertErr) {
+        errors.push({ key: key.keyName, error: (insertErr as Error).message });
+      }
+    }
+
+    res.json({
+      imported,
+      skipped: [],
+      errors,
+      total: keys.length,
+    });
+  } catch (err) {
+    res.status(500).json({ error: { message: (err as Error).message } });
+  }
+});
+
 keysRouter.patch('/:id', (req: Request, res: Response) => {
   const id = parseInt(req.params.id as string, 10);
   if (isNaN(id)) {
