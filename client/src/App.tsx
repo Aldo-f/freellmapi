@@ -18,7 +18,6 @@ import PlaygroundPage from '@/pages/PlaygroundPage'
 import FallbackPage from '@/pages/FallbackPage'
 import EmbeddingsPage from '@/pages/EmbeddingsPage'
 import AnalyticsPage from '@/pages/AnalyticsPage'
-import PremiumPage from '@/pages/PremiumPage'
 
 const queryClient = new QueryClient()
 
@@ -27,7 +26,6 @@ const navItems = [
   { to: '/playground', label: 'Playground' },
   { to: '/keys', label: 'Keys' },
   { to: '/analytics', label: 'Analytics' },
-  { to: '/premium', label: 'Premium' },
 ]
 
 function getPreferredDarkMode() {
@@ -206,7 +204,6 @@ function App() {
                 <Route path="/keys" element={<KeysPage />} />
                 <Route path="/fallback" element={<Navigate to="/models/chat" replace />} />
                 <Route path="/analytics" element={<AnalyticsPage />} />
-                <Route path="/premium" element={<PremiumPage />} />
                 <Route path="/test" element={<Navigate to="/playground" replace />} />
                 <Route path="/health" element={<Navigate to="/keys" replace />} />
               </Routes>
