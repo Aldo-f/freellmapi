@@ -352,6 +352,17 @@ If no vision-capable model is enabled in your Fallback Chain, an image request r
 
 Works with `stream=True` as well — you'll get `delta.tool_calls` chunks followed by a `finish_reason: "tool_calls"` close. Under the hood, OpenAI-compatible providers (Groq, Cerebras, Mistral, OpenRouter, GitHub Models, HuggingFace, Cloudflare, Cohere compat) get the request passed through; Gemini requests get translated into Google's `functionDeclarations` / `functionResponse` shape and the response is translated back.
 
+**Import API Keys**
+
+Upload a `.env`, `.json`, or `.js` file with all your provider keys at once instead of entering them one by one in the dashboard.
+
+```bash
+curl -X POST http://localhost:3001/api/keys/import \
+  -F "file=@keys.env;type=text/plain"
+```
+
+The endpoint recognises env-var prefixes like `GROQ_`, `GOOGLE_`, `MISTRAL_`, etc. and maps them to the right platform. Keys with an unrecognised prefix are skipped. See `docs/Health.md` for the full prefix table and response shape.
+
 Every response carries an `X-Routed-Via: <platform>/<model>` header so you can see which provider actually served each call. If a request fell over between providers, you'll also see `X-Fallback-Attempts: N`.
 
 ### Embeddings
@@ -490,7 +501,7 @@ Contributors very welcome! Good first PRs:
 - **Add a provider** — copy `server/src/providers/openai-compat.ts` as a template, wire it into `server/src/providers/index.ts`, seed its models in `server/src/db/index.ts`, add a test in `server/src/__tests__/providers/`.
 - **Add an endpoint** — images, moderations, audio. The provider base class can grow new methods; adapters declare which they support.
 - **Improve the router** — cost-aware routing (cheapest-healthy-fastest tradeoffs), better latency-weighted priority, regional pinning.
-- **Dashboard polish** — charts on the Analytics page, key rotation UX, batch import of keys from `.env`.
+- **Dashboard polish** — charts on the Analytics page, key rotation UX, ~~batch import of keys from `.env`~~ (done).
 - **Docs** — more examples, client library snippets for Go/Rust/etc., a deployment recipe for Docker or Fly.
 
 **Development loop:**
