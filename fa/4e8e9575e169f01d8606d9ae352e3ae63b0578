@@ -1,0 +1,50 @@
+README.md
+  s_6c1e4bbbcc23ad::t_1ed81c5914daa6 504
+  s_6c1e4bbbcc23ad::t_33a504991bef96 355-365
+.github/workflows/ci.yml
+  s_f1c7dd0ae81952::t_10c136057610af 24-26
+shared/types.ts
+  s_8a510244543af7::t_a97fedbac6fbe6 22-25
+  s_8a510244543af7::t_05b8312891c2d6 16-21,26-32
+  s_4ebea8327c5782::t_d7a50295e9238b 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "fa4e8e9575e169f01d8606d9ae352e3ae63b0578",
+  "prompts": {},
+  "sessions": {
+    "s_4ebea8327c5782": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_180bd5bafffeRNTY2rGsirR7KO",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_6c1e4bbbcc23ad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_184a1a9beffeLG2Uo9yR32xgSx",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_8a510244543af7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_185760073ffeVLom4H2pWnt7t0",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_f1c7dd0ae81952": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_185e6abd5ffeF0EoBSc5qeb4Wa",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
