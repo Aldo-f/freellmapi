@@ -1,0 +1,76 @@
+client/src/AGENTS.md
+  s_e5cd53d1b57c50::t_f31ab7101454ae 1-51
+shared/AGENTS.md
+  s_e5cd53d1b57c50::t_32dcb484a0c9cf 1-39
+server/src/routes/AGENTS.md
+  s_e5cd53d1b57c50::t_9424214461b199 1-46
+server/src/__tests__/routes/sync.test.ts
+  s_e5cd53d1b57c50::t_ebe6d682bbbbf7 28-36,40-70,72-92,94-103
+  s_e5cd53d1b57c50::t_3581a95c6020c2 104
+  s_e5cd53d1b57c50::t_b6a438d426e607 1,5,7-9
+  s_e5cd53d1b57c50::t_d7232274a47de7 71
+  s_08b312e0968aa7::t_acc45998167bac 2-4,6,10-26
+  s_e5cd53d1b57c50::t_40509a1a3ae287 27,37-39
+  s_e5cd53d1b57c50::t_a99b6a2da9dcbe 93
+server/src/routes/sync.ts
+  s_e5cd53d1b57c50::t_8602f063c9a5f1 81-85
+  s_08b312e0968aa7::t_1476565945825e 2-12
+  s_e5cd53d1b57c50::t_58b1567ed786c2 75-80
+  s_cb95d9ae522cf2::t_13292356682e83 14-19
+server/src/providers/AGENTS.md
+  s_e5cd53d1b57c50::t_70c66056e08bd7 1-46
+server/src/services/AGENTS.md
+  s_e5cd53d1b57c50::t_9fd34c75cb4ee7 1-40
+client/src/__tests__/e2e/ollama-local.test.ts
+  s_130bb1a3ae7072::t_7e78fe40f1ead1 20
+  s_130bb1a3ae7072::t_8d6777b365a4e5 32
+client/src/__tests__/e2e/form-add-provider.test.ts
+  s_130bb1a3ae7072::t_ef1956ca964c4e 20
+AGENTS.md
+  s_e5cd53d1b57c50::t_2d381f073c3e78 1-11,13-17,19,21,23-25,27-34,36-42,45-109
+  s_e5cd53d1b57c50::t_b9844c9df966a4 12,18,20,22,26,35,43
+client/src/__tests__/e2e/provider-add-form.test.ts
+  s_130bb1a3ae7072::t_9e11fde80d0e11 16
+server/src/db/AGENTS.md
+  s_e5cd53d1b57c50::t_82bec13ea5dd4a 1-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "e4551182af5a4dfac85fa4b8c93953db110f9e36",
+  "prompts": {},
+  "sessions": {
+    "s_08b312e0968aa7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_19083cac3ffe9CL7qL8ixa5Lz5",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_130bb1a3ae7072": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_18b9f0f85ffeQDb5y7WB40rVNn",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_cb95d9ae522cf2": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "f82da64c-2720-42e6-ba52-320641ac7ab0",
+        "model": "gpt-5-mini"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_e5cd53d1b57c50": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_18c29b7b2ffeLA4WbOpbNvLLFy",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
