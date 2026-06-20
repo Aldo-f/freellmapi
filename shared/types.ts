@@ -52,6 +52,8 @@ export type Platform =
   | 'zhipu'
   | 'ollama'
   | 'ollama-local'
+  | 'ollama-cloud'
+  | 'sambanova'
   | 'kilo'
   | 'pollinations'
   | 'llm7'
