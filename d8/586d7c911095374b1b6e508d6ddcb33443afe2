@@ -1,0 +1,97 @@
+.gitignore
+  s_8a510244543af7::t_9c7c7f4f634552 12-14
+client/src/components/import-preview-table.tsx
+  s_8a510244543af7::t_3ffebda111d380 39
+server/src/lib/key-parser.ts
+  s_461a68394602f2::t_3f9cd9ec41f30c 623
+  s_8a510244543af7::t_aa7a26756da7c5 65,67-69
+  s_8a510244543af7::t_ae207ff28c80c4 141-143
+  s_8a510244543af7::t_48f4bcb2f17e8b 605-608,611
+  s_dadaf1e9bc62a5::t_0b6484ef285e77 196-199,202-245
+  s_8a510244543af7::t_99b17b5e59d20a 66
+  s_8a510244543af7::t_8f86600e8851d3 53-54,56-57
+  s_8a510244543af7::t_5edca9cb35cb73 137-140,144-195,200-201,246-247
+  s_8a510244543af7::t_d9fd36eee2200a 45
+client/src/lib/api.ts
+  s_8a510244543af7::t_96921c5ef02472 20-21,24,26,28
+server/src/__tests__/lib/key-parser.test.ts
+  s_8a510244543af7::t_fba613b6fb893b 369,371
+  s_8a510244543af7::t_78d23b6273f7d0 536
+  s_8a510244543af7::t_6c2d3e333f8d8d 332
+  s_8a510244543af7::t_02bd1f42b26770 262-279
+  s_8a510244543af7::t_5832c2f22fe02c 683
+  s_8a510244543af7::t_1d2c7416ac57ef 695
+  s_8a510244543af7::t_c5d64238f848f1 687
+  s_8a510244543af7::t_5e38d3c79f4695 350
+server/src/__tests__/routes/keys.test.ts
+  s_8a510244543af7::t_914e13c25984aa 305-308
+  s_8a510244543af7::t_a27dc2687571c5 190-193
+client/src/pages/KeysPage.tsx
+  s_8a510244543af7::t_7e8e8cb8130728 362-364
+  s_8a510244543af7::t_5164157b1ef336 17,19,23-38
+  s_8a510244543af7::t_781edbe45de926 54-57
+  s_8a510244543af7::t_fa3122194ec130 361
+  s_8a510244543af7::t_86f0f2cf27b7d6 18,20-22,39-53,58-99
+  s_8a510244543af7::t_09b2aa42e3ff07 376-380
+  s_8a510244543af7::t_4fd1d63f20ff2c 706-743
+  s_8a510244543af7::t_6372ec6222913e 778
+server/src/routes/keys.ts
+  s_8a510244543af7::t_91ffe26aa2fcb2 311-312
+  s_0116c4d6ccbf66::t_d21b97fec91c86 375
+  s_8a510244543af7::t_d741b7337583b1 413-414
+  s_6f93dbaae288a6::t_f27d9fc26d9d36 416
+  s_8a510244543af7::t_6c9ef6e7ec0a17 334-356
+  s_6f93dbaae288a6::t_f5cc6699be1bdb 314
+  s_8a510244543af7::t_c83bf9152a0c2c 477-482
+  s_6f93dbaae288a6::t_eadd9ba96088a2 9
+server/package.json
+  s_8a510244543af7::t_50772727723c78 17,25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "d8586d7c911095374b1b6e508d6ddcb33443afe2",
+  "prompts": {},
+  "sessions": {
+    "s_0116c4d6ccbf66": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_17389d653ffeup8mI480hfQiCP",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_461a68394602f2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_17391648bffetDaAiAs1nDcac9",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_6f93dbaae288a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_1738bfc57ffesSzrxDYfo1J6jb",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_8a510244543af7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_185760073ffeVLom4H2pWnt7t0",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    },
+    "s_dadaf1e9bc62a5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ses_1738e4a53ffeLvm7LuL7f9JA2l",
+        "model": "unknown"
+      },
+      "human_author": "Aldo <aldo.fieuw@gmail.com>"
+    }
+  }
+}
