@@ -38,7 +38,7 @@ import {
   isProviderDegradedError,
 } from './error-classify.js';
 import { sanitizeProviderErrorMessage } from './error-redaction.js';
-import { checkKeyHealth } from '../services/health.js';
+import { checkKeyHealth, markKeyHealthyFromRequest } from '../services/health.js';
 import { getSetting } from '../db/index.js';
 import { newBreaker, recordBreakerFailure } from './guardrails.js';
 
@@ -213,6 +213,10 @@ export function recordUpstreamSuccess(route: RouteResult, rateLimitTokens: numbe
   recordRequest(route.platform, route.modelId, route.keyId);
   recordTokens(route.platform, route.modelId, route.keyId, rateLimitTokens);
   recordSuccess(route.modelDbId);
+  // A served request is the strongest possible evidence the key works, so clear
+  // any stale 'error' status left by an earlier transport blip instead of waiting
+  // for the next health pass to make the key routable again.
+  markKeyHealthyFromRequest(route.keyId);
 }
 
 // ── Attempt trail ─────────────────────────────────────────────────────────────
@@ -556,6 +560,13 @@ export async function runFallbackLoop(hooks: FallbackHooks): Promise<void> {
       return;
     }
 
+    // Everything from here to the end of the iteration runs inside a finally that
+    // frees the route's in-flight lease. Every exit — success, auth rotation,
+    // retryable continue, fatal, breaker trip, contract violation — passes through
+    // it, so no path can leak a lease and leave the key's concurrency budget short.
+    // Success accounting happens inside dispatch, so the persisted counters are
+    // already written by the time the provisional lease goes away.
+    try {
     let outcome: DispatchOutcome;
     try {
       outcome = await hooks.dispatch(route, attempt);
@@ -603,6 +614,9 @@ export async function runFallbackLoop(hooks: FallbackHooks): Promise<void> {
       hooks.onFatal(route, violation, attempt);
     }
     return;
+    } finally {
+      route.release?.();
+    }
   }
 
   hooks.onExhausted(

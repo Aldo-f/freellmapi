@@ -6,7 +6,11 @@ import {
   canUseTokens,
   isOnCooldown,
   canUseProvider,
+  canUseProviderMinute,
   canUseProviderTokens,
+  canUseKeyConcurrency,
+  acquireLease,
+  releaseLease,
   getSoonestCooldownExpiry,
 } from './ratelimit.js';
 import {
@@ -145,6 +149,20 @@ export interface RouteResult {
   // exhaustion (escalate the cooldown) from a transient per-minute spike.
   rpdLimit: number | null;
   tpdLimit: number | null;
+  /**
+   * Frees the in-flight lease taken when this route was selected. Idempotent.
+   *
+   * Callers should invoke it once the attempt is finished, however it finished —
+   * the shared fallback loop does so from a `finally` so no exit path can leak.
+   *
+   * Optional, and every call site uses `release?.()`, for a specific reason: the
+   * invocation sits in a `finally`, and a TypeError thrown there would *replace*
+   * the in-flight provider exception with a useless one, turning a diagnosable
+   * 429 into a mystery 500. A route that arrives without it (a test double, a
+   * future construction path) should quietly fall back to the lease ageing out
+   * rather than destroy the error being propagated.
+   */
+  release?: () => void;
 }
 
 // ── Routing token estimate: cap the reserved OUTPUT, not the full max_tokens ──
@@ -707,6 +725,14 @@ function selectKeyForModel(entry: ChainRow, estimatedTokens: number, skipKeys?: 
 
     if (isOnCooldown(entry.platform, entry.model_id, key.id)) { note('cooldown'); continue; }
     if (!canUseProvider(entry.platform, key.id)) { note('provider-daily-cap'); continue; }
+    // Account-wide per-minute budget, checked before the per-model gates: a model
+    // with a NULL rpm_limit would otherwise sail past them and spend a budget its
+    // siblings share.
+    if (!canUseProviderMinute(entry.platform, key.id)) { note('provider-minute-cap'); continue; }
+    // Skip a key that already has its allowed requests in the air. Without this,
+    // parallel streams all pick the same key and 429 each other on providers that
+    // meter concurrency per credential.
+    if (!canUseKeyConcurrency(entry.platform, key.id)) { note('key-concurrency'); continue; }
     if (!canMakeRequest(entry.platform, entry.model_id, key.id, limits)) { note('rpm/rpd-limit'); continue; }
     if (!canUseTokens(entry.platform, entry.model_id, key.id, estimatedTokens, limits)) { note('tpm/tpd-limit'); continue; }
     if (!canUseProviderTokens(entry.platform, key.id, entry.model_id, estimatedTokens)) { note('provider-daily-token-cap'); continue; }
@@ -727,6 +753,9 @@ function selectKeyForModel(entry: ChainRow, estimatedTokens: number, skipKeys?: 
     if (!resolvedProvider) { note('no-resolved-provider'); continue; }
 
     roundRobinIndex.set(rrKey, idx);
+    // Taken only once the key has cleared every gate and is definitely being
+    // returned, so a rejected candidate never consumes concurrency budget.
+    const leaseId = acquireLease(entry.platform, entry.model_id, key.id, estimatedTokens);
     return {
       provider: resolvedProvider,
       modelId: entry.model_id,
@@ -737,6 +766,7 @@ function selectKeyForModel(entry: ChainRow, estimatedTokens: number, skipKeys?: 
       displayName: entry.display_name,
       rpdLimit: limits.rpd,
       tpdLimit: limits.tpd,
+      release: () => releaseLease(leaseId),
     };
   }
 
@@ -788,6 +818,7 @@ export function hasOtherUsableKey(modelDbId: number, excludingKeyId: number, ski
     if (skipKeys?.has(`${m.platform}:${m.model_id}:${k.id}`)) continue;
     if (isOnCooldown(m.platform, m.model_id, k.id)) continue;
     if (!canUseProvider(m.platform, k.id)) continue;
+    if (!canUseProviderMinute(m.platform, k.id)) continue;
     if (!canMakeRequest(m.platform, m.model_id, k.id, limits)) continue;
     // A per-minute token spike on the failed key doesn't mean a fresh key lacks
     // headroom; a nominal 1-token probe only rules out a key already at its
@@ -932,6 +963,7 @@ export function getOrderedFusionChain(): FusionCandidate[] {
       (e.key_id == null || kid === e.key_id) &&
       !isOnCooldown(e.platform, e.model_id, kid) &&
       canUseProvider(e.platform, kid) &&
+      canUseProviderMinute(e.platform, kid) &&
       canMakeRequest(e.platform, e.model_id, kid, limits) &&
       canUseProviderTokens(e.platform, kid, e.model_id, 1),
     );

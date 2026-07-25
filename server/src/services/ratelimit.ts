@@ -45,6 +45,152 @@ function withDb<T>(fn: (db: RateLimitDb) => T): T | undefined {
   }
 }
 
+// ── In-flight leases ──────────────────────────────────────────────────────────
+// Usage is only recorded *after* an attempt succeeds, so between key selection
+// and that write the router has no idea a request is already in the air. A lease
+// makes that window visible. Today it backs the per-key concurrency cap; it is
+// also the hook for counting provisional usage against the quota gates, which is
+// what closes the check-then-act race under parallel load.
+//
+// Leases live in memory only: they describe requests this process currently has
+// open, so there is nothing meaningful to persist and a restart correctly starts
+// from zero.
+
+interface Lease {
+  platform: string;
+  modelId: string;
+  keyId: number;
+  tokens: number;
+  createdAt: number;
+}
+
+const leases = new Map<number, Lease>();
+let nextLeaseId = 1;
+
+// A lease should always be released explicitly by the fallback loop's finally
+// block. This bound is the backstop for a path that somehow doesn't: without it
+// a single leaked lease would count against a key's concurrency budget forever.
+// Comfortably longer than the per-attempt provider timeout.
+const LEASE_MAX_AGE_MS = 2 * MINUTE;
+
+function pruneLeases(now: number): void {
+  if (leases.size === 0) return;
+  for (const [id, lease] of leases) {
+    if (now - lease.createdAt > LEASE_MAX_AGE_MS) leases.delete(id);
+  }
+}
+
+/**
+ * Concurrent in-flight requests allowed per key, or null for unlimited.
+ *
+ * Some free tiers meter concurrency per credential rather than per minute, so
+ * parallel streams on one key mostly 429 each other. But most do not, and
+ * capping by default would serialise every provider and cost real throughput —
+ * so this is opt-in. There is deliberately no built-in per-platform table: the
+ * providers that behave this way are not documented well enough to assert a
+ * number for them here, and a wrong default is worse than none.
+ *
+ * `MAX_CONCURRENT_REQUESTS_PER_KEY_<PLATFORM>` sets it for one platform;
+ * `MAX_CONCURRENT_REQUESTS_PER_KEY` sets a fallback for all of them.
+ */
+export function getKeyConcurrencyLimit(platform: string): number | null {
+  const raw = process.env[`MAX_CONCURRENT_REQUESTS_PER_KEY_${platform.toUpperCase()}`]
+    ?? process.env.MAX_CONCURRENT_REQUESTS_PER_KEY;
+  if (raw !== undefined && raw.trim() !== '') {
+    const n = Number(raw);
+    if (Number.isInteger(n) && n > 0) return n;
+  }
+  return null;
+}
+
+/** Requests this process currently has in flight against one platform+key. */
+export function inFlightForKey(platform: string, keyId: number, now = Date.now()): number {
+  pruneLeases(now);
+  let count = 0;
+  for (const lease of leases.values()) {
+    if (lease.platform === platform && lease.keyId === keyId) count++;
+  }
+  return count;
+}
+
+/** False when this key already has its allowed number of requests in the air.
+ *  Always true when no cap is configured, which is the default. */
+export function canUseKeyConcurrency(platform: string, keyId: number, now = Date.now()): boolean {
+  const limit = getKeyConcurrencyLimit(platform);
+  if (limit === null) return true;
+  return inFlightForKey(platform, keyId, now) < limit;
+}
+
+/** Take a lease for an attempt about to be dispatched. Returns the id to release. */
+export function acquireLease(
+  platform: string,
+  modelId: string,
+  keyId: number,
+  tokens: number,
+  now = Date.now(),
+): number {
+  pruneLeases(now);
+  const id = nextLeaseId++;
+  leases.set(id, { platform, modelId, keyId, tokens, createdAt: now });
+  return id;
+}
+
+/** Release a lease. Idempotent, so a double release from overlapping cleanup
+ *  paths is harmless. */
+export function releaseLease(leaseId: number): void {
+  leases.delete(leaseId);
+}
+
+/** Test seam: drop all leases. */
+export function resetLeases(): void {
+  leases.clear();
+}
+
+// ── Provisional usage ─────────────────────────────────────────────────────────
+// Every gate below adds in-flight leases on top of the recorded counters. This is
+// what closes the check-then-act race: routeRequest is synchronous but usage is
+// only written after the awaited provider call, so N concurrent requests all read
+// the same pre-check and every one of them passes — then they collectively blow
+// through the limit and collect real 429s. Counting leases makes the second
+// caller see the first one's request.
+//
+// A lease is released just after the success write, so for a brief instant a
+// completed request is counted twice. That errs toward under-dispatching by one,
+// which is the safe direction for a free tier, and lasts microseconds.
+
+function provisionalRequests(platform: string, modelId: string, keyId: number, now: number): number {
+  pruneLeases(now);
+  let count = 0;
+  for (const lease of leases.values()) {
+    if (lease.platform === platform && lease.modelId === modelId && lease.keyId === keyId) count++;
+  }
+  return count;
+}
+
+function provisionalTokens(platform: string, modelId: string, keyId: number, now: number): number {
+  pruneLeases(now);
+  let total = 0;
+  for (const lease of leases.values()) {
+    if (lease.platform === platform && lease.modelId === modelId && lease.keyId === keyId) total += lease.tokens;
+  }
+  return total;
+}
+
+/** In-flight requests for a provider account+key across every model — the
+ *  provider-wide analogue, for the account-level gates. */
+function provisionalProviderRequests(platform: string, keyId: number, now: number): number {
+  return inFlightForKey(platform, keyId, now);
+}
+
+function provisionalProviderTokens(platform: string, keyId: number, now: number): number {
+  pruneLeases(now);
+  let total = 0;
+  for (const lease of leases.values()) {
+    if (lease.platform === platform && lease.keyId === keyId) total += lease.tokens;
+  }
+  return total;
+}
+
 function recordUsage(
   platform: string,
   modelId: string,
@@ -149,13 +295,16 @@ export function canMakeRequest(
   limits: { rpm: number | null; rpd: number | null; tpm: number | null; tpd: number | null },
 ): boolean {
   const now = Date.now();
+  // In-flight requests count against both windows: a lease means the request is
+  // happening now, so it belongs to this minute and to today.
+  const inFlight = provisionalRequests(platform, modelId, keyId, now);
 
   if (limits.rpm !== null) {
-    if (requestCount(platform, modelId, keyId, MINUTE, now) >= limits.rpm) return false;
+    if (requestCount(platform, modelId, keyId, MINUTE, now) + inFlight >= limits.rpm) return false;
   }
 
   if (limits.rpd !== null) {
-    if (requestCount(platform, modelId, keyId, DAY, now) >= limits.rpd) return false;
+    if (requestCount(platform, modelId, keyId, DAY, now) + inFlight >= limits.rpd) return false;
   }
 
   return true;
@@ -169,15 +318,17 @@ export function canUseTokens(
   limits: { tpm: number | null; tpd: number | null },
 ): boolean {
   const now = Date.now();
+  // Tokens already promised to in-flight attempts on this model+key.
+  const inFlight = provisionalTokens(platform, modelId, keyId, now);
 
   if (limits.tpm !== null) {
     const used = tokenCount(platform, modelId, keyId, MINUTE, now);
-    if (used + estimatedTokens > limits.tpm) return false;
+    if (used + inFlight + estimatedTokens > limits.tpm) return false;
   }
 
   if (limits.tpd !== null) {
     const used = tokenCount(platform, modelId, keyId, DAY, now);
-    if (used + estimatedTokens > limits.tpd) return false;
+    if (used + inFlight + estimatedTokens > limits.tpd) return false;
   }
 
   return true;
@@ -204,6 +355,16 @@ const DEFAULT_PROVIDER_DAILY_TOKEN_CAPS: Record<string, number> = {
   navy: 150_000,
 };
 
+// Per-minute caps that apply to the whole provider account rather than one model.
+// The per-model rpm_limit cannot express these: NVIDIA NIM meters ~40 requests a
+// minute across the entire account, so glm-4.7, minimax-m3 and deepseek all draw
+// from one bucket. Without an account-level gate the router sees each model's own
+// rpm as unspent — and a model row whose rpm_limit is NULL escapes pre-throttling
+// entirely — so it keeps dispatching and eats real 429s.
+const DEFAULT_PROVIDER_MINUTE_REQUEST_CAPS: Record<string, number> = {
+  nvidia: 40,
+};
+
 export function getProviderDailyRequestCap(platform: string): number | null {
   const raw = process.env[`PROVIDER_DAILY_REQUEST_CAP_${platform.toUpperCase()}`];
   if (raw !== undefined && raw.trim() !== '') {
@@ -211,6 +372,17 @@ export function getProviderDailyRequestCap(platform: string): number | null {
     if (Number.isFinite(n) && n >= 0) return n === 0 ? null : n;
   }
   return DEFAULT_PROVIDER_DAILY_REQUEST_CAPS[platform] ?? null;
+}
+
+/** Account-wide requests-per-minute cap, or null when the provider has none.
+ *  `PROVIDER_MINUTE_REQUEST_CAP_<PLATFORM>=0` disables the gate for that platform. */
+export function getProviderMinuteRequestCap(platform: string): number | null {
+  const raw = process.env[`PROVIDER_MINUTE_REQUEST_CAP_${platform.toUpperCase()}`];
+  if (raw !== undefined && raw.trim() !== '') {
+    const n = Number(raw);
+    if (Number.isFinite(n) && n >= 0) return n === 0 ? null : n;
+  }
+  return DEFAULT_PROVIDER_MINUTE_REQUEST_CAPS[platform] ?? null;
 }
 
 export function getProviderDailyTokenCap(platform: string): number | null {
@@ -266,7 +438,32 @@ export function providerDailyRequestCount(platform: string, keyId: number, now =
 export function canUseProvider(platform: string, keyId: number, now = Date.now()): boolean {
   const cap = getProviderDailyRequestCap(platform);
   if (cap === null) return true;
-  return providerDailyRequestCount(platform, keyId, now) < cap;
+  const used = providerDailyRequestCount(platform, keyId, now) + provisionalProviderRequests(platform, keyId, now);
+  return used < cap;
+}
+
+/** Requests in the last minute for a provider account+key, across every model. */
+export function providerMinuteRequestCount(platform: string, keyId: number, now = Date.now()): number {
+  const persisted = countPersistedProviderRequests(platform, keyId, MINUTE, now);
+  if (persisted !== undefined) return persisted;
+  // DB-unavailable fallback: sum the per-model rpm windows for this platform+key.
+  let total = 0;
+  for (const [key, w] of windows) {
+    if (key.startsWith(`${platform}:`) && key.endsWith(`:${keyId}:rpm`)) {
+      total += pruneTimestamps(w.timestamps, MINUTE, now).length;
+    }
+  }
+  return total;
+}
+
+// False when this provider account+key has spent its shared per-minute request
+// budget, so the router skips every model on that provider rather than learning
+// the limit again from a 429 on each one in turn.
+export function canUseProviderMinute(platform: string, keyId: number, now = Date.now()): boolean {
+  const cap = getProviderMinuteRequestCap(platform);
+  if (cap === null) return true;
+  const used = providerMinuteRequestCount(platform, keyId, now) + provisionalProviderRequests(platform, keyId, now);
+  return used < cap;
 }
 
 type ModelQuotaRow = { tpd_limit: number | null; monthly_token_budget: string | null };
@@ -365,7 +562,8 @@ export function canUseProviderTokens(
 ): boolean {
   const cap = getProviderDailyTokenCap(platform);
   if (cap === null) return true;
-  const used = providerDailyTokenCount(platform, keyId, now);
+  const used = providerDailyTokenCount(platform, keyId, now)
+    + providerBilledTokens(platform, modelId, provisionalProviderTokens(platform, keyId, now));
   return used + providerBilledTokens(platform, modelId, estimatedTokens) <= cap;
 }
 
