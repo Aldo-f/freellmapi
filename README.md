@@ -2,7 +2,7 @@
 
 # FreeLLMAPI
 
-**One OpenAI-compatible endpoint. 28 free LLM providers. 339 free model endpoints. ~4 billion tokens per month.**
+**One OpenAI-compatible endpoint. 29 free LLM providers. 339 free model endpoints. ~4 billion tokens per month.**
 
 Aggregate free tiers from dozens of providers, plus custom OpenAI-compatible chat, embedding, image, and audio endpoints, behind a single `/v1` API. Keys are stored encrypted. A router picks the best available model for each request, falls over to the next provider when one is rate-limited, and tracks per-key usage so you stay under every free-tier cap.
 
@@ -51,7 +51,7 @@ Your router updates its own model catalog from a signed feed: new free models, q
 
 Every serious AI lab now offers a free tier — a few million tokens a month, a few thousand requests a day. On its own each tier is a toy. Stacked together, they add up to roughly **4 billion tokens per month** of working inference capacity, across **235 model families / 339 provider endpoints** from small-and-fast to reasonably capable.
 
-The problem is that stacking them by hand is painful: twenty-eight different SDKs, twenty-eight different rate limits, twenty-eight places a request can fail. FreeLLMAPI collapses that into one OpenAI-compatible endpoint. Point any OpenAI client library at your local server, and it routes transparently across whichever providers you've added keys for.
+The problem is that stacking them by hand is painful: twenty-nine different SDKs, twenty-nine different rate limits, twenty-nine places a request can fail. FreeLLMAPI collapses that into one OpenAI-compatible endpoint. Point any OpenAI client library at your local server, and it routes transparently across whichever providers you've added keys for.
 
 And the free-tier landscape shifts weekly: providers launch models, retire them, and change quotas without notice. FreeLLMAPI tracks all of that for you. The router pulls a signed model catalog from [freellmapi.co](https://freellmapi.co) on its own, so your install keeps up without a `git pull`. See [Premium (live catalog)](#premium-live-catalog) for how fast it keeps up.
 
@@ -75,6 +75,9 @@ And the free-tier landscape shifts weekly: providers launch models, retire them,
 <td align="center"><a href="https://docs.z.ai"><b>Z.ai (Zhipu)</b><br/>GLM-4.5 · GLM-4.7 Flash</a></td>
 <td align="center"><a href="https://build.nvidia.com"><b>NVIDIA</b><br/>NIM · 40 RPM free (eval-only ToS)</a></td>
 <td align="center"><a href="https://huggingface.co/docs/inference-providers"><b>HuggingFace</b><br/>Router → DeepSeek V4 · Kimi K2.6 · Qwen3</a></td>
+</tr>
+<tr>
+<td align="center"><a href="https://modelscope.cn"><b>ModelScope</b><br/>Qwen3 · DeepSeek V4 · GLM-5 (needs Aliyun cn binding)</a></td>
 </tr>
 </table>
 
