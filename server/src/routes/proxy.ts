@@ -14,10 +14,10 @@ import { sanitizeProviderErrorMessage } from '../lib/error-redaction.js';
 import { rescueInlineToolCalls, startsWithDialectMarker, couldBecomeDialectMarker, containsDialectMarker } from '../lib/tool-call-rescue.js';
 import { getContextHandoffMode, recordIncomingMessages, maybeInjectContextHandoff, recordSuccessfulModel, hasPriorModel, HANDOFF_MAX_TOKENS } from '../services/context-handoff.js';
 import { isFusionModel, runFusion, fusionConfigSchema, FusionError, FUSION_MODEL_ID } from '../services/fusion.js';
-import { isRetryableError, isPaymentRequiredError, isModelNotFoundError, isModelAccessForbiddenError } from '../lib/error-classify.js';
+import { isRetryableError, isPaymentRequiredError, isModelNotFoundError, isModelAccessForbiddenError, isClientAbortError, newClientAbortError } from '../lib/error-classify.js';
 import { logRequest } from '../lib/request-log.js';
 import { parseCacheDirective, cacheActive, isCacheableTemperature, computeCacheKey, getCachedResponse, storeCachedResponse } from '../services/cache.js';
-import { runFallbackLoop, newFallbackState, recordUpstreamSuccess, exhaustedRetryError, setFallbackHeaders, type AttemptRecord } from '../lib/fallback-loop.js';
+import { runFallbackLoop, newFallbackState, recordUpstreamSuccess, exhaustedRetryError, setFallbackHeaders, exhaustionErrorPayload, setExhaustionHeaders, type AttemptRecord } from '../lib/fallback-loop.js';
 import { applyTokenBudget, tokenBudgetMessage } from '../lib/guardrails.js';
 import { samplingParamSchemaFields, pickSamplingParams, supportedParametersForPlatforms } from '../lib/sampling-params.js';
 import { enforceJsonContent } from '../lib/structured-output.js';
@@ -693,14 +693,26 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
       if (groupChain.length === 0) {
         const placeholders = members.map(() => '?').join(',');
         const anyEnabled = db.prepare(`SELECT 1 FROM models WHERE id IN (${placeholders}) AND enabled = 1 LIMIT 1`).get(...members);
-        const reason = anyEnabled ? 'has no providers with an enabled key' : 'is disabled';
-        res.status(400).json({
-          error: {
-            message: `Model '${requestedModel}' ${reason}. Use 'auto' (or omit the 'model' field) to auto-route, or call /v1/models for the available list.`,
-            type: 'invalid_request_error',
-            code: 'model_not_found',
-          },
-        });
+        // Honest statuses: a model whose providers exist but have no usable key
+        // is a server-side configuration gap (503), not a client mistake; a
+        // disabled/unknown model is a 404 model_not_found (OpenAI semantics).
+        if (anyEnabled) {
+          res.status(503).json({
+            error: {
+              message: `Model '${requestedModel}' has no providers with an enabled key. Add a provider API key for it, use 'auto' (or omit the 'model' field) to auto-route, or call /v1/models for the available list.`,
+              type: 'service_unavailable',
+              code: 'no_providers_configured',
+            },
+          });
+        } else {
+          res.status(404).json({
+            error: {
+              message: `Model '${requestedModel}' is disabled. Use 'auto' (or omit the 'model' field) to auto-route, or call /v1/models for the available list.`,
+              type: 'invalid_request_error',
+              code: 'model_not_found',
+            },
+          });
+        }
         return;
       }
     } else {
@@ -710,7 +722,7 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
       } else {
         const disabled = db.prepare('SELECT id FROM models WHERE model_id = ?').get(requestedModel) as { id: number } | undefined;
         const reason = disabled ? 'is disabled' : 'is not in the catalog';
-        res.status(400).json({
+        res.status(404).json({
           error: {
             message: `Model '${requestedModel}' ${reason}. Use 'auto' (or omit the 'model' field) to auto-route, or call /v1/models for the available list.`,
             type: 'invalid_request_error',
@@ -725,8 +737,20 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
   const pinnedModelId = requestedModel && !isAutoModel(requestedModel) ? requestedModel : null;
   const state = newFallbackState();
   const attemptLog: AttemptRecord[] = [];
+  // Client-disconnect fan-out: the flag stops the loop before the NEXT
+  // attempt; the AbortController (threaded to the provider as
+  // CompletionOptions.signal) additionally cancels the IN-FLIGHT upstream
+  // fetch and any body/stream read, so tokens stop burning and the in-flight
+  // lease frees immediately. 'close' also fires on normal completion —
+  // writableEnded distinguishes a real disconnect.
   let clientGone = false;
-  res.on('close', () => { if (!res.writableEnded) clientGone = true; });
+  const clientAbort = new AbortController();
+  res.on('close', () => {
+    if (!res.writableEnded) {
+      clientGone = true;
+      clientAbort.abort(newClientAbortError());
+    }
+  });
 
   // Legacy /completions is a thin adapter over the shared fallback loop
   // (lib/fallback-loop.ts): the cooldown/skip/penalty/exhaustion machinery is
@@ -781,7 +805,7 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
             route.apiKey,
             messages,
             route.modelId,
-            { temperature, max_tokens, top_p, stop },
+            { temperature, max_tokens, top_p, stop, signal: clientAbort.signal },
             quotaContextForRoute(route, 'chat/completions'),
           );
 
@@ -841,6 +865,12 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
           logRequest(route.platform, route.modelId, route.keyId, 'success', estimatedInputTokens, totalOutputTokens, Date.now() - start, null, ttfbMs, pinnedModelId);
           return 'done';
         } catch (streamErr: any) {
+          // Client abort mid-stream: the pump's own `if (clientGone) break`
+          // can lose the race against the fetch-signal rejection, so the
+          // abort may surface here instead. Rethrow — the shared loop's
+          // client-abort branch stops the ladder without benching or an
+          // error log row (the socket is gone; nothing to render).
+          if (isClientAbortError(streamErr)) throw streamErr;
           if (headerSent) {
             console.error(`[Proxy] Mid-stream legacy completion error from ${route.displayName}:`, streamErr.message);
             const payload = { error: { message: `Provider error (${route.displayName}): stream interrupted`, type: 'stream_error' } };
@@ -866,7 +896,7 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
         route.apiKey,
         messages,
         route.modelId,
-        { temperature, max_tokens, top_p, stop },
+        { temperature, max_tokens, top_p, stop, signal: clientAbort.signal },
         quotaContextForRoute(route, 'chat/completions'),
       );
 
@@ -941,22 +971,24 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
       });
     },
     onRoutingExhausted: (lastError, routeErr, exhaustion, info) => {
-      if (exhaustion) {
-        setFallbackHeaders(res, info.attempts.length, info.attempts);
-        res.status(exhaustion.status).json({ error: { message: exhaustion.message, type: exhaustion.type } });
-      } else {
+      if (!lastError) {
+        // Synchronous exhaustion: the router rejected every candidate before
+        // any upstream was tried — log the per-candidate disposition.
         const disposition: string[] = Array.isArray(routeErr.diagnostics) ? routeErr.diagnostics : [];
         console.warn(
           `[Proxy] legacy completions routing exhausted (no upstream tried) req=${shortRequestId(requestGroupId)} ` +
           `requested=${requestedModelLabel} candidates=${disposition.length}` +
           (disposition.length ? `:\n  ${disposition.join('\n  ')}` : ''),
         );
-        res.status(routeErr.status ?? 503).json({ error: { message: routeErr.message, type: 'routing_error' } });
       }
+      setFallbackHeaders(res, info.attempts.length, info.attempts);
+      setExhaustionHeaders(res, exhaustion);
+      res.status(exhaustion.status).json({ error: exhaustionErrorPayload(exhaustion) });
     },
     onExhausted: (exhaustion, info) => {
       setFallbackHeaders(res, info.attempts.length, info.attempts);
-      res.status(exhaustion.status).json({ error: { message: exhaustion.message, type: exhaustion.type } });
+      setExhaustionHeaders(res, exhaustion);
+      res.status(exhaustion.status).json({ error: exhaustionErrorPayload(exhaustion) });
     },
   });
 });
@@ -1386,19 +1418,29 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
     if (members && members.length > 0) {
       groupChain = resolveModelGroupCandidates(members);
       if (groupChain.length === 0) {
-        // Distinguish a catalog-disabled model from one whose providers are
-        // present but unusable (chain-disabled / no key), so the 400 stays
-        // actionable and matches the legacy single-row "is disabled" wording.
+        // Distinguish a catalog-disabled model (404 model_not_found, OpenAI
+        // semantics) from one whose providers are present but unusable
+        // (chain-disabled / no key) — the latter is a server-side
+        // configuration gap, so it renders an honest 503.
         const placeholders = members.map(() => '?').join(',');
         const anyEnabled = db.prepare(`SELECT 1 FROM models WHERE id IN (${placeholders}) AND enabled = 1 LIMIT 1`).get(...members);
-        const reason = anyEnabled ? 'has no providers with an enabled key' : 'is disabled';
-        res.status(400).json({
-          error: {
-            message: `Model '${requestedModel}' ${reason}. Use 'auto' (or omit the 'model' field) to auto-route, or call /v1/models for the available list.`,
-            type: 'invalid_request_error',
-            code: 'model_not_found',
-          },
-        });
+        if (anyEnabled) {
+          res.status(503).json({
+            error: {
+              message: `Model '${requestedModel}' has no providers with an enabled key. Add a provider API key for it, use 'auto' (or omit the 'model' field) to auto-route, or call /v1/models for the available list.`,
+              type: 'service_unavailable',
+              code: 'no_providers_configured',
+            },
+          });
+        } else {
+          res.status(404).json({
+            error: {
+              message: `Model '${requestedModel}' is disabled. Use 'auto' (or omit the 'model' field) to auto-route, or call /v1/models for the available list.`,
+              type: 'invalid_request_error',
+              code: 'model_not_found',
+            },
+          });
+        }
         return;
       }
       stickyStrategyKey = requestedModel;
@@ -1415,7 +1457,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
       } else {
         const disabled = db.prepare('SELECT id FROM models WHERE model_id = ?').get(requestedModel) as { id: number } | undefined;
         const reason = disabled ? 'is disabled' : 'is not in the catalog';
-        res.status(400).json({
+        res.status(404).json({
           error: {
             message: `Model '${requestedModel}' ${reason}. Use 'auto' (or omit the 'model' field) to auto-route, or call /v1/models for the available list.`,
             type: 'invalid_request_error',
@@ -1442,8 +1484,20 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
   // stream turn-integrity framing.
   const state = newFallbackState();
   const attemptLog: AttemptRecord[] = [];
+  // Client-disconnect fan-out: the flag stops the loop before the NEXT
+  // attempt; the AbortController (threaded to the provider as
+  // CompletionOptions.signal) additionally cancels the IN-FLIGHT upstream
+  // fetch and any body/stream read, so tokens stop burning and the in-flight
+  // lease frees immediately. 'close' also fires on normal completion —
+  // writableEnded distinguishes a real disconnect.
   let clientGone = false;
-  res.on('close', () => { if (!res.writableEnded) clientGone = true; });
+  const clientAbort = new AbortController();
+  res.on('close', () => {
+    if (!res.writableEnded) {
+      clientGone = true;
+      clientAbort.abort(newClientAbortError());
+    }
+  });
 
   await runFallbackLoop({
     maxRetries: MAX_RETRIES,
@@ -1539,7 +1593,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
         try {
           const gen = route.provider.streamChatCompletion(
             route.apiKey, outboundMessages, route.modelId,
-            { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, ...samplingParams },
+            { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, ...samplingParams, signal: clientAbort.signal },
             quotaContextForRoute(route, 'chat/completions'),
           );
 
@@ -1730,6 +1784,12 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
           logRequest(route.platform, route.modelId, route.keyId, 'success', estimatedInputTokens + injectedHandoffTokens, totalOutputTokens, Date.now() - start, null, ttfbMs, pinnedModelId);
           return 'done';
         } catch (streamErr: any) {
+          // Client abort mid-stream: the pump's own `if (clientGone) break`
+          // can lose the race against the fetch-signal rejection, so the
+          // abort may surface here instead. Rethrow — the shared loop's
+          // client-abort branch stops the ladder without benching or an
+          // error log row (the socket is gone; nothing to render).
+          if (isClientAbortError(streamErr)) throw streamErr;
           if (headerSent) {
             // Mid-stream error after real payload reached the client — finish
             // the SSE response honestly instead of leaving the client hanging.
@@ -1758,7 +1818,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
       } else {
         const result = await route.provider.chatCompletion(
           route.apiKey, outboundMessages, route.modelId,
-          { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, ...samplingParams },
+          { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, ...samplingParams, signal: clientAbort.signal },
           quotaContextForRoute(route, 'chat/completions'),
         );
 
@@ -1930,26 +1990,26 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
     },
     onRoutingExhausted: (lastError, routeErr, exhaustion, info) => {
       // No more models available.
-      if (exhaustion) {
-        setFallbackHeaders(res, info.attempts.length, info.attempts);
-        res.status(exhaustion.status).json({ error: { message: exhaustion.message, type: exhaustion.type } });
-      } else {
+      if (!lastError) {
         // Synchronous exhaustion: the router rejected every candidate before any
         // upstream was tried, so this is the ONLY place the per-model disposition
-        // is recorded. Without it a routing_error 429 is opaque — you can't tell a
-        // genuinely dry pool from cooldowns/quota/context narrowing (issue _1).
+        // is recorded. Without it the exhaustion status is opaque — you can't tell
+        // a genuinely dry pool from cooldowns/quota/context narrowing (issue _1).
         const disposition: string[] = Array.isArray(routeErr.diagnostics) ? routeErr.diagnostics : [];
         console.warn(
           `[Proxy] routing exhausted (no upstream tried) req=${shortRequestId(requestGroupId)} ` +
           `requested=${requestedModelLabel} candidates=${disposition.length}` +
           (disposition.length ? `:\n  ${disposition.join('\n  ')}` : ''),
         );
-        res.status(routeErr.status ?? 503).json({ error: { message: routeErr.message, type: 'routing_error' } });
       }
+      setFallbackHeaders(res, info.attempts.length, info.attempts);
+      setExhaustionHeaders(res, exhaustion);
+      res.status(exhaustion.status).json({ error: exhaustionErrorPayload(exhaustion) });
     },
     onExhausted: (exhaustion, info) => {
       setFallbackHeaders(res, info.attempts.length, info.attempts);
-      res.status(exhaustion.status).json({ error: { message: exhaustion.message, type: exhaustion.type } });
+      setExhaustionHeaders(res, exhaustion);
+      res.status(exhaustion.status).json({ error: exhaustionErrorPayload(exhaustion) });
     },
   });
 });

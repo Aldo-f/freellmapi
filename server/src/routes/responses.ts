@@ -23,11 +23,12 @@ import {
   traceRouteEvent,
   logRequest,
 } from './proxy.js';
-import { runFallbackLoop, newFallbackState, recordUpstreamSuccess, setFallbackHeaders, type AttemptRecord } from '../lib/fallback-loop.js';
+import { runFallbackLoop, newFallbackState, recordUpstreamSuccess, setFallbackHeaders, exhaustionErrorPayload, setExhaustionHeaders, type AttemptRecord } from '../lib/fallback-loop.js';
 import { applyTokenBudget, tokenBudgetMessage } from '../lib/guardrails.js';
 import { samplingParamSchemaFields, pickSamplingParams, type ResponseFormat } from '../lib/sampling-params.js';
 import { enforceJsonContent } from '../lib/structured-output.js';
 import { sanitizeProviderErrorMessage } from '../lib/error-redaction.js';
+import { isClientAbortError, newClientAbortError } from '../lib/error-classify.js';
 import { inferQuotaPoolKey, type QuotaObservationContext } from '../services/provider-quota.js';
 
 export const responsesRouter = Router();
@@ -407,8 +408,21 @@ responsesRouter.post('/responses', async (req: Request, res: Response) => {
   const responseId = newId('resp');
   const state = newFallbackState();
   const attemptLog: AttemptRecord[] = [];
+  // Client-disconnect fan-out: the flag stops the loop before the NEXT
+  // attempt; the AbortController (threaded to the provider as
+  // CompletionOptions.signal) additionally cancels the IN-FLIGHT upstream
+  // fetch and any body/stream read, so tokens stop burning and the in-flight
+  // lease frees immediately. 'close' also fires on normal completion —
+  // writableEnded distinguishes a real disconnect.
   let clientGone = false;
-  res.on('close', () => { if (!res.writableEnded) clientGone = true; });
+  const clientAbort = new AbortController();
+  res.on('close', () => {
+    if (!res.writableEnded) {
+      clientGone = true;
+      clientAbort.abort(newClientAbortError());
+    }
+  });
+  const dispatchOpts = { ...completionOpts, signal: clientAbort.signal };
 
   // Stream bookkeeping (used only when stream === true). `streamStarted` is the
   // commit flag: true once the response.created/in_progress skeleton has left,
@@ -498,7 +512,7 @@ responsesRouter.post('/responses', async (req: Request, res: Response) => {
             route.apiKey,
             messages,
             route.modelId,
-            completionOpts,
+            dispatchOpts,
             quotaContextForRoute(route, 'responses'),
           );
 
@@ -679,6 +693,12 @@ responsesRouter.post('/responses', async (req: Request, res: Response) => {
           logRequest(route.platform, route.modelId, route.keyId, 'success', estimatedInputTokens, totalOutputTokens, Date.now() - start, null);
           return 'done';
         } catch (streamErr: any) {
+          // Client abort mid-stream: the pump's own `if (clientGone) break`
+          // can lose the race against the fetch-signal rejection, so the
+          // abort may surface here instead. Rethrow — the shared loop's
+          // client-abort branch stops the ladder without benching or an
+          // error log row (the socket is gone; nothing to render).
+          if (isClientAbortError(streamErr)) throw streamErr;
           // A committed stream can't fail over (bytes already sent) — surface a
           // response.failed event honestly and stop. A pre-commit failure throws
           // through to the shared loop for cooldown + failover.
@@ -706,7 +726,7 @@ responsesRouter.post('/responses', async (req: Request, res: Response) => {
         route.apiKey,
         messages,
         route.modelId,
-        completionOpts,
+        dispatchOpts,
         quotaContextForRoute(route, 'responses'),
       );
 
@@ -809,26 +829,27 @@ responsesRouter.post('/responses', async (req: Request, res: Response) => {
       res.status(502).json({ error: { message: `Provider error (${route.displayName}): ${sanitizeProviderErrorMessage(err.message)}`, type: 'provider_error' } });
     },
     onRoutingExhausted: (lastError, routeErr, exhaustion, info) => {
-      const status = exhaustion?.status ?? routeErr.status ?? 503;
-      const message = exhaustion?.message ?? routeErr.message;
-      const type = exhaustion?.type ?? 'routing_error';
       if (streamStarted) {
-        sse('response.failed', { response: { id: responseId, object: 'response', status: 'failed', error: { message, type } } });
+        // Headers are already on the wire — the honest status/Retry-After can
+        // only travel in the failed-event payload.
+        sse('response.failed', { response: { id: responseId, object: 'response', status: 'failed', error: exhaustionErrorPayload(exhaustion) } });
         res.end();
       } else {
         setFallbackHeaders(res, info.attempts.length, info.attempts);
-        res.status(status).json({ error: { message, type } });
+        setExhaustionHeaders(res, exhaustion);
+        res.status(exhaustion.status).json({ error: exhaustionErrorPayload(exhaustion) });
       }
     },
     onExhausted: (exhaustion, info) => {
       // The streaming skeleton may already be on the wire — close the SSE stream
       // with a failed event instead of writing JSON onto a committed response.
       if (streamStarted) {
-        sse('response.failed', { response: { id: responseId, object: 'response', status: 'failed', error: { message: exhaustion.message, type: exhaustion.type } } });
+        sse('response.failed', { response: { id: responseId, object: 'response', status: 'failed', error: exhaustionErrorPayload(exhaustion) } });
         res.end();
       } else {
         setFallbackHeaders(res, info.attempts.length, info.attempts);
-        res.status(exhaustion.status).json({ error: { message: exhaustion.message, type: exhaustion.type } });
+        setExhaustionHeaders(res, exhaustion);
+        res.status(exhaustion.status).json({ error: exhaustionErrorPayload(exhaustion) });
       }
     },
   });

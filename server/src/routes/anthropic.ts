@@ -15,9 +15,10 @@ import { contentToString } from '../lib/content.js';
 import { repairToolArguments, toolSchemaMap } from '../lib/tool-args.js';
 import { rescueInlineToolCalls, startsWithDialectMarker, couldBecomeDialectMarker, containsDialectMarker } from '../lib/tool-call-rescue.js';
 import { sanitizeProviderErrorMessage } from '../lib/error-redaction.js';
+import { isClientAbortError, newClientAbortError } from '../lib/error-classify.js';
 import { logRequest } from '../lib/request-log.js';
 import { extractApiToken, timingSafeStringEqual, getStickyModel, setStickyModel } from './proxy.js';
-import { runFallbackLoop, newFallbackState, recordUpstreamSuccess, type ExhaustionBody, setFallbackHeaders, type AttemptRecord } from '../lib/fallback-loop.js';
+import { runFallbackLoop, newFallbackState, recordUpstreamSuccess, type ExhaustionBody, setFallbackHeaders, setExhaustionHeaders, type AttemptRecord } from '../lib/fallback-loop.js';
 import { applyTokenBudget, tokenBudgetMessage } from '../lib/guardrails.js';
 import { resolveAnthropicModel } from '../services/anthropic-map.js';
 import { buildModelListing } from '../services/model-listing.js';
@@ -113,15 +114,34 @@ function sendError(res: Response, status: number, errorType: string, message: st
 }
 
 // The shared exhaustion body's `type` strings are chosen to be valid on the
-// OpenAI-shaped surfaces; the all-keys-failed-auth exhaustion carries
-// 'provider_error' and the circuit-breaker stop carries 'service_unavailable',
-// neither of which is an Anthropic error type. Remap them onto Anthropic's
-// vocabulary ('api_error' / 'overloaded_error') so this surface stays
-// wire-correct.
+// OpenAI-shaped surfaces; several of them are not Anthropic error types. Remap
+// them onto Anthropic's vocabulary via the body's coarse `kind` so this
+// surface stays wire-correct: auth/upstream failures → 'api_error', pool
+// unavailability → 'overloaded_error', context exhaustion → Anthropic's 413
+// 'request_too_large', model-gone → 'not_found_error'.
 function anthropicErrorType(body: ExhaustionBody): string {
-  if (body.kind === 'auth') return 'api_error';
+  if (body.kind === 'auth' || body.kind === 'upstream') return 'api_error';
   if (body.kind === 'unavailable') return 'overloaded_error';
+  if (body.kind === 'context_too_large') return 'request_too_large';
+  if (body.kind === 'model_not_found') return 'not_found_error';
   return body.type;
+}
+
+// Render an exhaustion body on the Anthropic wire shape, carrying the
+// machine-readable extras (`code`, `retryAtMs`) alongside Anthropic's standard
+// type/message and stamping the matching Retry-After header. Extra keys on the
+// error object are ignored by Anthropic SDKs, so this stays wire-compatible.
+function sendExhaustion(res: Response, body: ExhaustionBody): void {
+  setExhaustionHeaders(res, body);
+  res.status(body.status).json({
+    type: 'error',
+    error: {
+      type: anthropicErrorType(body),
+      message: body.message,
+      ...(body.code ? { code: body.code } : {}),
+      ...(body.retryAtMs != null ? { retryAtMs: body.retryAtMs } : {}),
+    },
+  });
 }
 
 function newMessageId(): string {
@@ -422,8 +442,21 @@ anthropicRouter.post('/messages', async (req: Request, res: Response) => {
   // inline tool-call dialect rescue that the OpenAI/Responses surfaces carry.
   const state = newFallbackState();
   const attemptLog: AttemptRecord[] = [];
+  // Client-disconnect fan-out: the flag stops the loop before the NEXT
+  // attempt; the AbortController (threaded to the provider as
+  // CompletionOptions.signal) additionally cancels the IN-FLIGHT upstream
+  // fetch and any body/stream read, so tokens stop burning and the in-flight
+  // lease frees immediately. 'close' also fires on normal completion —
+  // writableEnded distinguishes a real disconnect.
   let clientGone = false;
-  res.on('close', () => { if (!res.writableEnded) clientGone = true; });
+  const clientAbort = new AbortController();
+  res.on('close', () => {
+    if (!res.writableEnded) {
+      clientGone = true;
+      clientAbort.abort(newClientAbortError());
+    }
+  });
+  const dispatchOptions = { ...completionOptions, signal: clientAbort.signal };
 
   await runFallbackLoop({
     maxRetries: MAX_RETRIES,
@@ -434,7 +467,7 @@ anthropicRouter.post('/messages', async (req: Request, res: Response) => {
     dispatch: async (route, attempt) => {
       if (stream) {
         try {
-          await streamCompletion(res, route, messages, completionOptions, {
+          await streamCompletion(res, route, messages, dispatchOptions, {
             start, attempt, attemptLog, clientGone: () => clientGone, requestedModel, estimatedInputTokens, tools, pinnedModelId,
             sessionId, pinned: resolved.pinned,
           });
@@ -447,7 +480,7 @@ anthropicRouter.post('/messages', async (req: Request, res: Response) => {
         }
       }
 
-      const result = await route.provider.chatCompletion(route.apiKey, messages, route.modelId, completionOptions);
+      const result = await route.provider.chatCompletion(route.apiKey, messages, route.modelId, dispatchOptions);
       const respMsg = result.choices?.[0]?.message;
       const respText = contentToString(respMsg?.content ?? '');
       let respToolCalls = respMsg?.tool_calls ?? [];
@@ -526,16 +559,12 @@ anthropicRouter.post('/messages', async (req: Request, res: Response) => {
       sendError(res, 502, 'api_error', `Provider error (${route.displayName}): ${sanitizeProviderErrorMessage(err.message)}`);
     },
     onRoutingExhausted: (lastError, routeErr, exhaustion, info) => {
-      if (exhaustion) {
-        setFallbackHeaders(res, info.attempts.length, info.attempts);
-        sendError(res, exhaustion.status, anthropicErrorType(exhaustion), exhaustion.message);
-      } else {
-        sendError(res, routeErr?.status ?? 503, 'api_error', routeErr?.message ?? 'No model available to route this request');
-      }
+      setFallbackHeaders(res, info.attempts.length, info.attempts);
+      sendExhaustion(res, exhaustion);
     },
     onExhausted: (exhaustion, info) => {
       setFallbackHeaders(res, info.attempts.length, info.attempts);
-      sendError(res, exhaustion.status, anthropicErrorType(exhaustion), exhaustion.message);
+      sendExhaustion(res, exhaustion);
     },
   });
 });
@@ -771,6 +800,12 @@ async function streamCompletion(
     logRequest(route.platform, route.modelId, route.keyId, 'success', ctx.estimatedInputTokens, outputTokens, Date.now() - ctx.start, null, null, ctx.pinnedModelId);
   } catch (err: any) {
     if (err instanceof StreamAlreadyStarted) throw err;
+    // Client abort mid-stream: the pump's own `if (ctx.clientGone()) break`
+    // can lose the race against the fetch-signal rejection, so the abort may
+    // surface here instead. Rethrow — the shared loop's client-abort branch
+    // stops the ladder without benching or an error log row (the socket is
+    // gone; nothing to render).
+    if (isClientAbortError(err)) throw err;
     if (messageStarted) {
       // Real payload already reached the client — finish the SSE response
       // honestly instead of leaving Claude Code hanging, and stop the retry loop.
