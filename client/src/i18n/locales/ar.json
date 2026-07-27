@@ -13,7 +13,8 @@
     "switchDark": "التبديل إلى المظهر الداكن",
     "switchToChinese": "التبديل إلى الصينية",
     "switchToEnglish": "التبديل إلى اللغة الإنجليزية",
-    "modelsMenu": "تصفح أنواع النماذج"
+    "modelsMenu": "تصفح أنواع النماذج",
+    "agents": "الوكلاء"
   },
   "auth": {
     "createYourAccount": "أنشئ حسابك",
@@ -375,7 +376,29 @@
     "quotaLimit": "الحد",
     "quotaRemaining": "المتبقي",
     "quotaReset": "إعادة تعيين",
-    "quotaObserved": "لوحظ"
+    "quotaObserved": "لوحظ",
+    "tabAgents": "الوكلاء",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "تعيين نماذج Gemini",
+    "geminiDesc": "عيّن أسماء Gemini Pro وFlash وFlash-Lite إلى Auto أو إلى نموذج محدد من الكتالوج.",
+    "compatibilityTitle": "توافق الوكلاء",
+    "compatibilityDesc": "تحكم في واجهات التوافق الاختيارية واكتشاف نماذج Claude Code.",
+    "ollamaMode": "محاكاة Ollama",
+    "ollamaModeHint": "الوضع المفتوح على loopback لا يقبل أبدًا حركة مرور LAN غير مصادق عليها.",
+    "ollamaOff": "إيقاف",
+    "ollamaLoopback": "مفتوح على loopback",
+    "ollamaKeyRequired": "مفتاح API مطلوب",
+    "claudeAliases": "أسماء بديلة لاكتشاف Claude Code",
+    "claudeAliasesHint": "اعرض أسماء بديلة بصيغة claude/<model> ليتمكن منتقي النماذج في البوابة من عرض الكتالوج.",
+    "urlTokensTitle": "رموز URL قابلة للإلغاء",
+    "urlTokensDesc": "للعملاء بدون ترويسات فقط. قد تتسرب رموز URL إلى المحفوظات والسجلات، لذا ألغِها عندما لا تعود هناك حاجة إليها.",
+    "urlTokenLabel": "تسمية الرمز",
+    "createUrlToken": "إنشاء رمز",
+    "urlTokenOnce": "انسخ هذا الرمز الآن. لن يتم عرضه مرة أخرى.",
+    "revoked": "مُلغى",
+    "revoke": "إلغاء"
   },
   "status": {
     "healthy": "صحي",
@@ -454,7 +477,8 @@
     "keyOrdinal": "المفتاح #{n}",
     "attemptTimingHint": "بداية الإزاحة من بداية الطلب · مدة المحاولة",
     "requestedModel": "النموذج المطلوب",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "الطلبات حسب الوكيل"
   },
   "playground": {
     "title": "ملعب",
@@ -674,5 +698,15 @@
     "url": "أدخل URL صالحًا يبدأ بـ http:// أو https://",
     "email": "أدخل عنوان بريد إلكتروني صالحًا",
     "passwordMin": "أحرف {min} على الأقل"
+  },
+  "agents": {
+    "title": "وكلاء البرمجة",
+    "description": "اربط أدوات البرمجة ببوابة واحدة للنماذج المجانية مع تكوين مُنشأ تلقائيًا وآمن للنسخ الاحتياطي.",
+    "apiKey": "مفتاح API",
+    "quickstart": "أسرع طريقة: قم بتكوين Claude Code من الكتالوج المباشر.",
+    "currentKey": "المفتاح الموحد الحالي:",
+    "seenRecently": "شوهد مؤخرًا",
+    "endpoint": "نقطة النهاية",
+    "documentation": "التوثيق"
   }
 }

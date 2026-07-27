@@ -13,7 +13,8 @@
     "switchDark": "Переключиться на темную тему",
     "switchToChinese": "Переключиться на китайский",
     "switchToEnglish": "Переключиться на английский",
-    "modelsMenu": "Просмотр типов моделей"
+    "modelsMenu": "Просмотр типов моделей",
+    "agents": "Агенты"
   },
   "auth": {
     "createYourAccount": "Создайте свою учетную запись",
@@ -375,7 +376,29 @@
     "quotaLimit": "Лимит",
     "quotaRemaining": "Осталось",
     "quotaReset": "Сброс",
-    "quotaObserved": "Наблюдается"
+    "quotaObserved": "Наблюдается",
+    "tabAgents": "Агенты",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Сопоставление моделей Gemini",
+    "geminiDesc": "Сопоставьте имена Gemini Pro, Flash и Flash-Lite с Auto или конкретной моделью каталога.",
+    "compatibilityTitle": "Совместимость с агентами",
+    "compatibilityDesc": "Управляйте дополнительными уровнями совместимости и обнаружением моделей Claude Code.",
+    "ollamaMode": "Эмуляция Ollama",
+    "ollamaModeHint": "Открытый loopback никогда не принимает неаутентифицированный трафик из LAN.",
+    "ollamaOff": "Выкл.",
+    "ollamaLoopback": "Открыт на loopback",
+    "ollamaKeyRequired": "Требуется API-ключ",
+    "claudeAliases": "Алиасы обнаружения Claude Code",
+    "claudeAliasesHint": "Публикуйте алиасы claude/<model>, чтобы селектор моделей шлюза мог отобразить каталог.",
+    "urlTokensTitle": "Отзываемые URL-токены",
+    "urlTokensDesc": "Только для клиентов без заголовков. URL-токены могут попасть в историю и логи, поэтому отзывайте их, когда они больше не нужны.",
+    "urlTokenLabel": "Метка токена",
+    "createUrlToken": "Создать токен",
+    "urlTokenOnce": "Скопируйте этот токен сейчас. Он больше не будет показан.",
+    "revoked": "Отозван",
+    "revoke": "Отозвать"
   },
   "status": {
     "healthy": "здоровый",
@@ -454,7 +477,8 @@
     "keyOrdinal": "ключ #{n}",
     "attemptTimingHint": "Начальное смещение от начала запроса · продолжительность попытки",
     "requestedModel": "Запрошенная модель",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Запросы по агентам"
   },
   "playground": {
     "title": "Детская площадка",
@@ -674,5 +698,15 @@
     "url": "Введите действительный URL, начиная с http:// или https://.",
     "email": "Введите действительный адрес электронной почты",
     "passwordMin": "Минимум символов {min}."
+  },
+  "agents": {
+    "title": "Агенты программирования",
+    "description": "Подключайте инструменты программирования к единому шлюзу бесплатных моделей с генерируемой конфигурацией, безопасной для резервных копий.",
+    "apiKey": "API-ключ",
+    "quickstart": "Самый быстрый путь: настройте Claude Code по актуальному каталогу.",
+    "currentKey": "Текущий единый ключ:",
+    "seenRecently": "Замечен недавно",
+    "endpoint": "Эндпоинт",
+    "documentation": "Документация"
   }
 }

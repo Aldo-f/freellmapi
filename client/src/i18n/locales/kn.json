@@ -13,7 +13,8 @@
     "switchDark": "ಡಾರ್ಕ್ ಥೀಮ್‌ಗೆ ಬದಲಿಸಿ",
     "switchToChinese": "ಚೈನೀಸ್‌ಗೆ ಬದಲಿಸಿ",
     "switchToEnglish": "ಇಂಗ್ಲಿಷ್‌ಗೆ ಬದಲಿಸಿ",
-    "modelsMenu": "ಮಾದರಿ ಪ್ರಕಾರಗಳನ್ನು ಬ್ರೌಸ್ ಮಾಡಿ"
+    "modelsMenu": "ಮಾದರಿ ಪ್ರಕಾರಗಳನ್ನು ಬ್ರೌಸ್ ಮಾಡಿ",
+    "agents": "ಏಜೆಂಟ್‌ಗಳು"
   },
   "auth": {
     "createYourAccount": "ನಿಮ್ಮ ಖಾತೆಯನ್ನು ರಚಿಸಿ",
@@ -375,7 +376,29 @@
     "quotaLimit": "ಮಿತಿ",
     "quotaRemaining": "ಉಳಿದಿದೆ",
     "quotaReset": "ಮರುಹೊಂದಿಸಿ",
-    "quotaObserved": "ಗಮನಿಸಿದೆ"
+    "quotaObserved": "ಗಮನಿಸಿದೆ",
+    "tabAgents": "ಏಜೆಂಟ್‌ಗಳು",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Gemini ಮಾದರಿ ಮ್ಯಾಪಿಂಗ್",
+    "geminiDesc": "Gemini Pro, Flash ಮತ್ತು Flash-Lite ಹೆಸರುಗಳನ್ನು ಆಟೋ ಅಥವಾ ನಿರ್ದಿಷ್ಟ ಕ್ಯಾಟಲಾಗ್ ಮಾದರಿಗೆ ಮ್ಯಾಪ್ ಮಾಡಿ.",
+    "compatibilityTitle": "ಏಜೆಂಟ್ ಹೊಂದಾಣಿಕೆ",
+    "compatibilityDesc": "ಆಪ್ಟ್-ಇನ್ ಹೊಂದಾಣಿಕೆ ಮೇಲ್ಮೈಗಳು ಮತ್ತು Claude Code ಮಾದರಿ ಅನ್ವೇಷಣೆಯನ್ನು ನಿಯಂತ್ರಿಸಿ.",
+    "ollamaMode": "Ollama ಅನುಕರಣೆ",
+    "ollamaModeHint": "ತೆರೆದ ಲೂಪ್‌ಬ್ಯಾಕ್ ಎಂದಿಗೂ ದೃಢೀಕರಿಸದ LAN ಟ್ರಾಫಿಕ್ ಅನ್ನು ಸ್ವೀಕರಿಸುವುದಿಲ್ಲ.",
+    "ollamaOff": "ಆಫ್",
+    "ollamaLoopback": "ಲೂಪ್‌ಬ್ಯಾಕ್‌ನಲ್ಲಿ ತೆರೆದಿದೆ",
+    "ollamaKeyRequired": "API ಕೀ ಅಗತ್ಯವಿದೆ",
+    "claudeAliases": "Claude Code ಅನ್ವೇಷಣೆ ಅಲಿಯಾಸ್‌ಗಳು",
+    "claudeAliasesHint": "ಗೇಟ್‌ವೇ ಮಾದರಿ ಆಯ್ಕೆಗಾರ ಕ್ಯಾಟಲಾಗ್ ಅನ್ನು ಪಟ್ಟಿ ಮಾಡಲು claude/<model> ಅಲಿಯಾಸ್‌ಗಳನ್ನು ಬಹಿರಂಗಪಡಿಸಿ.",
+    "urlTokensTitle": "ಹಿಂಪಡೆಯಬಹುದಾದ URL ಟೋಕನ್‌ಗಳು",
+    "urlTokensDesc": "ಹೆಡರ್ ಇಲ್ಲದ ಕ್ಲೈಂಟ್‌ಗಳಿಗೆ ಮಾತ್ರ. URL ಟೋಕನ್‌ಗಳು ಇತಿಹಾಸ ಮತ್ತು ಲಾಗ್‌ಗಳಿಗೆ ಸೋರಿಕೆಯಾಗಬಹುದು, ಆದ್ದರಿಂದ ಅಗತ್ಯವಿಲ್ಲದಾಗ ಅವುಗಳನ್ನು ಹಿಂಪಡೆಯಿರಿ.",
+    "urlTokenLabel": "ಟೋಕನ್ ಲೇಬಲ್",
+    "createUrlToken": "ಟೋಕನ್ ರಚಿಸಿ",
+    "urlTokenOnce": "ಈ ಟೋಕನ್ ಅನ್ನು ಈಗಲೇ ನಕಲಿಸಿ. ಇದನ್ನು ಮತ್ತೆ ತೋರಿಸಲಾಗುವುದಿಲ್ಲ.",
+    "revoked": "ಹಿಂಪಡೆಯಲಾಗಿದೆ",
+    "revoke": "ಹಿಂಪಡೆಯಿರಿ"
   },
   "status": {
     "healthy": "ಆರೋಗ್ಯಕರ",
@@ -454,7 +477,8 @@
     "keyOrdinal": "ಕೀ #{n}",
     "attemptTimingHint": "ವಿನಂತಿಯ ಪ್ರಾರಂಭದಿಂದ ಆಫ್‌ಸೆಟ್ ಪ್ರಾರಂಭಿಸಿ · ಪ್ರಯತ್ನದ ಅವಧಿ",
     "requestedModel": "ವಿನಂತಿಸಿದ ಮಾದರಿ",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "ಏಜೆಂಟ್ ಪ್ರಕಾರ ವಿನಂತಿಗಳು"
   },
   "playground": {
     "title": "ಆಟದ ಮೈದಾನ",
@@ -674,5 +698,15 @@
     "url": "http:// ಅಥವಾ https:// ನೊಂದಿಗೆ ಪ್ರಾರಂಭವಾಗುವ ಮಾನ್ಯವಾದ URL ಅನ್ನು ನಮೂದಿಸಿ",
     "email": "ಮಾನ್ಯವಾದ ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ",
     "passwordMin": "ಕನಿಷ್ಠ {min} ಅಕ್ಷರಗಳು"
+  },
+  "agents": {
+    "title": "ಕೋಡಿಂಗ್ ಏಜೆಂಟ್‌ಗಳು",
+    "description": "ರಚಿಸಲಾದ, ಬ್ಯಾಕಪ್-ಸುರಕ್ಷಿತ ಕಾನ್ಫಿಗರೇಶನ್‌ನೊಂದಿಗೆ ಕೋಡಿಂಗ್ ಉಪಕರಣಗಳನ್ನು ಒಂದು ಉಚಿತ-ಮಾದರಿ ಗೇಟ್‌ವೇಗೆ ಸಂಪರ್ಕಿಸಿ.",
+    "apiKey": "API ಕೀ",
+    "quickstart": "ಅತಿ ವೇಗದ ಮಾರ್ಗ: ಲೈವ್ ಕ್ಯಾಟಲಾಗ್‌ನಿಂದ Claude Code ಅನ್ನು ಕಾನ್ಫಿಗರ್ ಮಾಡಿ.",
+    "currentKey": "ಪ್ರಸ್ತುತ ಏಕೀಕೃತ ಕೀ:",
+    "seenRecently": "ಇತ್ತೀಚೆಗೆ ಕಂಡುಬಂದಿದೆ",
+    "endpoint": "ಅಂತಿಮ ಬಿಂದು",
+    "documentation": "ದಾಖಲಾತಿ"
   }
 }

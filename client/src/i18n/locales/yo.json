@@ -13,7 +13,8 @@
     "switchDark": "Yipada si akori dudu",
     "switchToChinese": "Yipada si Kannada",
     "switchToEnglish": "Yipada si English",
-    "modelsMenu": "Kiri awoṣe orisi"
+    "modelsMenu": "Kiri awoṣe orisi",
+    "agents": "Awọn aṣoju"
   },
   "auth": {
     "createYourAccount": "Ṣẹda akọọlẹ rẹ",
@@ -375,7 +376,29 @@
     "quotaLimit": "Idiwọn",
     "quotaRemaining": "Ti o ku",
     "quotaReset": "Tunto",
-    "quotaObserved": "Ti ṣe akiyesi"
+    "quotaObserved": "Ti ṣe akiyesi",
+    "tabAgents": "Awọn aṣoju",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Isopọ awoṣe Gemini",
+    "geminiDesc": "So awọn orukọ Gemini Pro, Flash, ati Flash-Lite pọ mọ Auto tabi awoṣe katalogu kan pato.",
+    "compatibilityTitle": "Ibamu aṣoju",
+    "compatibilityDesc": "Ṣakoso awọn oju ibamu yiyan ati wiwa awoṣe Claude Code.",
+    "ollamaMode": "Afarawe Ollama",
+    "ollamaModeHint": "Loopback ṣiṣi ko gba ijabọ LAN ti ko ni ijẹrisi rara.",
+    "ollamaOff": "Pa",
+    "ollamaLoopback": "Ṣii lori loopback",
+    "ollamaKeyRequired": "A nilo bọtini API",
+    "claudeAliases": "Awọn inagijẹ wiwa Claude Code",
+    "claudeAliasesHint": "Fi awọn inagijẹ claude/<model> han ki oluyan awoṣe ẹnu-ọna le ṣe atokọ katalogu naa.",
+    "urlTokensTitle": "Awọn tokini URL ti a le fagile",
+    "urlTokensDesc": "Fun awọn alabara ti ko ni akọsori nikan. Awọn tokini URL le jo sinu itan-akọọlẹ ati awọn akọsilẹ, nitorinaa fagile wọn nigbati wọn ko ba nilo mọ.",
+    "urlTokenLabel": "Aami tokini",
+    "createUrlToken": "Ṣẹda tokini",
+    "urlTokenOnce": "Daakọ tokini yii ni bayi. Kii yoo han lẹẹkansi.",
+    "revoked": "Ti fagile",
+    "revoke": "Fagile"
   },
   "status": {
     "healthy": "ni ilera",
@@ -454,7 +477,8 @@
     "keyOrdinal": "bọtini #{n}",
     "attemptTimingHint": "Bẹrẹ aiṣedeede lati ibere ibere · Iye akoko igbiyanju",
     "requestedModel": "Awoṣe ti a beere",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Awọn ibeere nipasẹ aṣoju"
   },
   "playground": {
     "title": "Ibi isereile",
@@ -674,5 +698,15 @@
     "url": "Tẹ URL to wulo ti o bẹrẹ pẹlu http:// tabi https://",
     "email": "Tẹ adirẹsi imeeli to wulo",
     "passwordMin": "O kere ju awọn ohun kikọ {min}"
+  },
+  "agents": {
+    "title": "Awọn aṣoju kikọ koodu",
+    "description": "So awọn irinṣẹ kikọ koodu pọ mọ ẹnu-ọna awoṣe ọfẹ kan pẹlu iṣeto ti a ṣẹda, ti o ni aabo afẹyinti.",
+    "apiKey": "Bọtini API",
+    "quickstart": "Ọna ti o yara julọ: ṣeto Claude Code lati inu katalogu laaye.",
+    "currentKey": "Bọtini iṣọkan lọwọlọwọ:",
+    "seenRecently": "Ti a rii laipẹ",
+    "endpoint": "Ebute",
+    "documentation": "Iwe akọsilẹ"
   }
 }

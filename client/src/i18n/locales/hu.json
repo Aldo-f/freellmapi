@@ -13,7 +13,8 @@
     "switchDark": "Áttérés sötét témára",
     "switchToChinese": "Átállás kínaira",
     "switchToEnglish": "Átállás angolra",
-    "modelsMenu": "Böngészés modelltípusok"
+    "modelsMenu": "Böngészés modelltípusok",
+    "agents": "Ügynökök"
   },
   "auth": {
     "createYourAccount": "Hozza létre a fiókot",
@@ -375,7 +376,29 @@
     "quotaLimit": "Határ",
     "quotaRemaining": "Maradék",
     "quotaReset": "Reset",
-    "quotaObserved": "Megfigyelve"
+    "quotaObserved": "Megfigyelve",
+    "tabAgents": "Ügynökök",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Gemini modellek leképezése",
+    "geminiDesc": "Rendeld a Gemini Pro, Flash és Flash-Lite neveket az Auto-hoz vagy egy adott katalógusmodellhez.",
+    "compatibilityTitle": "Ügynök-kompatibilitás",
+    "compatibilityDesc": "Szabályozd az opcionális kompatibilitási felületeket és a Claude Code modellfelderítést.",
+    "ollamaMode": "Ollama emuláció",
+    "ollamaModeHint": "A nyitott loopback soha nem fogad hitelesítetlen LAN forgalmat.",
+    "ollamaOff": "Ki",
+    "ollamaLoopback": "Nyitva a loopbacken",
+    "ollamaKeyRequired": "API kulcs szükséges",
+    "claudeAliases": "Claude Code felderítési aliasok",
+    "claudeAliasesHint": "Tedd elérhetővé a claude/<model> aliasokat, hogy az átjáró modellválasztója listázhassa a katalógust.",
+    "urlTokensTitle": "Visszavonható URL tokenek",
+    "urlTokensDesc": "Csak fejléc nélküli kliensekhez. Az URL tokenek kiszivároghatnak az előzményekbe és a naplókba, ezért vond vissza őket, ha már nincs rájuk szükség.",
+    "urlTokenLabel": "Token címke",
+    "createUrlToken": "Token létrehozása",
+    "urlTokenOnce": "Másold ki ezt a tokent most. Többé nem jelenik meg.",
+    "revoked": "Visszavonva",
+    "revoke": "Visszavonás"
   },
   "status": {
     "healthy": "egészséges",
@@ -454,7 +477,8 @@
     "keyOrdinal": "Kulcsfontosságú #{n}",
     "attemptTimingHint": "A kérelmű elejétől kezdj el · Próbálkozás időtartama",
     "requestedModel": "Kért modell",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Kérések ügynökönként"
   },
   "playground": {
     "title": "Játszótér",
@@ -674,5 +698,15 @@
     "url": "Írj be egy érvényes URL http://-vel vagy https://",
     "email": "Írj meg érvényes e-mail címet",
     "passwordMin": "Legalább {min} karakter"
+  },
+  "agents": {
+    "title": "Kódoló ügynökök",
+    "description": "Kösd össze a kódolóeszközöket egyetlen ingyenes modellátjáróval, generált, mentésbiztos konfigurációval.",
+    "apiKey": "API kulcs",
+    "quickstart": "A leggyorsabb út: állítsd be a Claude Code-ot az élő katalógusból.",
+    "currentKey": "Jelenlegi egységes kulcs:",
+    "seenRecently": "Nemrég látott",
+    "endpoint": "Végpont",
+    "documentation": "Dokumentáció"
   }
 }

@@ -13,7 +13,8 @@
     "switchDark": "गाढा विषयवस्तुमा स्विच गर्नुहोस्",
     "switchToChinese": "चिनियाँमा स्विच गर्नुहोस्",
     "switchToEnglish": "अङ्ग्रेजीमा स्विच गर्नुहोस्",
-    "modelsMenu": "नमूना प्रकार ब्राउज गर्नुहोस्"
+    "modelsMenu": "नमूना प्रकार ब्राउज गर्नुहोस्",
+    "agents": "एजेन्टहरू"
   },
   "auth": {
     "createYourAccount": "तपाईँको खाता सिर्जना गर्नुहोस्",
@@ -375,7 +376,29 @@
     "quotaLimit": "सीमा",
     "quotaRemaining": "बाँकी",
     "quotaReset": "रिसेट गर्नुहोस्",
-    "quotaObserved": "अवलोकन गरियो"
+    "quotaObserved": "अवलोकन गरियो",
+    "tabAgents": "एजेन्टहरू",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Gemini मोडेल म्यापिङ",
+    "geminiDesc": "Gemini Pro, Flash र Flash-Lite नामहरूलाई Auto वा कुनै निश्चित क्याटलग मोडेलमा म्याप गर्नुहोस्।",
+    "compatibilityTitle": "एजेन्ट अनुकूलता",
+    "compatibilityDesc": "ऐच्छिक अनुकूलता सतहहरू र Claude Code मोडेल खोज नियन्त्रण गर्नुहोस्।",
+    "ollamaMode": "Ollama इमुलेसन",
+    "ollamaModeHint": "खुला लुपब्याकले प्रमाणीकरण नगरिएको LAN ट्राफिक कहिल्यै स्वीकार गर्दैन।",
+    "ollamaOff": "बन्द",
+    "ollamaLoopback": "लुपब्याकमा खुला",
+    "ollamaKeyRequired": "API कुञ्जी आवश्यक",
+    "claudeAliases": "Claude Code खोज उपनामहरू",
+    "claudeAliasesHint": "गेटवे मोडेल चयनकर्ताले क्याटलग सूचीबद्ध गर्न सकोस् भनेर claude/<model> उपनामहरू उपलब्ध गराउनुहोस्।",
+    "urlTokensTitle": "रद्द गर्न सकिने URL टोकनहरू",
+    "urlTokensDesc": "हेडरविहीन क्लाइन्टहरूका लागि मात्र। URL टोकनहरू इतिहास र लगहरूमा चुहिन सक्छन्, त्यसैले आवश्यक नपरेपछि रद्द गर्नुहोस्।",
+    "urlTokenLabel": "टोकन लेबल",
+    "createUrlToken": "टोकन सिर्जना गर्नुहोस्",
+    "urlTokenOnce": "यो टोकन अहिले नै प्रतिलिपि गर्नुहोस्। यो फेरि देखाइने छैन।",
+    "revoked": "रद्द गरिएको",
+    "revoke": "रद्द गर्नुहोस्"
   },
   "status": {
     "healthy": "स्वस्थ छ",
@@ -454,7 +477,8 @@
     "keyOrdinal": "कुञ्जी #{n}",
     "attemptTimingHint": "अनुरोध सुरुबाट अफसेट सुरु गर्नुहोस् · प्रयास अवधि",
     "requestedModel": "अनुरोध गरिएको नमूना",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "एजेन्टद्वारा अनुरोधहरू"
   },
   "playground": {
     "title": "खेल मैदान[सम्पादन गर्ने]",
@@ -674,5 +698,15 @@
     "url": "http:// वा https:// सँग सुरु भएको वैध URL प्रविष्ट गर्नुहोस्",
     "email": "वैध इमेल ठेगाना प्रविष्ट गर्नुहोस्",
     "passwordMin": "कम्तिमा {min} क्यारेक्टरहरू"
+  },
+  "agents": {
+    "title": "कोडिङ एजेन्टहरू",
+    "description": "कोडिङ उपकरणहरूलाई स्वतः सिर्जना गरिएको, ब्याकअप-सुरक्षित कन्फिगरेसनसहित एउटै नि:शुल्क-मोडेल गेटवेमा जोड्नुहोस्।",
+    "apiKey": "API कुञ्जी",
+    "quickstart": "सबैभन्दा छिटो बाटो: प्रत्यक्ष क्याटलगबाट Claude Code कन्फिगर गर्नुहोस्।",
+    "currentKey": "हालको एकीकृत कुञ्जी:",
+    "seenRecently": "भर्खरै देखिएको",
+    "endpoint": "एन्डपोइन्ट",
+    "documentation": "दस्तावेज"
   }
 }

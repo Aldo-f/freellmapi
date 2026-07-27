@@ -13,7 +13,8 @@
     "switchDark": "Bytt til mørkt tema",
     "switchToChinese": "Overgang til kinesisk",
     "switchToEnglish": "Bytte til engelsk",
-    "modelsMenu": "Bla gjennom modelltyper"
+    "modelsMenu": "Bla gjennom modelltyper",
+    "agents": "Agenter"
   },
   "auth": {
     "createYourAccount": "Opprett kontoen din",
@@ -375,7 +376,29 @@
     "quotaLimit": "Grense",
     "quotaRemaining": "Gjenværende",
     "quotaReset": "Tilbakestilling",
-    "quotaObserved": "Observert"
+    "quotaObserved": "Observert",
+    "tabAgents": "Agenter",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Gemini-modelltilordning",
+    "geminiDesc": "Tilordne navnene Gemini Pro, Flash og Flash-Lite til Auto eller en bestemt katalogmodell.",
+    "compatibilityTitle": "Agentkompatibilitet",
+    "compatibilityDesc": "Styr valgfrie kompatibilitetsflater og modelloppdaging for Claude Code.",
+    "ollamaMode": "Ollama-emulering",
+    "ollamaModeHint": "Åpen loopback godtar aldri uautentisert LAN-trafikk.",
+    "ollamaOff": "Av",
+    "ollamaLoopback": "Åpen på loopback",
+    "ollamaKeyRequired": "API-nøkkel kreves",
+    "claudeAliases": "Oppdagingsaliaser for Claude Code",
+    "claudeAliasesHint": "Eksponer claude/<model>-aliaser slik at gatewayens modellvelger kan liste opp katalogen.",
+    "urlTokensTitle": "Tilbakekallbare URL-tokener",
+    "urlTokensDesc": "Kun for klienter uten headere. URL-tokener kan lekke inn i historikk og logger, så tilbakekall dem når de ikke lenger trengs.",
+    "urlTokenLabel": "Tokenetikett",
+    "createUrlToken": "Opprett token",
+    "urlTokenOnce": "Kopier dette tokenet nå. Det vises ikke igjen.",
+    "revoked": "Tilbakekalt",
+    "revoke": "Tilbakekall"
   },
   "status": {
     "healthy": "Sunt",
@@ -454,7 +477,8 @@
     "keyOrdinal": "Nøkkel #{n}",
     "attemptTimingHint": "Startforskyvning fra forespørselsstart · Forsøksvarighet",
     "requestedModel": "Etterspurt modell",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Forespørsler per agent"
   },
   "playground": {
     "title": "Lekeplass",
@@ -674,5 +698,15 @@
     "url": "Skriv inn en gyldig URL som starter med http:// eller https://",
     "email": "Skriv inn en gyldig e-postadresse",
     "passwordMin": "I hvert fall {min} karakterer"
+  },
+  "agents": {
+    "title": "Kodeagenter",
+    "description": "Koble kodeverktøy til én gateway for gratis modeller med generert, sikkerhetskopivennlig konfigurasjon.",
+    "apiKey": "API-nøkkel",
+    "quickstart": "Raskeste vei: konfigurer Claude Code fra live-katalogen.",
+    "currentKey": "Gjeldende samlenøkkel:",
+    "seenRecently": "Nylig sett",
+    "endpoint": "Endepunkt",
+    "documentation": "Dokumentasjon"
   }
 }

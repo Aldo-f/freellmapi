@@ -13,7 +13,8 @@
     "switchDark": "Beralih ke tema gelap",
     "switchToChinese": "Beralih ke bahasa Cina",
     "switchToEnglish": "Beralih ke bahasa Inggris",
-    "modelsMenu": "Telusuri jenis model"
+    "modelsMenu": "Telusuri jenis model",
+    "agents": "Agen"
   },
   "auth": {
     "createYourAccount": "Buat akun Anda",
@@ -375,7 +376,29 @@
     "quotaLimit": "Batasi",
     "quotaRemaining": "Tersisa",
     "quotaReset": "Setel ulang",
-    "quotaObserved": "Diamati"
+    "quotaObserved": "Diamati",
+    "tabAgents": "Agen",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Pemetaan model Gemini",
+    "geminiDesc": "Petakan nama Gemini Pro, Flash, dan Flash-Lite ke Otomatis atau model katalog tertentu.",
+    "compatibilityTitle": "Kompatibilitas agen",
+    "compatibilityDesc": "Kontrol permukaan kompatibilitas opt-in dan penemuan model Claude Code.",
+    "ollamaMode": "Emulasi Ollama",
+    "ollamaModeHint": "Loopback terbuka tidak pernah menerima lalu lintas LAN tanpa autentikasi.",
+    "ollamaOff": "Mati",
+    "ollamaLoopback": "Terbuka di loopback",
+    "ollamaKeyRequired": "Perlu kunci API",
+    "claudeAliases": "Alias penemuan Claude Code",
+    "claudeAliasesHint": "Ekspos alias claude/<model> agar pemilih model gateway dapat menampilkan daftar katalog.",
+    "urlTokensTitle": "Token URL yang dapat dicabut",
+    "urlTokensDesc": "Hanya untuk klien tanpa header. Token URL bisa bocor ke riwayat dan log, jadi cabut jika sudah tidak diperlukan.",
+    "urlTokenLabel": "Label token",
+    "createUrlToken": "Buat token",
+    "urlTokenOnce": "Salin token ini sekarang. Token tidak akan ditampilkan lagi.",
+    "revoked": "Dicabut",
+    "revoke": "Cabut"
   },
   "status": {
     "healthy": "sehat",
@@ -454,7 +477,8 @@
     "keyOrdinal": "kunci #{n}",
     "attemptTimingHint": "Mulai offset dari awal permintaan · durasi upaya",
     "requestedModel": "Model yang diminta",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Permintaan per agen"
   },
   "playground": {
     "title": "Taman bermain",
@@ -674,5 +698,15 @@
     "url": "Masukkan URL yang valid dimulai dengan http:// atau https://",
     "email": "Masukkan alamat email yang valid",
     "passwordMin": "Setidaknya karakter {min}"
+  },
+  "agents": {
+    "title": "Agen coding",
+    "description": "Hubungkan alat coding ke satu gateway model gratis dengan konfigurasi yang dihasilkan otomatis dan aman untuk dicadangkan.",
+    "apiKey": "Kunci API",
+    "quickstart": "Jalur tercepat: konfigurasikan Claude Code dari katalog langsung.",
+    "currentKey": "Kunci terpadu saat ini:",
+    "seenRecently": "Terlihat baru-baru ini",
+    "endpoint": "Titik akhir",
+    "documentation": "Dokumentasi"
   }
 }

@@ -13,7 +13,8 @@
     "switchDark": "Cambiar al tema oscuro",
     "switchToChinese": "Cambiar a chino",
     "switchToEnglish": "Cambiar a inglés",
-    "modelsMenu": "Explorar tipos de modelos"
+    "modelsMenu": "Explorar tipos de modelos",
+    "agents": "Agentes"
   },
   "auth": {
     "createYourAccount": "Crea tu cuenta",
@@ -375,7 +376,29 @@
     "quotaLimit": "Límite",
     "quotaRemaining": "Restante",
     "quotaReset": "Reinicio",
-    "quotaObserved": "Observado"
+    "quotaObserved": "Observado",
+    "tabAgents": "Agentes",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Asignación de modelos Gemini",
+    "geminiDesc": "Asigna los nombres de Gemini Pro, Flash y Flash-Lite a Auto o a un modelo concreto del catálogo.",
+    "compatibilityTitle": "Compatibilidad de agentes",
+    "compatibilityDesc": "Controla las superficies de compatibilidad opcionales y la detección de modelos de Claude Code.",
+    "ollamaMode": "Emulación de Ollama",
+    "ollamaModeHint": "El modo abierto en loopback nunca acepta tráfico LAN sin autenticar.",
+    "ollamaOff": "Desactivado",
+    "ollamaLoopback": "Abierto en loopback",
+    "ollamaKeyRequired": "Se requiere clave de API",
+    "claudeAliases": "Alias de detección de Claude Code",
+    "claudeAliasesHint": "Expón alias claude/<model> para que el selector de modelos del gateway pueda listar el catálogo.",
+    "urlTokensTitle": "Tokens de URL revocables",
+    "urlTokensDesc": "Solo para clientes sin cabeceras. Los tokens de URL pueden filtrarse al historial y a los registros, así que revócalos cuando ya no los necesites.",
+    "urlTokenLabel": "Etiqueta del token",
+    "createUrlToken": "Crear token",
+    "urlTokenOnce": "Copia este token ahora. No se volverá a mostrar.",
+    "revoked": "Revocado",
+    "revoke": "Revocar"
   },
   "status": {
     "healthy": "correcto",
@@ -454,7 +477,8 @@
     "keyOrdinal": "clave #{n}",
     "attemptTimingHint": "Desfase desde el inicio de la solicitud · duración del intento",
     "requestedModel": "Modelo solicitado",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Solicitudes por agente"
   },
   "playground": {
     "title": "Entorno de pruebas",
@@ -674,5 +698,15 @@
     "url": "Introduce una URL válida que empiece por http:// o https://",
     "email": "Introduce una dirección de correo válida",
     "passwordMin": "Al menos {min} caracteres"
+  },
+  "agents": {
+    "title": "Agentes de programación",
+    "description": "Conecta herramientas de programación a un único gateway de modelos gratuitos con configuración generada y respaldo seguro.",
+    "apiKey": "Clave de API",
+    "quickstart": "La vía más rápida: configura Claude Code desde el catálogo en vivo.",
+    "currentKey": "Clave unificada actual:",
+    "seenRecently": "Visto recientemente",
+    "endpoint": "Endpoint",
+    "documentation": "Documentación"
   }
 }

@@ -13,7 +13,8 @@
     "switchDark": "Mudança para tema sombrio",
     "switchToChinese": "Mudança para o chinês",
     "switchToEnglish": "Mudança para inglês",
-    "modelsMenu": "Navegar pelos tipos de modelos"
+    "modelsMenu": "Navegar pelos tipos de modelos",
+    "agents": "Agentes"
   },
   "auth": {
     "createYourAccount": "Crie a sua conta",
@@ -375,7 +376,29 @@
     "quotaLimit": "Limite",
     "quotaRemaining": "Remanescentes",
     "quotaReset": "Reiniciar",
-    "quotaObserved": "Observado"
+    "quotaObserved": "Observado",
+    "tabAgents": "Agentes",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Mapeamento de modelos Gemini",
+    "geminiDesc": "Mapeie os nomes Gemini Pro, Flash e Flash-Lite para Auto ou para um modelo específico do catálogo.",
+    "compatibilityTitle": "Compatibilidade de agentes",
+    "compatibilityDesc": "Controle as superfícies de compatibilidade opcionais e a descoberta de modelos do Claude Code.",
+    "ollamaMode": "Emulação do Ollama",
+    "ollamaModeHint": "O loopback aberto nunca aceita tráfego LAN não autenticado.",
+    "ollamaOff": "Desligado",
+    "ollamaLoopback": "Aberto no loopback",
+    "ollamaKeyRequired": "Chave de API obrigatória",
+    "claudeAliases": "Aliases de descoberta do Claude Code",
+    "claudeAliasesHint": "Exponha aliases claude/<model> para que o seletor de modelos do gateway possa listar o catálogo.",
+    "urlTokensTitle": "Tokens de URL revogáveis",
+    "urlTokensDesc": "Apenas para clientes sem cabeçalhos. Os tokens de URL podem ser expostos no histórico e nos registos, por isso revogue-os quando já não forem necessários.",
+    "urlTokenLabel": "Etiqueta do token",
+    "createUrlToken": "Criar token",
+    "urlTokenOnce": "Copie este token agora. Não voltará a ser mostrado.",
+    "revoked": "Revogado",
+    "revoke": "Revogar"
   },
   "status": {
     "healthy": "Saudável",
@@ -454,7 +477,8 @@
     "keyOrdinal": "#{n} chave",
     "attemptTimingHint": "Início deslocado a partir do início do pedido · Duração da tentativa",
     "requestedModel": "Modelo solicitado",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Pedidos por agente"
   },
   "playground": {
     "title": "Parque infantil",
@@ -674,5 +698,15 @@
     "url": "Introduza uma URL válida começando por http:// ou https://",
     "email": "Insira um endereço de email válido",
     "passwordMin": "Pelo menos {min} personagens"
+  },
+  "agents": {
+    "title": "Agentes de programação",
+    "description": "Ligue ferramentas de programação a um único gateway de modelos gratuitos com configuração gerada e segura para cópias de segurança.",
+    "apiKey": "Chave de API",
+    "quickstart": "Caminho mais rápido: configure o Claude Code a partir do catálogo em direto.",
+    "currentKey": "Chave unificada atual:",
+    "seenRecently": "Visto recentemente",
+    "endpoint": "Endpoint",
+    "documentation": "Documentação"
   }
 }

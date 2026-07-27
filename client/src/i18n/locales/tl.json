@@ -13,7 +13,8 @@
     "switchDark": "Lumipat sa madilim na tema",
     "switchToChinese": "Lumipat sa Chinese",
     "switchToEnglish": "Lumipat sa Ingles",
-    "modelsMenu": "Mag-browse ng mga uri ng modelo"
+    "modelsMenu": "Mag-browse ng mga uri ng modelo",
+    "agents": "Mga Agent"
   },
   "auth": {
     "createYourAccount": "Gumawa ng iyong account",
@@ -375,7 +376,29 @@
     "quotaLimit": "Limitasyon",
     "quotaRemaining": "Natitira",
     "quotaReset": "I-reset",
-    "quotaObserved": "naobserbahan"
+    "quotaObserved": "naobserbahan",
+    "tabAgents": "Mga Agent",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Pagmamapa ng modelo ng Gemini",
+    "geminiDesc": "I-map ang mga pangalan ng Gemini Pro, Flash, at Flash-Lite sa Auto o sa isang partikular na modelo ng catalog.",
+    "compatibilityTitle": "Compatibility ng agent",
+    "compatibilityDesc": "Kontrolin ang mga opt-in na compatibility surface at ang pagtuklas ng modelo ng Claude Code.",
+    "ollamaMode": "Emulasyon ng Ollama",
+    "ollamaModeHint": "Ang bukas na loopback ay hindi kailanman tumatanggap ng unauthenticated na LAN traffic.",
+    "ollamaOff": "Naka-off",
+    "ollamaLoopback": "Bukas sa loopback",
+    "ollamaKeyRequired": "Kailangan ng API key",
+    "claudeAliases": "Mga discovery alias ng Claude Code",
+    "claudeAliasesHint": "Ilantad ang mga claude/<model> na alias para mailista ng model picker ng gateway ang catalog.",
+    "urlTokensTitle": "Mga nare-revoke na URL token",
+    "urlTokensDesc": "Para lamang sa mga client na walang header. Maaaring tumagas ang mga URL token sa history at mga log, kaya i-revoke ang mga ito kapag hindi na kailangan.",
+    "urlTokenLabel": "Label ng token",
+    "createUrlToken": "Gumawa ng token",
+    "urlTokenOnce": "Kopyahin ang token na ito ngayon. Hindi na ito ipapakita muli.",
+    "revoked": "Na-revoke",
+    "revoke": "I-revoke"
   },
   "status": {
     "healthy": "malusog",
@@ -454,7 +477,8 @@
     "keyOrdinal": "pangunahing #{n}",
     "attemptTimingHint": "Start offset mula sa request start · tagal ng pagtatangka",
     "requestedModel": "Hinihiling na modelo",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Mga kahilingan ayon sa agent"
   },
   "playground": {
     "title": "Palaruan",
@@ -674,5 +698,15 @@
     "url": "Maglagay ng valid na URL na nagsisimula sa http:// o https://",
     "email": "Maglagay ng wastong email address",
     "passwordMin": "Hindi bababa sa {min} mga karakter"
+  },
+  "agents": {
+    "title": "Mga coding agent",
+    "description": "Ikonekta ang mga coding tool sa iisang free-model gateway gamit ang nabuong, backup-safe na configuration.",
+    "apiKey": "API key",
+    "quickstart": "Pinakamabilis na paraan: i-configure ang Claude Code mula sa live na catalog.",
+    "currentKey": "Kasalukuyang pinag-isang key:",
+    "seenRecently": "Nakita kamakailan",
+    "endpoint": "Endpoint",
+    "documentation": "Dokumentasyon"
   }
 }

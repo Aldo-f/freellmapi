@@ -13,7 +13,8 @@
     "switchDark": "Byt till mörkt tema",
     "switchToChinese": "Byt till kinesiska",
     "switchToEnglish": "Byta till engelska",
-    "modelsMenu": "Bläddra bland modelltyper"
+    "modelsMenu": "Bläddra bland modelltyper",
+    "agents": "Agenter"
   },
   "auth": {
     "createYourAccount": "Skapa ditt konto",
@@ -375,7 +376,29 @@
     "quotaLimit": "Gräns",
     "quotaRemaining": "Återstående",
     "quotaReset": "Återställ",
-    "quotaObserved": "Observerat"
+    "quotaObserved": "Observerat",
+    "tabAgents": "Agenter",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Gemini-modellmappning",
+    "geminiDesc": "Mappa namnen Gemini Pro, Flash och Flash-Lite till Auto eller en specifik katalogmodell.",
+    "compatibilityTitle": "Agentkompatibilitet",
+    "compatibilityDesc": "Styr kompatibilitetsytor som kräver aktivering samt modellupptäckt för Claude Code.",
+    "ollamaMode": "Ollama-emulering",
+    "ollamaModeHint": "Öppen loopback accepterar aldrig oautentiserad LAN-trafik.",
+    "ollamaOff": "Av",
+    "ollamaLoopback": "Öppen på loopback",
+    "ollamaKeyRequired": "API-nyckel krävs",
+    "claudeAliases": "Upptäcktsalias för Claude Code",
+    "claudeAliasesHint": "Exponera claude/<model>-alias så att gatewayens modellväljare kan lista katalogen.",
+    "urlTokensTitle": "Återkallbara URL-token",
+    "urlTokensDesc": "Endast för klienter utan headers. URL-token kan läcka till historik och loggar, så återkalla dem när de inte längre behövs.",
+    "urlTokenLabel": "Tokenetikett",
+    "createUrlToken": "Skapa token",
+    "urlTokenOnce": "Kopiera denna token nu. Den visas inte igen.",
+    "revoked": "Återkallad",
+    "revoke": "Återkalla"
   },
   "status": {
     "healthy": "Hälsosamt",
@@ -454,7 +477,8 @@
     "keyOrdinal": "Nyckel#{n}",
     "attemptTimingHint": "Startförskjutning från begäran start · Försökslängd",
     "requestedModel": "Efterfrågad modell",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Begäranden per agent"
   },
   "playground": {
     "title": "Lekplats",
@@ -674,5 +698,15 @@
     "url": "Ange en giltig URL som börjar med http:// eller https://",
     "email": "Ange en giltig e-postadress",
     "passwordMin": "Åtminstone {min} karaktärer"
+  },
+  "agents": {
+    "title": "Kodningsagenter",
+    "description": "Anslut kodningsverktyg till en gemensam gateway för gratismodeller med genererad konfiguration som säkerhetskopieras tryggt.",
+    "apiKey": "API-nyckel",
+    "quickstart": "Snabbaste vägen: konfigurera Claude Code från livekatalogen.",
+    "currentKey": "Aktuell enhetlig nyckel:",
+    "seenRecently": "Nyligen sedd",
+    "endpoint": "Slutpunkt",
+    "documentation": "Dokumentation"
   }
 }

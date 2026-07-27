@@ -13,7 +13,8 @@
     "switchDark": "Passer au thème sombre",
     "switchToChinese": "Passer au chinois",
     "switchToEnglish": "Passer à l'anglais",
-    "modelsMenu": "Parcourir les types de modèles"
+    "modelsMenu": "Parcourir les types de modèles",
+    "agents": "Agents"
   },
   "auth": {
     "createYourAccount": "Créez votre compte",
@@ -375,7 +376,29 @@
     "quotaLimit": "Limite",
     "quotaRemaining": "Restant",
     "quotaReset": "Réinitialisation",
-    "quotaObserved": "Observé"
+    "quotaObserved": "Observé",
+    "tabAgents": "Agents",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Correspondance des modèles Gemini",
+    "geminiDesc": "Associez les noms Gemini Pro, Flash et Flash-Lite à Auto ou à un modèle précis du catalogue.",
+    "compatibilityTitle": "Compatibilité des agents",
+    "compatibilityDesc": "Contrôlez les surfaces de compatibilité en opt-in et la découverte des modèles par Claude Code.",
+    "ollamaMode": "Émulation Ollama",
+    "ollamaModeHint": "Le mode ouvert en loopback n'accepte jamais de trafic LAN non authentifié.",
+    "ollamaOff": "Désactivé",
+    "ollamaLoopback": "Ouvert en loopback",
+    "ollamaKeyRequired": "Clé API requise",
+    "claudeAliases": "Alias de découverte Claude Code",
+    "claudeAliasesHint": "Exposez des alias claude/<model> pour que le sélecteur de modèles de la passerelle puisse lister le catalogue.",
+    "urlTokensTitle": "Tokens d'URL révocables",
+    "urlTokensDesc": "Réservé aux clients sans en-têtes. Les tokens d'URL peuvent fuiter dans l'historique et les journaux ; révoquez-les dès qu'ils ne sont plus nécessaires.",
+    "urlTokenLabel": "Libellé du token",
+    "createUrlToken": "Créer un token",
+    "urlTokenOnce": "Copiez ce token maintenant. Il ne sera plus affiché.",
+    "revoked": "Révoqué",
+    "revoke": "Révoquer"
   },
   "status": {
     "healthy": "sain",
@@ -454,7 +477,8 @@
     "keyOrdinal": "clé #{n}",
     "attemptTimingHint": "Décalage depuis le début de la requête · durée de la tentative",
     "requestedModel": "Modèle demandé",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Requêtes par agent"
   },
   "playground": {
     "title": "Bac à sable",
@@ -674,5 +698,15 @@
     "url": "Saisissez une URL valide commençant par http:// ou https://",
     "email": "Saisissez une adresse e-mail valide",
     "passwordMin": "Au moins {min} caractères"
+  },
+  "agents": {
+    "title": "Agents de codage",
+    "description": "Connectez vos outils de codage à une passerelle unique de modèles gratuits, avec une configuration générée et sans risque pour vos sauvegardes.",
+    "apiKey": "Clé API",
+    "quickstart": "Le plus rapide : configurez Claude Code depuis le catalogue en direct.",
+    "currentKey": "Clé unifiée actuelle :",
+    "seenRecently": "Vu récemment",
+    "endpoint": "Endpoint",
+    "documentation": "Documentation"
   }
 }

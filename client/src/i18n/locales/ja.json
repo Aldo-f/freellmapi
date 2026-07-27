@@ -13,7 +13,8 @@
     "switchDark": "ダークテーマに切り替える",
     "switchToChinese": "中国語に切り替える",
     "switchToEnglish": "英語に切り替える",
-    "modelsMenu": "モデルタイプを参照する"
+    "modelsMenu": "モデルタイプを参照する",
+    "agents": "エージェント"
   },
   "auth": {
     "createYourAccount": "アカウントを作成する",
@@ -375,7 +376,29 @@
     "quotaLimit": "限界",
     "quotaRemaining": "残り",
     "quotaReset": "リセット",
-    "quotaObserved": "観察された"
+    "quotaObserved": "観察された",
+    "tabAgents": "エージェント",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Gemini モデルマッピング",
+    "geminiDesc": "Gemini Pro、Flash、Flash-Lite の名前を Auto または特定のカタログモデルにマッピングします。",
+    "compatibilityTitle": "エージェント互換性",
+    "compatibilityDesc": "オプトインの互換サーフェスと Claude Code のモデル検出を制御します。",
+    "ollamaMode": "Ollama エミュレーション",
+    "ollamaModeHint": "オープンループバックは、未認証の LAN トラフィックを決して受け付けません。",
+    "ollamaOff": "オフ",
+    "ollamaLoopback": "ループバックで開放",
+    "ollamaKeyRequired": "API キーが必要",
+    "claudeAliases": "Claude Code 検出エイリアス",
+    "claudeAliasesHint": "claude/<model> エイリアスを公開して、ゲートウェイのモデルピッカーがカタログを一覧表示できるようにします。",
+    "urlTokensTitle": "取り消し可能な URL トークン",
+    "urlTokensDesc": "ヘッダーを使えないクライアント専用です。URL トークンは履歴やログに漏れる可能性があるため、不要になったら取り消してください。",
+    "urlTokenLabel": "トークンラベル",
+    "createUrlToken": "トークンを作成",
+    "urlTokenOnce": "このトークンを今すぐコピーしてください。二度と表示されません。",
+    "revoked": "取り消し済み",
+    "revoke": "取り消す"
   },
   "status": {
     "healthy": "健康な",
@@ -454,7 +477,8 @@
     "keyOrdinal": "キー #{n}",
     "attemptTimingHint": "リクエスト開始からの開始オフセット · 試行期間",
     "requestedModel": "要求されたモデル",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "エージェント別リクエスト"
   },
   "playground": {
     "title": "遊び場",
@@ -674,5 +698,15 @@
     "url": "http:// または https:// で始まる有効な URL を入力してください",
     "email": "有効なメールアドレスを入力してください",
     "passwordMin": "少なくとも {min} 文字"
+  },
+  "agents": {
+    "title": "コーディングエージェント",
+    "description": "コーディングツールを 1 つの無料モデルゲートウェイに接続します。設定は自動生成され、バックアップも安全です。",
+    "apiKey": "API キー",
+    "quickstart": "最速の方法: ライブカタログから Claude Code を設定します。",
+    "currentKey": "現在の統合キー:",
+    "seenRecently": "最近確認済み",
+    "endpoint": "エンドポイント",
+    "documentation": "ドキュメント"
   }
 }

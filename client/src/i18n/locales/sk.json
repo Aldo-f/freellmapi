@@ -13,7 +13,8 @@
     "switchDark": "Prejsť na tmavú tému",
     "switchToChinese": "Prechod na čínštinu",
     "switchToEnglish": "Prechod na angličtinu",
-    "modelsMenu": "Prehliadať typy modelov"
+    "modelsMenu": "Prehliadať typy modelov",
+    "agents": "Agenti"
   },
   "auth": {
     "createYourAccount": "Vytvorte si účet",
@@ -375,7 +376,29 @@
     "quotaLimit": "Limit",
     "quotaRemaining": "Zvyšok",
     "quotaReset": "Reset",
-    "quotaObserved": "Pozorované"
+    "quotaObserved": "Pozorované",
+    "tabAgents": "Agenti",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Mapovanie modelov Gemini",
+    "geminiDesc": "Namapujte názvy Gemini Pro, Flash a Flash-Lite na Auto alebo konkrétny model z katalógu.",
+    "compatibilityTitle": "Kompatibilita agentov",
+    "compatibilityDesc": "Ovládajte voliteľné vrstvy kompatibility a zisťovanie modelov Claude Code.",
+    "ollamaMode": "Emulácia Ollama",
+    "ollamaModeHint": "Otvorený loopback nikdy neprijíma neoverenú prevádzku z LAN.",
+    "ollamaOff": "Vypnuté",
+    "ollamaLoopback": "Otvorené na loopbacku",
+    "ollamaKeyRequired": "Vyžaduje sa API kľúč",
+    "claudeAliases": "Aliasy zisťovania Claude Code",
+    "claudeAliasesHint": "Sprístupnite aliasy claude/<model>, aby výber modelov brány mohol zobraziť katalóg.",
+    "urlTokensTitle": "Odvolateľné URL tokeny",
+    "urlTokensDesc": "Iba pre klientov bez hlavičiek. URL tokeny môžu uniknúť do histórie a logov, preto ich odvolajte, keď už nie sú potrebné.",
+    "urlTokenLabel": "Označenie tokenu",
+    "createUrlToken": "Vytvoriť token",
+    "urlTokenOnce": "Skopírujte tento token teraz. Už sa znova nezobrazí.",
+    "revoked": "Odvolaný",
+    "revoke": "Odvolať"
   },
   "status": {
     "healthy": "zdravé",
@@ -454,7 +477,8 @@
     "keyOrdinal": "Kľúčové #{n}",
     "attemptTimingHint": "Začať offset od začiatku požiadavky · Trvanie pokusu",
     "requestedModel": "Požadovaný model",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Požiadavky podľa agenta"
   },
   "playground": {
     "title": "Ihrisko",
@@ -674,5 +698,15 @@
     "url": "Zadajte platný URL začínajúci na http:// alebo https://",
     "email": "Zadajte platnú e-mailovú adresu",
     "passwordMin": "Aspoň {min} postavy"
+  },
+  "agents": {
+    "title": "Kódovací agenti",
+    "description": "Pripojte kódovacie nástroje k jednej bráne bezplatných modelov s generovanou konfiguráciou bezpečnou pre zálohy.",
+    "apiKey": "API kľúč",
+    "quickstart": "Najrýchlejšia cesta: nakonfigurujte Claude Code zo živého katalógu.",
+    "currentKey": "Aktuálny zjednotený kľúč:",
+    "seenRecently": "Nedávno videný",
+    "endpoint": "Endpoint",
+    "documentation": "Dokumentácia"
   }
 }

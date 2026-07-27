@@ -13,7 +13,8 @@
     "switchDark": "เปลี่ยนเป็นธีมสีเข้ม",
     "switchToChinese": "เปลี่ยนไปใช้ภาษาจีน",
     "switchToEnglish": "เปลี่ยนเป็นภาษาอังกฤษ",
-    "modelsMenu": "เรียกดูประเภทโมเดล"
+    "modelsMenu": "เรียกดูประเภทโมเดล",
+    "agents": "เอเจนต์"
   },
   "auth": {
     "createYourAccount": "สร้างบัญชีของคุณ",
@@ -375,7 +376,29 @@
     "quotaLimit": "ขีดจำกัด",
     "quotaRemaining": "ที่เหลืออยู่",
     "quotaReset": "รีเซ็ต",
-    "quotaObserved": "สังเกต"
+    "quotaObserved": "สังเกต",
+    "tabAgents": "เอเจนต์",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "การแมปโมเดล Gemini",
+    "geminiDesc": "แมปชื่อ Gemini Pro, Flash และ Flash-Lite ไปยัง Auto หรือโมเดลแค็ตตาล็อกที่ระบุ",
+    "compatibilityTitle": "ความเข้ากันได้ของเอเจนต์",
+    "compatibilityDesc": "ควบคุมพื้นผิวความเข้ากันได้แบบเลือกใช้และการค้นหาโมเดลของ Claude Code",
+    "ollamaMode": "การจำลอง Ollama",
+    "ollamaModeHint": "loopback แบบเปิดจะไม่ยอมรับทราฟฟิก LAN ที่ไม่ผ่านการยืนยันตัวตนเด็ดขาด",
+    "ollamaOff": "ปิด",
+    "ollamaLoopback": "เปิดบน loopback",
+    "ollamaKeyRequired": "ต้องใช้กุญแจ API",
+    "claudeAliases": "นามแฝงการค้นหาของ Claude Code",
+    "claudeAliasesHint": "เปิดเผยนามแฝง claude/<model> เพื่อให้ตัวเลือกโมเดลของเกตเวย์แสดงรายการแค็ตตาล็อกได้",
+    "urlTokensTitle": "โทเค็น URL ที่เพิกถอนได้",
+    "urlTokensDesc": "สำหรับไคลเอนต์ที่ไม่มีส่วนหัวเท่านั้น โทเค็น URL อาจรั่วไหลไปยังประวัติและบันทึก ดังนั้นให้เพิกถอนเมื่อไม่ต้องการใช้อีกต่อไป",
+    "urlTokenLabel": "ป้ายกำกับโทเค็น",
+    "createUrlToken": "สร้างโทเค็น",
+    "urlTokenOnce": "คัดลอกโทเค็นนี้ตอนนี้ จะไม่แสดงอีก",
+    "revoked": "เพิกถอนแล้ว",
+    "revoke": "เพิกถอน"
   },
   "status": {
     "healthy": "มีสุขภาพดี",
@@ -454,7 +477,8 @@
     "keyOrdinal": "กุญแจ #{n}",
     "attemptTimingHint": "เริ่มต้นออฟเซ็ตจากคำขอเริ่มต้น · ระยะเวลาความพยายาม",
     "requestedModel": "รุ่นที่ขอ",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "คำขอตามเอเจนต์"
   },
   "playground": {
     "title": "สนามเด็กเล่น",
@@ -674,5 +698,15 @@
     "url": "ป้อน URL ที่ถูกต้องโดยขึ้นต้นด้วย http:// หรือ https://",
     "email": "ป้อนที่อยู่อีเมลที่ถูกต้อง",
     "passwordMin": "อย่างน้อยอักขระ {min}"
+  },
+  "agents": {
+    "title": "เอเจนต์เขียนโค้ด",
+    "description": "เชื่อมต่อเครื่องมือเขียนโค้ดกับเกตเวย์โมเดลฟรีเดียวด้วยการกำหนดค่าที่สร้างให้และปลอดภัยต่อการสำรองข้อมูล",
+    "apiKey": "กุญแจ API",
+    "quickstart": "เส้นทางที่เร็วที่สุด: กำหนดค่า Claude Code จากแค็ตตาล็อกสด",
+    "currentKey": "กุญแจรวมปัจจุบัน:",
+    "seenRecently": "พบเห็นเมื่อเร็วๆ นี้",
+    "endpoint": "เอนด์พอยต์",
+    "documentation": "เอกสารประกอบ"
   }
 }

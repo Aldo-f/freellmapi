@@ -13,7 +13,8 @@
     "switchDark": "Overschakelen naar donker thema",
     "switchToChinese": "Overstappen naar Chinees",
     "switchToEnglish": "Overstap naar Engels",
-    "modelsMenu": "Blader door modeltypes"
+    "modelsMenu": "Blader door modeltypes",
+    "agents": "Agenten"
   },
   "auth": {
     "createYourAccount": "Maak je account aan",
@@ -375,7 +376,29 @@
     "quotaLimit": "Limiet",
     "quotaRemaining": "Overige",
     "quotaReset": "Reset",
-    "quotaObserved": "Geobserveerd"
+    "quotaObserved": "Geobserveerd",
+    "tabAgents": "Agenten",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Gemini-modeltoewijzing",
+    "geminiDesc": "Wijs de namen Gemini Pro, Flash en Flash-Lite toe aan Auto of een specifiek catalogusmodel.",
+    "compatibilityTitle": "Agentcompatibiliteit",
+    "compatibilityDesc": "Beheer optionele compatibiliteitsfuncties en Claude Code-modeldetectie.",
+    "ollamaMode": "Ollama-emulatie",
+    "ollamaModeHint": "Open loopback accepteert nooit niet-geauthenticeerd LAN-verkeer.",
+    "ollamaOff": "Uit",
+    "ollamaLoopback": "Open op loopback",
+    "ollamaKeyRequired": "API-sleutel vereist",
+    "claudeAliases": "Claude Code-detectiealiassen",
+    "claudeAliasesHint": "Stel claude/<model>-aliassen beschikbaar zodat de modelkiezer van de gateway de catalogus kan tonen.",
+    "urlTokensTitle": "Intrekbare URL-tokens",
+    "urlTokensDesc": "Alleen voor clients zonder headers. URL-tokens kunnen in geschiedenis en logs terechtkomen, dus trek ze in zodra ze niet meer nodig zijn.",
+    "urlTokenLabel": "Tokenlabel",
+    "createUrlToken": "Token aanmaken",
+    "urlTokenOnce": "Kopieer dit token nu. Het wordt niet opnieuw getoond.",
+    "revoked": "Ingetrokken",
+    "revoke": "Intrekken"
   },
   "status": {
     "healthy": "Gezond",
@@ -454,7 +477,8 @@
     "keyOrdinal": "Belangrijke #{n}",
     "attemptTimingHint": "Start offset van verzoek start · Duur van de poging",
     "requestedModel": "Aangevraagd model",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Verzoeken per agent"
   },
   "playground": {
     "title": "Speeltuin",
@@ -674,5 +698,15 @@
     "url": "Voer een geldige URL in die begint met http:// of https://",
     "email": "Voer een geldig e-mailadres in",
     "passwordMin": "Tenminste {min} personages"
+  },
+  "agents": {
+    "title": "Codeeragenten",
+    "description": "Verbind codeertools met één gateway voor gratis modellen, met gegenereerde, back-upveilige configuratie.",
+    "apiKey": "API-sleutel",
+    "quickstart": "Snelste route: configureer Claude Code vanuit de live catalogus.",
+    "currentKey": "Huidige uniforme sleutel:",
+    "seenRecently": "Onlangs gezien",
+    "endpoint": "Endpoint",
+    "documentation": "Documentatie"
   }
 }

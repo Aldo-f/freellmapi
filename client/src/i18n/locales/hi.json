@@ -13,7 +13,8 @@
     "switchDark": "डार्क थीम पर स्विच करें",
     "switchToChinese": "चीनी पर स्विच करें",
     "switchToEnglish": "अंग्रेजी पर स्विच करें",
-    "modelsMenu": "मॉडल प्रकार ब्राउज़ करें"
+    "modelsMenu": "मॉडल प्रकार ब्राउज़ करें",
+    "agents": "एजेंट"
   },
   "auth": {
     "createYourAccount": "अपना खाता बनाएं",
@@ -375,7 +376,29 @@
     "quotaLimit": "सीमा",
     "quotaRemaining": "शेष",
     "quotaReset": "रीसेट करें",
-    "quotaObserved": "अवलोकन किया"
+    "quotaObserved": "अवलोकन किया",
+    "tabAgents": "एजेंट",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Gemini मॉडल मैपिंग",
+    "geminiDesc": "Gemini Pro, Flash और Flash-Lite नामों को ऑटो या किसी विशिष्ट कैटलॉग मॉडल पर मैप करें।",
+    "compatibilityTitle": "एजेंट संगतता",
+    "compatibilityDesc": "ऑप्ट-इन संगतता सतहों और Claude Code मॉडल खोज को नियंत्रित करें।",
+    "ollamaMode": "Ollama अनुकरण",
+    "ollamaModeHint": "ओपन-लूपबैक कभी भी अप्रमाणित LAN ट्रैफ़िक स्वीकार नहीं करता।",
+    "ollamaOff": "बंद",
+    "ollamaLoopback": "लूपबैक पर खुला",
+    "ollamaKeyRequired": "API कुंजी आवश्यक",
+    "claudeAliases": "Claude Code खोज उपनाम",
+    "claudeAliasesHint": "claude/<model> उपनाम उजागर करें ताकि गेटवे मॉडल चयनकर्ता कैटलॉग सूचीबद्ध कर सके।",
+    "urlTokensTitle": "रद्द करने योग्य URL टोकन",
+    "urlTokensDesc": "केवल हेडर-रहित क्लाइंट के लिए। URL टोकन इतिहास और लॉग में लीक हो सकते हैं, इसलिए ज़रूरत न रहने पर उन्हें रद्द कर दें।",
+    "urlTokenLabel": "टोकन लेबल",
+    "createUrlToken": "टोकन बनाएँ",
+    "urlTokenOnce": "यह टोकन अभी कॉपी करें। यह दोबारा नहीं दिखाया जाएगा।",
+    "revoked": "रद्द किया गया",
+    "revoke": "रद्द करें"
   },
   "status": {
     "healthy": "स्वस्थ",
@@ -454,7 +477,8 @@
     "keyOrdinal": "कुंजी #{n}",
     "attemptTimingHint": "अनुरोध प्रारंभ · प्रयास अवधि से प्रारंभ ऑफसेट",
     "requestedModel": "अनुरोधित मॉडल",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "एजेंट के अनुसार अनुरोध"
   },
   "playground": {
     "title": "खेल का मैदान",
@@ -674,5 +698,15 @@
     "url": "http:// या https:// से शुरू होने वाला वैध URL दर्ज करें",
     "email": "एक वैध ईमेल पता दर्ज करें",
     "passwordMin": "कम से कम {min} अक्षर"
+  },
+  "agents": {
+    "title": "कोडिंग एजेंट",
+    "description": "कोडिंग टूल को एक फ्री-मॉडल गेटवे से जोड़ें, जनरेट की गई और बैकअप-सुरक्षित कॉन्फ़िगरेशन के साथ।",
+    "apiKey": "API कुंजी",
+    "quickstart": "सबसे तेज़ रास्ता: लाइव कैटलॉग से Claude Code कॉन्फ़िगर करें।",
+    "currentKey": "वर्तमान एकीकृत कुंजी:",
+    "seenRecently": "हाल ही में देखा गया",
+    "endpoint": "समापन बिंदु",
+    "documentation": "दस्तावेज़ीकरण"
   }
 }

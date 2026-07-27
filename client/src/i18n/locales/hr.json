@@ -13,7 +13,8 @@
     "switchDark": "Prebaci na tamnu temu",
     "switchToChinese": "Prijelaz na kineski",
     "switchToEnglish": "Prijelaz na engleski",
-    "modelsMenu": "Pregledajte vrste modela"
+    "modelsMenu": "Pregledajte vrste modela",
+    "agents": "Agenti"
   },
   "auth": {
     "createYourAccount": "Kreirajte svoj račun",
@@ -375,7 +376,29 @@
     "quotaLimit": "Ograničenje",
     "quotaRemaining": "Preostali",
     "quotaReset": "Reset",
-    "quotaObserved": "Opaženo"
+    "quotaObserved": "Opaženo",
+    "tabAgents": "Agenti",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Mapiranje Gemini modela",
+    "geminiDesc": "Mapirajte nazive Gemini Pro, Flash i Flash-Lite na Auto ili određeni model iz kataloga.",
+    "compatibilityTitle": "Kompatibilnost agenata",
+    "compatibilityDesc": "Upravljajte opcionalnim sučeljima kompatibilnosti i otkrivanjem modela za Claude Code.",
+    "ollamaMode": "Ollama emulacija",
+    "ollamaModeHint": "Otvoreni loopback nikada ne prihvaća neautentificirani LAN promet.",
+    "ollamaOff": "Isključeno",
+    "ollamaLoopback": "Otvoreno na loopbacku",
+    "ollamaKeyRequired": "Potreban API ključ",
+    "claudeAliases": "Aliasi za otkrivanje Claude Codea",
+    "claudeAliasesHint": "Izložite claude/<model> aliase kako bi birač modela gatewaya mogao izlistati katalog.",
+    "urlTokensTitle": "Opozivi URL tokeni",
+    "urlTokensDesc": "Samo za klijente bez zaglavlja. URL tokeni mogu procuriti u povijest i logove, pa ih opozovite kad više nisu potrebni.",
+    "urlTokenLabel": "Oznaka tokena",
+    "createUrlToken": "Stvori token",
+    "urlTokenOnce": "Kopirajte ovaj token sada. Neće se ponovno prikazati.",
+    "revoked": "Opozvano",
+    "revoke": "Opozovi"
   },
   "status": {
     "healthy": "Zdravo",
@@ -454,7 +477,8 @@
     "keyOrdinal": "Ključne #{n}",
     "attemptTimingHint": "Početak offseta od početka zahtjeva · Trajanje pokušaja",
     "requestedModel": "Traženi model",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Zahtjevi po agentu"
   },
   "playground": {
     "title": "Igralište",
@@ -674,5 +698,15 @@
     "url": "Unesite valjani URL koji počinje s http:// ili https://",
     "email": "Unesite valjanu e-mail adresu",
     "passwordMin": "Barem {min} likova"
+  },
+  "agents": {
+    "title": "Agenti za kodiranje",
+    "description": "Povežite alate za kodiranje s jednim gatewayem besplatnih modela uz generiranu konfiguraciju sigurnu za backup.",
+    "apiKey": "API ključ",
+    "quickstart": "Najbrži put: konfigurirajte Claude Code iz live kataloga.",
+    "currentKey": "Trenutni objedinjeni ključ:",
+    "seenRecently": "Nedavno viđeno",
+    "endpoint": "Krajnja točka",
+    "documentation": "Dokumentacija"
   }
 }

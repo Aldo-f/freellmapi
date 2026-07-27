@@ -13,7 +13,8 @@
     "switchDark": "Пребаците се на тамну тему",
     "switchToChinese": "Пребаци на кинески",
     "switchToEnglish": "Пребаците се на енглески",
-    "modelsMenu": "Прегледајте типове модела"
+    "modelsMenu": "Прегледајте типове модела",
+    "agents": "Агенти"
   },
   "auth": {
     "createYourAccount": "Креирајте свој налог",
@@ -375,7 +376,29 @@
     "quotaLimit": "Лимит",
     "quotaRemaining": "Преостало",
     "quotaReset": "Ресетуј",
-    "quotaObserved": "Посматрано"
+    "quotaObserved": "Посматрано",
+    "tabAgents": "Агенти",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Мапирање Gemini модела",
+    "geminiDesc": "Мапирајте називе Gemini Pro, Flash и Flash-Lite на Auto или одређени модел из каталога.",
+    "compatibilityTitle": "Компатибилност агената",
+    "compatibilityDesc": "Управљајте опционим површинама компатибилности и откривањем модела за Claude Code.",
+    "ollamaMode": "Ollama емулација",
+    "ollamaModeHint": "Отворени loopback никада не прихвата неаутентификовани LAN саобраћај.",
+    "ollamaOff": "Искључено",
+    "ollamaLoopback": "Отворено на loopback-у",
+    "ollamaKeyRequired": "Потребан је API кључ",
+    "claudeAliases": "Алијаси за откривање Claude Code-а",
+    "claudeAliasesHint": "Изложите claude/<model> алијасе како би бирач модела мрежног пролаза могао да прикаже каталог.",
+    "urlTokensTitle": "Опозиви URL токени",
+    "urlTokensDesc": "Само за клијенте без заглавља. URL токени могу да процуре у историју и логове, па их опозовите када више нису потребни.",
+    "urlTokenLabel": "Ознака токена",
+    "createUrlToken": "Направи токен",
+    "urlTokenOnce": "Копирајте овај токен одмах. Неће бити поново приказан.",
+    "revoked": "Опозван",
+    "revoke": "Опозови"
   },
   "status": {
     "healthy": "здраво",
@@ -454,7 +477,8 @@
     "keyOrdinal": "кључ #{n}",
     "attemptTimingHint": "Почетак одступања од почетка захтева · трајање покушаја",
     "requestedModel": "Тражени модел",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Захтеви по агенту"
   },
   "playground": {
     "title": "Игралиште",
@@ -674,5 +698,15 @@
     "url": "Унесите важећи URL који почиње са хттп:// или хттпс://",
     "email": "Унесите важећу адресу е-поште",
     "passwordMin": "Најмање {min} знакова"
+  },
+  "agents": {
+    "title": "Агенти за кодирање",
+    "description": "Повежите алате за кодирање са једним мрежним пролазом бесплатних модела уз генерисану конфигурацију безбедну за резервне копије.",
+    "apiKey": "API кључ",
+    "quickstart": "Најбржи пут: конфигуришите Claude Code из каталога уживо.",
+    "currentKey": "Тренутни обједињени кључ:",
+    "seenRecently": "Недавно виђен",
+    "endpoint": "Крајња тачка",
+    "documentation": "Документација"
   }
 }

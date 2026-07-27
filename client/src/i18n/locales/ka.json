@@ -13,7 +13,8 @@
     "switchDark": "ბნელ თემაზე გადართვა",
     "switchToChinese": "ჩინურზე გადართვა",
     "switchToEnglish": "ინგლისურზე გადართვა",
-    "modelsMenu": "მოდელის ტიპების დათვალიერება"
+    "modelsMenu": "მოდელის ტიპების დათვალიერება",
+    "agents": "აგენტები"
   },
   "auth": {
     "createYourAccount": "შექმენით თქვენი ანგარიში",
@@ -375,7 +376,29 @@
     "quotaLimit": "ლიმიტი",
     "quotaRemaining": "დარჩენილი",
     "quotaReset": "გადატვირთვა",
-    "quotaObserved": "დააკვირდა"
+    "quotaObserved": "დააკვირდა",
+    "tabAgents": "აგენტები",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Gemini მოდელების მაპინგი",
+    "geminiDesc": "მიაბით Gemini Pro, Flash და Flash-Lite სახელები Auto-ს ან კონკრეტულ კატალოგის მოდელს.",
+    "compatibilityTitle": "აგენტების თავსებადობა",
+    "compatibilityDesc": "მართეთ არჩევითი თავსებადობის ზედაპირები და Claude Code მოდელების აღმოჩენა.",
+    "ollamaMode": "Ollama ემულაცია",
+    "ollamaModeHint": "ღია loopback არასოდეს იღებს არაავტორიზებულ LAN ტრაფიკს.",
+    "ollamaOff": "გამორთული",
+    "ollamaLoopback": "ღია loopback-ზე",
+    "ollamaKeyRequired": "საჭიროა API გასაღები",
+    "claudeAliases": "Claude Code აღმოჩენის ალიასები",
+    "claudeAliasesHint": "გამოაჩინეთ claude/<model> ალიასები, რომ გეითვეის მოდელის ამრჩევმა შეძლოს კატალოგის ჩამოთვლა.",
+    "urlTokensTitle": "გაუქმებადი URL ტოკენები",
+    "urlTokensDesc": "მხოლოდ ჰედერების გარეშე კლიენტებისთვის. URL ტოკენები შეიძლება მოხვდეს ისტორიასა და ჟურნალებში, ამიტომ გააუქმეთ ისინი, როცა აღარ გჭირდებათ.",
+    "urlTokenLabel": "ტოკენის ლეიბლი",
+    "createUrlToken": "ტოკენის შექმნა",
+    "urlTokenOnce": "დააკოპირეთ ეს ტოკენი ახლავე. ის აღარ გამოჩნდება.",
+    "revoked": "გაუქმებულია",
+    "revoke": "გაუქმება"
   },
   "status": {
     "healthy": "ჯანსაღი",
@@ -454,7 +477,8 @@
     "keyOrdinal": "გასაღები #{n}",
     "attemptTimingHint": "ოფსეტის დაწყება მოთხოვნის დაწყებიდან · მცდელობის ხანგრძლივობა",
     "requestedModel": "მოთხოვნილი მოდელი",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "მოთხოვნები აგენტების მიხედვით"
   },
   "playground": {
     "title": "სათამაშო მოედანი",
@@ -674,5 +698,15 @@
     "url": "შეიყვანეთ სწორი URL დაწყებული http:// ან https://-ით",
     "email": "შეიყვანეთ სწორი ელფოსტის მისამართი",
     "passwordMin": "მინიმუმ {min} სიმბოლო"
+  },
+  "agents": {
+    "title": "კოდირების აგენტები",
+    "description": "დააკავშირეთ კოდირების ხელსაწყოები ერთ უფასო მოდელების გეითვეისთან გენერირებული, სარეზერვო ასლისთვის უსაფრთხო კონფიგურაციით.",
+    "apiKey": "API გასაღები",
+    "quickstart": "ყველაზე სწრაფი გზა: დააკონფიგურირეთ Claude Code ცოცხალი კატალოგიდან.",
+    "currentKey": "მიმდინარე ერთიანი გასაღები:",
+    "seenRecently": "ბოლოს ნანახი",
+    "endpoint": "საბოლოო წერტილი",
+    "documentation": "დოკუმენტაცია"
   }
 }

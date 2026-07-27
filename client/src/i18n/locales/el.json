@@ -13,7 +13,8 @@
     "switchDark": "Μετάβαση σε σκούρο θέμα",
     "switchToChinese": "Μετάβαση στα Κινέζικα",
     "switchToEnglish": "Μετάβαση στα Αγγλικά",
-    "modelsMenu": "Αναζήτηση τύπων μοντέλων"
+    "modelsMenu": "Αναζήτηση τύπων μοντέλων",
+    "agents": "Πράκτορες"
   },
   "auth": {
     "createYourAccount": "Δημιουργήστε τον λογαριασμό σας",
@@ -375,7 +376,29 @@
     "quotaLimit": "Όριο",
     "quotaRemaining": "Υπόλοιπο",
     "quotaReset": "Επαναφορά",
-    "quotaObserved": "Παρατηρήθηκε"
+    "quotaObserved": "Παρατηρήθηκε",
+    "tabAgents": "Πράκτορες",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Αντιστοίχιση μοντέλων Gemini",
+    "geminiDesc": "Αντιστοιχίστε τα ονόματα Gemini Pro, Flash και Flash-Lite στο Auto ή σε συγκεκριμένο μοντέλο του καταλόγου.",
+    "compatibilityTitle": "Συμβατότητα πρακτόρων",
+    "compatibilityDesc": "Ελέγξτε τις προαιρετικές επιφάνειες συμβατότητας και την ανακάλυψη μοντέλων του Claude Code.",
+    "ollamaMode": "Εξομοίωση Ollama",
+    "ollamaModeHint": "Το ανοιχτό loopback δεν δέχεται ποτέ μη πιστοποιημένη κίνηση LAN.",
+    "ollamaOff": "Ανενεργό",
+    "ollamaLoopback": "Ανοιχτό στο loopback",
+    "ollamaKeyRequired": "Απαιτείται κλειδί API",
+    "claudeAliases": "Ψευδώνυμα ανακάλυψης Claude Code",
+    "claudeAliasesHint": "Εκθέστε ψευδώνυμα claude/<model> ώστε ο επιλογέας μοντέλων της πύλης να εμφανίζει τον κατάλογο.",
+    "urlTokensTitle": "Ανακλητά token URL",
+    "urlTokensDesc": "Μόνο για πελάτες χωρίς κεφαλίδες. Τα token URL μπορούν να διαρρεύσουν στο ιστορικό και στα αρχεία καταγραφής, γι' αυτό ανακαλέστε τα όταν δεν χρειάζονται πια.",
+    "urlTokenLabel": "Ετικέτα token",
+    "createUrlToken": "Δημιουργία token",
+    "urlTokenOnce": "Αντιγράψτε αυτό το token τώρα. Δεν θα εμφανιστεί ξανά.",
+    "revoked": "Ανακλήθηκε",
+    "revoke": "Ανάκληση"
   },
   "status": {
     "healthy": "υγιής",
@@ -454,7 +477,8 @@
     "keyOrdinal": "Βασικά #{n}",
     "attemptTimingHint": "Μετατόπιση έναρξης από την έναρξη αιτήματος · Διάρκεια προσπάθειας",
     "requestedModel": "Ζητούμενο μοντέλο",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Αιτήματα ανά πράκτορα"
   },
   "playground": {
     "title": "Παιδική χαρά",
@@ -674,5 +698,15 @@
     "url": "Εισαγάγετε μια έγκυρη URL ξεκινώντας με http:// ή https://",
     "email": "Εισαγάγετε μια έγκυρη διεύθυνση email",
     "passwordMin": "Τουλάχιστον {min} χαρακτήρες"
+  },
+  "agents": {
+    "title": "Πράκτορες προγραμματισμού",
+    "description": "Συνδέστε εργαλεία προγραμματισμού σε μία πύλη δωρεάν μοντέλων με παραγόμενη διαμόρφωση που προστατεύει τα αντίγραφα ασφαλείας.",
+    "apiKey": "Κλειδί API",
+    "quickstart": "Ο γρηγορότερος δρόμος: διαμορφώστε το Claude Code από τον ζωντανό κατάλογο.",
+    "currentKey": "Τρέχον ενοποιημένο κλειδί:",
+    "seenRecently": "Εμφανίστηκε πρόσφατα",
+    "endpoint": "Τελικό σημείο",
+    "documentation": "Τεκμηρίωση"
   }
 }

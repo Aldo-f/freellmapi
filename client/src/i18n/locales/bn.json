@@ -13,7 +13,8 @@
     "switchDark": "অন্ধকার থিমে স্যুইচ করুন",
     "switchToChinese": "চাইনিজ এ স্যুইচ করুন",
     "switchToEnglish": "ইংরেজিতে স্যুইচ করুন",
-    "modelsMenu": "মডেলের ধরন ব্রাউজ করুন"
+    "modelsMenu": "মডেলের ধরন ব্রাউজ করুন",
+    "agents": "এজেন্ট"
   },
   "auth": {
     "createYourAccount": "আপনার অ্যাকাউন্ট তৈরি করুন",
@@ -375,7 +376,29 @@
     "quotaLimit": "সীমা",
     "quotaRemaining": "অবশিষ্ট",
     "quotaReset": "রিসেট করুন",
-    "quotaObserved": "পর্যবেক্ষণ করা হয়েছে"
+    "quotaObserved": "পর্যবেক্ষণ করা হয়েছে",
+    "tabAgents": "এজেন্ট",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Gemini মডেল ম্যাপিং",
+    "geminiDesc": "Gemini Pro, Flash এবং Flash-Lite নামগুলি Auto বা ক্যাটালগের একটি নির্দিষ্ট মডেলে ম্যাপ করুন।",
+    "compatibilityTitle": "এজেন্ট সামঞ্জস্য",
+    "compatibilityDesc": "ঐচ্ছিক সামঞ্জস্য পৃষ্ঠতল এবং Claude Code মডেল আবিষ্কার নিয়ন্ত্রণ করুন।",
+    "ollamaMode": "Ollama এমুলেশন",
+    "ollamaModeHint": "লুপব্যাকে খোলা মোড কখনও প্রমাণীকরণবিহীন LAN ট্র্যাফিক গ্রহণ করে না।",
+    "ollamaOff": "বন্ধ",
+    "ollamaLoopback": "লুপব্যাকে খোলা",
+    "ollamaKeyRequired": "API কী প্রয়োজন",
+    "claudeAliases": "Claude Code আবিষ্কারের অ্যালিয়াস",
+    "claudeAliasesHint": "গেটওয়ের মডেল নির্বাচক যাতে ক্যাটালগ তালিকাভুক্ত করতে পারে সেজন্য claude/<model> অ্যালিয়াস উন্মুক্ত করুন।",
+    "urlTokensTitle": "প্রত্যাহারযোগ্য URL টোকেন",
+    "urlTokensDesc": "শুধুমাত্র হেডারবিহীন ক্লায়েন্টদের জন্য। URL টোকেন ইতিহাস এবং লগে ফাঁস হতে পারে, তাই আর প্রয়োজন না হলে সেগুলি প্রত্যাহার করুন।",
+    "urlTokenLabel": "টোকেন লেবেল",
+    "createUrlToken": "টোকেন তৈরি করুন",
+    "urlTokenOnce": "এই টোকেনটি এখনই কপি করুন। এটি আর দেখানো হবে না।",
+    "revoked": "প্রত্যাহার করা হয়েছে",
+    "revoke": "প্রত্যাহার করুন"
   },
   "status": {
     "healthy": "সুস্থ",
@@ -454,7 +477,8 @@
     "keyOrdinal": "কী #{n}",
     "attemptTimingHint": "অনুরোধ শুরু থেকে অফসেট শুরু করুন · প্রচেষ্টার সময়কাল",
     "requestedModel": "অনুরোধ করা মডেল",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "এজেন্ট অনুযায়ী অনুরোধ"
   },
   "playground": {
     "title": "খেলার মাঠ",
@@ -674,5 +698,15 @@
     "url": "http:// বা https:// দিয়ে শুরু করে একটি বৈধ URL লিখুন",
     "email": "একটি বৈধ ইমেল ঠিকানা লিখুন",
     "passwordMin": "অন্তত {min} অক্ষর"
+  },
+  "agents": {
+    "title": "কোডিং এজেন্ট",
+    "description": "জেনারেট করা, ব্যাকআপ-নিরাপদ কনফিগারেশন সহ কোডিং টুলগুলিকে একটি ফ্রি-মডেল গেটওয়েতে সংযুক্ত করুন।",
+    "apiKey": "API কী",
+    "quickstart": "দ্রুততম পথ: লাইভ ক্যাটালগ থেকে Claude Code কনফিগার করুন।",
+    "currentKey": "বর্তমান একীভূত কী:",
+    "seenRecently": "সম্প্রতি দেখা গেছে",
+    "endpoint": "এন্ডপয়েন্ট",
+    "documentation": "ডকুমেন্টেশন"
   }
 }

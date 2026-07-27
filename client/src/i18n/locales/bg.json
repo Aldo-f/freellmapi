@@ -13,7 +13,8 @@
     "switchDark": "Премини към тъмна тема",
     "switchToChinese": "Преход към китайски",
     "switchToEnglish": "Преход към английски",
-    "modelsMenu": "Видове модели за разглеждане"
+    "modelsMenu": "Видове модели за разглеждане",
+    "agents": "Агенти"
   },
   "auth": {
     "createYourAccount": "Създайте свой акаунт",
@@ -375,7 +376,29 @@
     "quotaLimit": "Граница",
     "quotaRemaining": "Останали",
     "quotaReset": "Нулиране",
-    "quotaObserved": "Наблюдавано"
+    "quotaObserved": "Наблюдавано",
+    "tabAgents": "Агенти",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Съответствие на Gemini модели",
+    "geminiDesc": "Съпоставете имената Gemini Pro, Flash и Flash-Lite с Auto или с конкретен модел от каталога.",
+    "compatibilityTitle": "Съвместимост с агенти",
+    "compatibilityDesc": "Управлявайте незадължителните повърхности за съвместимост и откриването на модели от Claude Code.",
+    "ollamaMode": "Ollama емулация",
+    "ollamaModeHint": "Отвореният loopback никога не приема неавтентикиран LAN трафик.",
+    "ollamaOff": "Изключено",
+    "ollamaLoopback": "Отворено на loopback",
+    "ollamaKeyRequired": "Изисква се API ключ",
+    "claudeAliases": "Псевдоними за откриване на Claude Code",
+    "claudeAliasesHint": "Изложете псевдоними claude/<model>, за да може селекторът на модели на шлюза да покаже каталога.",
+    "urlTokensTitle": "Отменяеми URL токени",
+    "urlTokensDesc": "Само за клиенти без хедъри. URL токените могат да изтекат в историята и логовете, затова ги отменяйте, когато вече не са нужни.",
+    "urlTokenLabel": "Етикет на токена",
+    "createUrlToken": "Създай токен",
+    "urlTokenOnce": "Копирайте този токен сега. Той няма да бъде показан отново.",
+    "revoked": "Отменен",
+    "revoke": "Отмени"
   },
   "status": {
     "healthy": "здравословно",
@@ -454,7 +477,8 @@
     "keyOrdinal": "Ключови #{n}",
     "attemptTimingHint": "Изместване на старта от заявката за старт · Продължителност на опита",
     "requestedModel": "Поискан модел",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Заявки по агент"
   },
   "playground": {
     "title": "Детска площадка",
@@ -674,5 +698,15 @@
     "url": "Въведете валиден URL, започващ с http:// или https://",
     "email": "Въведете валиден имейл адрес",
     "passwordMin": "Поне {min} герои"
+  },
+  "agents": {
+    "title": "Агенти за програмиране",
+    "description": "Свържете инструменти за програмиране към един шлюз за безплатни модели с генерирана конфигурация и безопасно архивиране.",
+    "apiKey": "API ключ",
+    "quickstart": "Най-бързият път: конфигурирайте Claude Code от каталога на живо.",
+    "currentKey": "Текущ унифициран ключ:",
+    "seenRecently": "Видян наскоро",
+    "endpoint": "Крайна точка",
+    "documentation": "Документация"
   }
 }

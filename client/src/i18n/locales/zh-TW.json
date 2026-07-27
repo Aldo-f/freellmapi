@@ -13,7 +13,8 @@
     "switchDark": "切換到暗色主題",
     "switchToChinese": "轉用中文",
     "switchToEnglish": "轉用英語",
-    "modelsMenu": "瀏覽模型類型"
+    "modelsMenu": "瀏覽模型類型",
+    "agents": "代理程式"
   },
   "auth": {
     "createYourAccount": "建立您的帳號",
@@ -375,7 +376,29 @@
     "quotaLimit": "極限",
     "quotaRemaining": "現存",
     "quotaReset": "重置",
-    "quotaObserved": "觀察"
+    "quotaObserved": "觀察",
+    "tabAgents": "代理程式",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Gemini 模型對應",
+    "geminiDesc": "將 Gemini Pro、Flash 與 Flash-Lite 名稱對應到 Auto 或特定的目錄模型。",
+    "compatibilityTitle": "代理程式相容性",
+    "compatibilityDesc": "控制需主動啟用的相容性介面以及 Claude Code 模型探索。",
+    "ollamaMode": "Ollama 模擬",
+    "ollamaModeHint": "開放迴送絕不接受未經驗證的區域網路流量。",
+    "ollamaOff": "關閉",
+    "ollamaLoopback": "在迴送介面開放",
+    "ollamaKeyRequired": "需要 API 金鑰",
+    "claudeAliases": "Claude Code 探索別名",
+    "claudeAliasesHint": "公開 claude/<model> 別名，讓閘道的模型選擇器能列出目錄。",
+    "urlTokensTitle": "可撤銷的 URL 權杖",
+    "urlTokensDesc": "僅供無法傳送標頭的用戶端使用。URL 權杖可能外洩到歷史記錄與日誌中，不再需要時請撤銷。",
+    "urlTokenLabel": "權杖標籤",
+    "createUrlToken": "建立權杖",
+    "urlTokenOnce": "請立即複製此權杖，之後將不會再顯示。",
+    "revoked": "已撤銷",
+    "revoke": "撤銷"
   },
   "status": {
     "healthy": "健康",
@@ -454,7 +477,8 @@
     "keyOrdinal": "關鍵 #{n}",
     "attemptTimingHint": "請求起始的起始偏移量 ·嘗試時間",
     "requestedModel": "需求模型",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "依代理程式的請求"
   },
   "playground": {
     "title": "遊樂場",
@@ -674,5 +698,15 @@
     "url": "輸入一個以 http:// 或 https:// 開頭的有效URL",
     "email": "輸入有效的電子郵件地址",
     "passwordMin": "至少{min}角色"
+  },
+  "agents": {
+    "title": "程式開發代理",
+    "description": "透過產生的、可安全備份的設定，將程式開發工具連接到同一個免費模型閘道。",
+    "apiKey": "API 金鑰",
+    "quickstart": "最快途徑：從即時目錄設定 Claude Code。",
+    "currentKey": "目前的統一金鑰：",
+    "seenRecently": "最近出現",
+    "endpoint": "端點",
+    "documentation": "說明文件"
   }
 }

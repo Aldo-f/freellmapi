@@ -13,7 +13,8 @@
     "switchDark": "Treci la tema întunecată",
     "switchToChinese": "Trecerea la chineză",
     "switchToEnglish": "Trecerea la engleză",
-    "modelsMenu": "Explorează tipurile de modele"
+    "modelsMenu": "Explorează tipurile de modele",
+    "agents": "Agenți"
   },
   "auth": {
     "createYourAccount": "Creează-ți contul",
@@ -375,7 +376,29 @@
     "quotaLimit": "Limită",
     "quotaRemaining": "Rămași",
     "quotaReset": "Resetare",
-    "quotaObserved": "Observat"
+    "quotaObserved": "Observat",
+    "tabAgents": "Agenți",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "Maparea modelelor Gemini",
+    "geminiDesc": "Mapează numele Gemini Pro, Flash și Flash-Lite la Auto sau la un model anume din catalog.",
+    "compatibilityTitle": "Compatibilitate agenți",
+    "compatibilityDesc": "Controlează suprafețele de compatibilitate opționale și descoperirea modelelor Claude Code.",
+    "ollamaMode": "Emulare Ollama",
+    "ollamaModeHint": "Loopback-ul deschis nu acceptă niciodată trafic LAN neautentificat.",
+    "ollamaOff": "Dezactivat",
+    "ollamaLoopback": "Deschis pe loopback",
+    "ollamaKeyRequired": "Cheie API necesară",
+    "claudeAliases": "Aliasuri de descoperire Claude Code",
+    "claudeAliasesHint": "Expune aliasurile claude/<model> pentru ca selectorul de modele al gateway-ului să poată lista catalogul.",
+    "urlTokensTitle": "Tokenuri URL revocabile",
+    "urlTokensDesc": "Doar pentru clienți fără anteturi. Tokenurile URL pot ajunge în istoric și în loguri, așa că revocă-le când nu mai sunt necesare.",
+    "urlTokenLabel": "Etichetă token",
+    "createUrlToken": "Creează token",
+    "urlTokenOnce": "Copiază acest token acum. Nu va mai fi afișat.",
+    "revoked": "Revocat",
+    "revoke": "Revocă"
   },
   "status": {
     "healthy": "Sănătos",
@@ -454,7 +477,8 @@
     "keyOrdinal": "#{n} cheie",
     "attemptTimingHint": "Start offset față de începutul cererii · Durata încercării",
     "requestedModel": "Modelul cerut",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "Cereri per agent"
   },
   "playground": {
     "title": "Locul de joacă",
@@ -674,5 +698,15 @@
     "url": "Introdu un URL valid care începe cu http:// sau https://",
     "email": "Introdu o adresă de email validă",
     "passwordMin": "Cel puțin {min} personaje"
+  },
+  "agents": {
+    "title": "Agenți de codare",
+    "description": "Conectează instrumentele de codare la un singur gateway de modele gratuite, cu configurație generată, sigură pentru backup.",
+    "apiKey": "Cheie API",
+    "quickstart": "Cea mai rapidă cale: configurează Claude Code din catalogul live.",
+    "currentKey": "Cheia unificată curentă:",
+    "seenRecently": "Văzut recent",
+    "endpoint": "Endpoint",
+    "documentation": "Documentație"
   }
 }

@@ -13,7 +13,8 @@
     "switchDark": "מעבר לנושא כהה",
     "switchToChinese": "מעבר לסינית",
     "switchToEnglish": "מעבר לאנגלית",
-    "modelsMenu": "דפדוף בסוגי דגמים"
+    "modelsMenu": "דפדוף בסוגי דגמים",
+    "agents": "סוכנים"
   },
   "auth": {
     "createYourAccount": "צור את החשבון שלך",
@@ -375,7 +376,29 @@
     "quotaLimit": "גבול",
     "quotaRemaining": "נותר",
     "quotaReset": "איפוס",
-    "quotaObserved": "נצפה"
+    "quotaObserved": "נצפה",
+    "tabAgents": "סוכנים",
+    "familyGeminiPro": "Gemini Pro",
+    "familyGeminiFlash": "Gemini Flash",
+    "familyGeminiFlashLite": "Gemini Flash-Lite",
+    "geminiTitle": "מיפוי מודלי Gemini",
+    "geminiDesc": "מפה את השמות Gemini Pro, Flash ו-Flash-Lite לאוטו או למודל ספציפי מהקטלוג.",
+    "compatibilityTitle": "תאימות סוכנים",
+    "compatibilityDesc": "שלוט במשטחי תאימות בהסכמה מפורשת ובגילוי מודלים של Claude Code.",
+    "ollamaMode": "אמולציית Ollama",
+    "ollamaModeHint": "מצב loopback פתוח לעולם אינו מקבל תעבורת LAN לא מאומתת.",
+    "ollamaOff": "כבוי",
+    "ollamaLoopback": "פתוח ב-loopback",
+    "ollamaKeyRequired": "נדרש מפתח API",
+    "claudeAliases": "כינויי גילוי של Claude Code",
+    "claudeAliasesHint": "חשוף כינויי claude/<model> כדי שבורר המודלים של השער יוכל להציג את הקטלוג.",
+    "urlTokensTitle": "טוקני URL ניתנים לביטול",
+    "urlTokensDesc": "ללקוחות ללא כותרות בלבד. טוקני URL עלולים לדלוף להיסטוריה וליומנים, לכן בטל אותם כשאינם נחוצים עוד.",
+    "urlTokenLabel": "תווית טוקן",
+    "createUrlToken": "צור טוקן",
+    "urlTokenOnce": "העתק את הטוקן עכשיו. הוא לא יוצג שוב.",
+    "revoked": "בוטל",
+    "revoke": "בטל"
   },
   "status": {
     "healthy": "בריא",
@@ -454,7 +477,8 @@
     "keyOrdinal": "מפתח #{n}",
     "attemptTimingHint": "התחל הזזה מהבקשה · משך הניסיון",
     "requestedModel": "מודל מבוקש",
-    "ttft": "TTFT"
+    "ttft": "TTFT",
+    "requestsByAgent": "בקשות לפי סוכן"
   },
   "playground": {
     "title": "מגרש משחקים",
@@ -674,5 +698,15 @@
     "url": "הזן URL תקף שמתחיל ב-http:// או https://",
     "email": "הזן כתובת אימייל תקפה",
     "passwordMin": "לפחות {min} דמויות"
+  },
+  "agents": {
+    "title": "סוכני קוד",
+    "description": "חבר כלי תכנות לשער אחד של מודלים חינמיים עם תצורה שנוצרת אוטומטית ובטוחה לגיבוי.",
+    "apiKey": "מפתח API",
+    "quickstart": "המסלול המהיר ביותר: הגדר את Claude Code מהקטלוג החי.",
+    "currentKey": "מפתח מאוחד נוכחי:",
+    "seenRecently": "נראה לאחרונה",
+    "endpoint": "נקודת קצה",
+    "documentation": "תיעוד"
   }
 }
