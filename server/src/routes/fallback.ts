@@ -13,6 +13,7 @@ import { parseBudget } from '../lib/budget.js';
 import { getModelGroups } from '../services/model-groups.js';
 import { getPenaltyInspector } from '../services/penalty-inspector.js';
 import { getActiveProfileId } from '../services/profile-models.js';
+import { overriddenFieldNames } from '../services/model-state.js';
 
 export const fallbackRouter = Router();
 
@@ -73,6 +74,7 @@ fallbackRouter.get('/', (_req: Request, res: Response) => {
            m.monthly_token_budget, m.supports_vision, m.supports_tools,
            m.key_id, ak.label AS key_label,
            mo.overrides_json IS NOT NULL AS has_overrides,
+           mo.overrides_json,
            ts.source AS tombstone_source, ts.reason AS tombstone_reason
     FROM profile_models pm
     JOIN models m ON m.id = pm.model_db_id
@@ -93,6 +95,7 @@ fallbackRouter.get('/', (_req: Request, res: Response) => {
            m.monthly_token_budget, m.supports_vision, m.supports_tools,
            m.key_id, ak.label AS key_label,
            mo.overrides_json IS NOT NULL AS has_overrides,
+           mo.overrides_json,
            ts.source AS tombstone_source, ts.reason AS tombstone_reason
     FROM fallback_config fc
     JOIN models m ON m.id = fc.model_db_id
@@ -166,6 +169,9 @@ fallbackRouter.get('/', (_req: Request, res: Response) => {
       keyId: r.key_id ?? null,
       keyLabel: r.key_label ?? null,
       hasOverrides: Boolean(r.has_overrides),
+      // Which fields the local override actually replaces, so the model page
+      // can mark the individual inputs it edits (#551).
+      overrideFields: overriddenFieldNames(r.overrides_json),
       // Why the switch is off: a model auto-disabled because the provider
       // retired it upstream (410 / end of life, #634) is a different state from
       // one the user turned off, and the dashboard says so. The reason is the
