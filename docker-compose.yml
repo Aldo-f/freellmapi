@@ -13,6 +13,8 @@ services:
     # exposed to the internet. Set HOST_BIND=0.0.0.0 to reach it from your LAN.
     ports:
       - "${HOST_BIND:-127.0.0.1}:${PORT:-3001}:3001"
+    networks:
+      - traefik_net
     volumes:
       - freellmapi-data:/app/server/data
     restart: unless-stopped
@@ -28,6 +30,10 @@ services:
       timeout: 5s
       start_period: 15s
       retries: 3
+
+networks:
+  traefik_net:
+    external: true
 
 volumes:
   freellmapi-data:
