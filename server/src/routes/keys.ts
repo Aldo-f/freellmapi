@@ -8,6 +8,7 @@ import { resolveProvider, getAllProviders } from '../providers/index.js';
 import { encrypt, decrypt, maskKey } from '../lib/crypto.js';
 import { parseKeysFromFile, stripJsoncComments, stripTrailingCommas } from '../lib/key-parser.js';
 import { assessProviderUrl } from '../lib/url-guard.js';
+import { verifyCredentials } from '../services/auth.js';
 import { ensureModelInProfiles } from '../services/profile-models.js';
 import { getActiveCooldownsForKeys, clearCooldownsForKey } from '../services/ratelimit.js';
 import { resolveCustomEndpointKey, customEndpointKeyIds, siblingEndpointKeyId } from '../services/custom-endpoint.js';
@@ -308,7 +309,14 @@ keysRouter.delete('/:id/cooldowns', (req: Request, res: Response) => {
 // Export keys — returns plaintext keys in the requested format.
 // GET /api/keys/export?format=json|env|csv&healthy=true
 // The response is the raw file download (Content-Type varies by format).
+// Password re-verification via x-reauth-password header is required.
 keysRouter.get('/export', (req: Request, res: Response) => {
+  const user = (req as any).user;
+  const password = req.headers['x-reauth-password'] as string | undefined;
+  if (!password || !verifyCredentials(user.email, password)) {
+    res.status(403).json({ error: { message: 'Password verification required to export keys', type: 'authentication_error' } });
+    return;
+  }
   const db = getDb();
   const format = (req.query.format as string) ?? 'json';
   const healthyOnly = req.query.healthy === 'true';
