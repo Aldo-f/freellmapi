@@ -133,8 +133,6 @@
     "embeddingsTab": "Indlejringer",
     "imageTab": "Billede",
     "audioTab": "Lyd",
-    "imageTitle": "Billedmodeller",
-    "audioTitle": "Lydmodeller",
     "imageDesc": "Modeller til generering af tekst til billede.",
     "audioDesc": "Tekst-til-tale og tale-til-tekst-modeller.",
     "mediaHint": "Generer via",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Lad stå tomt for ingen grænse."
+    "limitHint": "Lad stå tomt for ingen grænse.",
+    "usageThisMonth": "Forbrug denne måned",
+    "usageEmpty": "Ingen anmodninger denne måned endnu.",
+    "usageRequestsMonth": "{count} anmodn. denne måned"
   },
   "strategies": {
     "title": "Routingstrategi",

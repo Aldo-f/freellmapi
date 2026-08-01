@@ -133,8 +133,6 @@
     "embeddingsTab": "Mga Embedding",
     "imageTab": "Larawan",
     "audioTab": "Audio",
-    "imageTitle": "Mga modelo ng imahe",
-    "audioTitle": "Mga Audio Model",
     "imageDesc": "Mga modelo ng pagbuo ng teksto-sa-larawan.",
     "audioDesc": "Mga modelo ng text-to-speech at speech-to-text.",
     "mediaHint": "Mag-generate sa pamamagitan ng",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Iwanang blangko para walang limitasyon."
+    "limitHint": "Iwanang blangko para walang limitasyon.",
+    "usageThisMonth": "Paggamit ngayong buwan",
+    "usageEmpty": "Wala pang mga kahilingan ngayong buwan.",
+    "usageRequestsMonth": "{count} kahilingan ngayong buwan"
   },
   "strategies": {
     "title": "Estratehiya sa Pag-ruta",

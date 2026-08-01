@@ -133,8 +133,6 @@
     "embeddingsTab": "এমবেডিং",
     "imageTab": "ছবি",
     "audioTab": "অডিও",
-    "imageTitle": "ইমেজ মডেল",
-    "audioTitle": "অডিও মডেল",
     "imageDesc": "টেক্সট-টু-ইমেজ জেনারেশন মডেল।",
     "audioDesc": "টেক্সট-টু-স্পিচ এবং স্পিচ-টু-টেক্সট মডেল।",
     "mediaHint": "এর মাধ্যমে তৈরি করুন",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "কোনো সীমা না রাখতে ফাঁকা রাখুন।"
+    "limitHint": "কোনো সীমা না রাখতে ফাঁকা রাখুন।",
+    "usageThisMonth": "এই মাসের ব্যবহার",
+    "usageEmpty": "এই মাসে এখনও কোনো অনুরোধ নেই।",
+    "usageRequestsMonth": "এই মাসে {count}টি অনুরোধ"
   },
   "strategies": {
     "title": "রাউটিং কৌশল",

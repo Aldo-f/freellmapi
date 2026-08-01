@@ -133,8 +133,6 @@
     "embeddingsTab": "嵌入模型",
     "imageTab": "圖像",
     "audioTab": "音訊",
-    "imageTitle": "圖像模型",
-    "audioTitle": "音訊模型",
     "imageDesc": "文字轉圖像生成模型。",
     "audioDesc": "文字轉語音與語音轉文字模型。",
     "mediaHint": "透過以下端點生成",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "留空表示不限制。"
+    "limitHint": "留空表示不限制。",
+    "usageThisMonth": "本月用量",
+    "usageEmpty": "本月尚無請求。",
+    "usageRequestsMonth": "本月 {count} 次請求"
   },
   "strategies": {
     "title": "路由策略",

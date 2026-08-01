@@ -133,8 +133,6 @@
     "embeddingsTab": "කාවැද්දීම",
     "imageTab": "රූපය",
     "audioTab": "ශ්රව්ය උපකරණ",
-    "imageTitle": "රූප ආකෘති",
-    "audioTitle": "ශ්රව්ය ආකෘති",
     "imageDesc": "පෙළ සිට රූප උත්පාදන ආකෘති.",
     "audioDesc": "පෙළ සිට කථනය සහ කථනයෙන් පෙළ ආකෘති.",
     "mediaHint": "හරහා ජනනය කරන්න",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "සීමාවක් නොමැති නම් හිස්ව තබන්න."
+    "limitHint": "සීමාවක් නොමැති නම් හිස්ව තබන්න.",
+    "usageThisMonth": "මෙම මාසයේ භාවිතය",
+    "usageEmpty": "මෙම මාසයේ තවම ඉල්ලීම් නැත.",
+    "usageRequestsMonth": "මෙම මාසයේ ඉල්ලීම් {count}"
   },
   "strategies": {
     "title": "මාර්ගගත කිරීමේ උපාය",

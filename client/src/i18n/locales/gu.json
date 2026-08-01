@@ -133,8 +133,6 @@
     "embeddingsTab": "એમ્બેડિંગ્સ",
     "imageTab": "છબી",
     "audioTab": "ઓડિયો",
-    "imageTitle": "છબી મોડેલો",
-    "audioTitle": "ઓડિયો મોડલ્સ",
     "imageDesc": "ટેક્સ્ટ-ટુ-ઇમેજ જનરેશન મોડલ્સ.",
     "audioDesc": "ટેક્સ્ટ-ટુ-સ્પીચ અને સ્પીચ-ટુ-ટેક્સ્ટ મોડલ્સ.",
     "mediaHint": "દ્વારા જનરેટ કરો",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "કોઈ મર્યાદા ન રાખવા ખાલી છોડો."
+    "limitHint": "કોઈ મર્યાદા ન રાખવા ખાલી છોડો.",
+    "usageThisMonth": "આ મહિનાનો વપરાશ",
+    "usageEmpty": "આ મહિને હજી કોઈ વિનંતી નથી.",
+    "usageRequestsMonth": "આ મહિને {count} વિનંતી"
   },
   "strategies": {
     "title": "રૂટીંગ વ્યૂહરચના",

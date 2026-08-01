@@ -133,8 +133,6 @@
     "embeddingsTab": "Abun ciki",
     "imageTab": "Hoto",
     "audioTab": "Audio",
-    "imageTitle": "Samfuran hoto",
-    "audioTitle": "Samfuran sauti",
     "imageDesc": "Tsarin tsara rubutu-zuwa-hoto.",
     "audioDesc": "Tsarin rubutu-zuwa-magana da magana-zuwa-rubutu.",
     "mediaHint": "Ƙirƙira ta hanyar",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Bar shi fanko domin babu iyaka."
+    "limitHint": "Bar shi fanko domin babu iyaka.",
+    "usageThisMonth": "Amfani na wannan wata",
+    "usageEmpty": "Babu buƙatu tukuna wannan wata.",
+    "usageRequestsMonth": "buƙatu {count} wannan wata"
   },
   "strategies": {
     "title": "Dabarar hanya",

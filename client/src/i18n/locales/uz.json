@@ -133,8 +133,6 @@
     "embeddingsTab": "O'rnatishlar",
     "imageTab": "Rasm",
     "audioTab": "Audio",
-    "imageTitle": "Tasvir modellari",
-    "audioTitle": "Audio modellar",
     "imageDesc": "Matnni tasvirga yaratish modellari.",
     "audioDesc": "Matndan nutqqa va nutqdan matnga modellar.",
     "mediaHint": "orqali yaratish",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Cheklov boʻlmasligi uchun boʻsh qoldiring."
+    "limitHint": "Cheklov boʻlmasligi uchun boʻsh qoldiring.",
+    "usageThisMonth": "Shu oydagi foydalanish",
+    "usageEmpty": "Bu oyda hali so'rovlar yo'q.",
+    "usageRequestsMonth": "bu oyda {count} ta so'rov"
   },
   "strategies": {
     "title": "Marshrut strategiyasi",

@@ -133,8 +133,6 @@
     "embeddingsTab": "Embedding",
     "imageTab": "Immagine",
     "audioTab": "Audio",
-    "imageTitle": "Modelli di immagini",
-    "audioTitle": "Modelli audio",
     "imageDesc": "Modelli di generazione testo-immagine.",
     "audioDesc": "Modelli di sintesi e riconoscimento vocale.",
     "mediaHint": "Genera tramite",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Lascia vuoto per nessun limite."
+    "limitHint": "Lascia vuoto per nessun limite.",
+    "usageThisMonth": "Utilizzo di questo mese",
+    "usageEmpty": "Nessuna richiesta questo mese.",
+    "usageRequestsMonth": "{count} rich. questo mese"
   },
   "strategies": {
     "title": "Strategia di routing",

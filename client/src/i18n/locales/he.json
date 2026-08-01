@@ -133,8 +133,6 @@
     "embeddingsTab": "הטבעות",
     "imageTab": "תמונה",
     "audioTab": "אודיו",
-    "imageTitle": "מודלים של תמונות",
-    "audioTitle": "דגמי אודיו",
     "imageDesc": "מודלים ליצירת טקסט לתמונה.",
     "audioDesc": "מודלים של טקסט לדיבור ודיבור לטקסט.",
     "mediaHint": "יצור דרך",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "השאירו ריק כדי לא להגביל."
+    "limitHint": "השאירו ריק כדי לא להגביל.",
+    "usageThisMonth": "שימוש החודש",
+    "usageEmpty": "אין עדיין בקשות החודש.",
+    "usageRequestsMonth": "{count} בקשות החודש"
   },
   "strategies": {
     "title": "אסטרטגיית ניתוב",

@@ -133,8 +133,6 @@
     "embeddingsTab": "Penyisipan",
     "imageTab": "Imej",
     "audioTab": "Audio",
-    "imageTitle": "Model imej",
-    "audioTitle": "Model audio",
     "imageDesc": "Model penjanaan teks-ke-imej.",
     "audioDesc": "Model teks-ke-ucapan dan pertuturan-ke-teks.",
     "mediaHint": "Jana melalui",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Biarkan kosong untuk tiada had."
+    "limitHint": "Biarkan kosong untuk tiada had.",
+    "usageThisMonth": "Penggunaan bulan ini",
+    "usageEmpty": "Tiada permintaan lagi bulan ini.",
+    "usageRequestsMonth": "{count} permintaan bulan ini"
   },
   "strategies": {
     "title": "Strategi penghalaan",

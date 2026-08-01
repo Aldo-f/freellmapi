@@ -133,8 +133,6 @@
     "embeddingsTab": "ការបញ្ចូល",
     "imageTab": "រូបភាព",
     "audioTab": "សំឡេង",
-    "imageTitle": "ម៉ូដែលរូបភាព",
-    "audioTitle": "ម៉ូដែលសំឡេង",
     "imageDesc": "ម៉ូដែលបង្កើតអត្ថបទទៅរូបភាព។",
     "audioDesc": "គំរូបម្លែងអត្ថបទទៅសំឡេង និងសំឡេងទៅអត្ថបទ។",
     "mediaHint": "បង្កើតតាមរយៈ",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "ទុកឱ្យទទេ ដើម្បីគ្មានដែនកំណត់។"
+    "limitHint": "ទុកឱ្យទទេ ដើម្បីគ្មានដែនកំណត់។",
+    "usageThisMonth": "ការប្រើប្រាស់ខែនេះ",
+    "usageEmpty": "មិនទាន់មានសំណើនៅខែនេះទេ។",
+    "usageRequestsMonth": "ខែនេះ {count} សំណើ"
   },
   "strategies": {
     "title": "យុទ្ធសាស្ត្រផ្លូវបញ្ជូន",

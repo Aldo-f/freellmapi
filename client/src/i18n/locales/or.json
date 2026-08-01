@@ -133,8 +133,6 @@
     "embeddingsTab": "ଏମ୍ବେଡିଂ",
     "imageTab": "ଚିତ୍ର",
     "audioTab": "ଅଡିଓ",
-    "imageTitle": "ପ୍ରତିଛବି ମଡେଲ",
-    "audioTitle": "ଅଡିଓ ମଡେଲ",
     "imageDesc": "ଟେକ୍ସଟ୍-ରୁ-ଫଟୋ ଜେନେରେସନ୍ ମଡେଲ୍।",
     "audioDesc": "ଟେକ୍ସଟ୍-ରୁ-ସ୍ପିଚ୍ ଏବଂ ସ୍ପିଚ୍-ରୁ-ଟେକ୍ସଟ୍ ମଡେଲ୍।",
     "mediaHint": "ମାଧ୍ୟମରେ ସୃଷ୍ଟି କରନ୍ତୁ",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "କୌଣସି ସୀମା ନ ରଖିବାକୁ ଖାଲି ଛାଡ଼ନ୍ତୁ।"
+    "limitHint": "କୌଣସି ସୀମା ନ ରଖିବାକୁ ଖାଲି ଛାଡ଼ନ୍ତୁ।",
+    "usageThisMonth": "ଏହି ମାସର ବ୍ୟବହାର",
+    "usageEmpty": "ଏହି ମାସରେ ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ଅନୁରୋଧ ନାହିଁ।",
+    "usageRequestsMonth": "ଏହି ମାସରେ {count} ଅନୁରୋଧ"
   },
   "strategies": {
     "title": "ରାଉଟିଂ ରଣନୀତି",

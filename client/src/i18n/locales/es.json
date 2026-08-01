@@ -133,8 +133,6 @@
     "embeddingsTab": "Embeddings",
     "imageTab": "Imagen",
     "audioTab": "Audio",
-    "imageTitle": "Modelos de imagen",
-    "audioTitle": "Modelos de audio",
     "imageDesc": "Modelos de generación de texto a imagen.",
     "audioDesc": "Modelos de texto a voz y de voz a texto.",
     "mediaHint": "Generar mediante",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Déjalo en blanco para no aplicar límite."
+    "limitHint": "Déjalo en blanco para no aplicar límite.",
+    "usageThisMonth": "Uso de este mes",
+    "usageEmpty": "Aún no hay solicitudes este mes.",
+    "usageRequestsMonth": "{count} sol. este mes"
   },
   "strategies": {
     "title": "Estrategia de enrutamiento",

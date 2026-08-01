@@ -133,8 +133,6 @@
     "embeddingsTab": "Upotukset",
     "imageTab": "Kuva",
     "audioTab": "Ääni",
-    "imageTitle": "Kuvamallit",
-    "audioTitle": "Äänimallit",
     "imageDesc": "Tekstistä kuvaksi -generointimallit.",
     "audioDesc": "Tekstistä puheeksi -mallit ja puheesta tekstiksi -mallit.",
     "mediaHint": "Generoi",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Jätä tyhjäksi, jos ei rajaa."
+    "limitHint": "Jätä tyhjäksi, jos ei rajaa.",
+    "usageThisMonth": "Tämän kuun käyttö",
+    "usageEmpty": "Ei vielä pyyntöjä tässä kuussa.",
+    "usageRequestsMonth": "{count} pyyntöä tässä kuussa"
   },
   "strategies": {
     "title": "Reititysstrategia",

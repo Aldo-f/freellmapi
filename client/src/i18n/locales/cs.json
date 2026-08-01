@@ -133,8 +133,6 @@
     "embeddingsTab": "Vložení",
     "imageTab": "Obrázek",
     "audioTab": "Audio",
-    "imageTitle": "Modely obrazů",
-    "audioTitle": "Audio modely",
     "imageDesc": "Modely generování textu na obraz.",
     "audioDesc": "Modely převodu textu na řeč a převodu řeči na text.",
     "mediaHint": "Generujte přes",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Ponechte prázdné pro žádný limit."
+    "limitHint": "Ponechte prázdné pro žádný limit.",
+    "usageThisMonth": "Spotřeba tento měsíc",
+    "usageEmpty": "Tento měsíc zatím žádné požadavky.",
+    "usageRequestsMonth": "{count} pož. tento měsíc"
   },
   "strategies": {
     "title": "Strategie směrování",

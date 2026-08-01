@@ -133,8 +133,6 @@
     "embeddingsTab": "Vkladania",
     "imageTab": "Obrázok",
     "audioTab": "Zvuk",
-    "imageTitle": "Obrazové modely",
-    "audioTitle": "Audio modely",
     "imageDesc": "Modely generovania textu na obraz.",
     "audioDesc": "Modely prevodu textu na reč a prevodu reči na text.",
     "mediaHint": "Generovať cez",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Ponechajte prázdne pre žiadny limit."
+    "limitHint": "Ponechajte prázdne pre žiadny limit.",
+    "usageThisMonth": "Spotreba tento mesiac",
+    "usageEmpty": "Tento mesiac zatiaľ žiadne požiadavky.",
+    "usageRequestsMonth": "{count} pož. tento mesiac"
   },
   "strategies": {
     "title": "Stratégia smerovania",

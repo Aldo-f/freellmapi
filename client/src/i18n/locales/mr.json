@@ -133,8 +133,6 @@
     "embeddingsTab": "एम्बेडिंग",
     "imageTab": "प्रतिमा",
     "audioTab": "ऑडिओ",
-    "imageTitle": "प्रतिमा मॉडेल",
-    "audioTitle": "ऑडिओ मॉडेल्स",
     "imageDesc": "मजकूर ते प्रतिमा निर्मिती मॉडेल.",
     "audioDesc": "टेक्स्ट-टू-स्पीच आणि स्पीच-टू-टेक्स्ट मॉडेल.",
     "mediaHint": "द्वारे व्युत्पन्न करा",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "मर्यादा नको असल्यास रिकामे ठेवा."
+    "limitHint": "मर्यादा नको असल्यास रिकामे ठेवा.",
+    "usageThisMonth": "या महिन्याचा वापर",
+    "usageEmpty": "या महिन्यात अद्याप विनंत्या नाहीत.",
+    "usageRequestsMonth": "या महिन्यात {count} विनंत्या"
   },
   "strategies": {
     "title": "राउटिंग धोरण",

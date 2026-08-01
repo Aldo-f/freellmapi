@@ -133,8 +133,6 @@
     "embeddingsTab": "Einbettungen",
     "imageTab": "Bild",
     "audioTab": "Audio",
-    "imageTitle": "Bildmodelle",
-    "audioTitle": "Audiomodelle",
     "imageDesc": "Modelle zur Text-zu-Bild-Generierung.",
     "audioDesc": "Text-to-Speech- und Speech-to-Text-Modelle.",
     "mediaHint": "Generieren über",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Leer lassen für kein Limit."
+    "limitHint": "Leer lassen für kein Limit.",
+    "usageThisMonth": "Nutzung diesen Monat",
+    "usageEmpty": "Diesen Monat noch keine Anfragen.",
+    "usageRequestsMonth": "{count} Anfr. diesen Monat"
   },
   "strategies": {
     "title": "Routing-Strategie",

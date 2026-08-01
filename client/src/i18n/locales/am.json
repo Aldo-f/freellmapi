@@ -133,8 +133,6 @@
     "embeddingsTab": "መክተቻዎች",
     "imageTab": "ምስል",
     "audioTab": "ኦዲዮ",
-    "imageTitle": "የምስል ሞዴሎች",
-    "audioTitle": "የድምጽ ሞዴሎች",
     "imageDesc": "የጽሑፍ-ወደ-ምስል ማመንጨት ሞዴሎች.",
     "audioDesc": "የጽሑፍ-ወደ-ንግግር እና የንግግር-ወደ-ጽሑፍ ሞዴሎች.",
     "mediaHint": "በኩል ይፍጠሩ",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "ገደብ እንዳይኖር ባዶ ይተዉት።"
+    "limitHint": "ገደብ እንዳይኖር ባዶ ይተዉት።",
+    "usageThisMonth": "የዚህ ወር አጠቃቀም",
+    "usageEmpty": "በዚህ ወር ገና ጥያቄዎች የሉም።",
+    "usageRequestsMonth": "በዚህ ወር {count} ጥያቄዎች"
   },
   "strategies": {
     "title": "የማዞሪያ ስትራቴጂ",

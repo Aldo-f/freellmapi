@@ -133,8 +133,6 @@
     "embeddingsTab": "Gömmeler",
     "imageTab": "Resim",
     "audioTab": "Ses",
-    "imageTitle": "Resim modelleri",
-    "audioTitle": "Ses modelleri",
     "imageDesc": "Metinden görüntüye üretim modelleri.",
     "audioDesc": "Metinden konuşmaya ve konuşmayı metne dönüştürme modelleri.",
     "mediaHint": "Şununla oluştur:",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Sınır olmaması için boş bırakın."
+    "limitHint": "Sınır olmaması için boş bırakın.",
+    "usageThisMonth": "Bu ayki kullanım",
+    "usageEmpty": "Bu ay henüz istek yok.",
+    "usageRequestsMonth": "bu ay {count} istek"
   },
   "strategies": {
     "title": "Yönlendirme stratejisi",

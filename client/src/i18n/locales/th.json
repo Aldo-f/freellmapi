@@ -133,8 +133,6 @@
     "embeddingsTab": "การฝัง",
     "imageTab": "รูปภาพ",
     "audioTab": "เสียง",
-    "imageTitle": "โมเดลรูปภาพ",
-    "audioTitle": "โมเดลเครื่องเสียง",
     "imageDesc": "แบบจำลองการสร้างข้อความเป็นรูปภาพ",
     "audioDesc": "รูปแบบการอ่านออกเสียงข้อความและคำพูดเป็นข้อความ",
     "mediaHint": "สร้างผ่าน",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "เว้นว่างไว้หากไม่จำกัด"
+    "limitHint": "เว้นว่างไว้หากไม่จำกัด",
+    "usageThisMonth": "การใช้งานเดือนนี้",
+    "usageEmpty": "ยังไม่มีคำขอในเดือนนี้",
+    "usageRequestsMonth": "เดือนนี้ {count} คำขอ"
   },
   "strategies": {
     "title": "กลยุทธ์การกำหนดเส้นทาง",

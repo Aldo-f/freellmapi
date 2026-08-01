@@ -133,8 +133,6 @@
     "embeddingsTab": "Awọn ifibọ",
     "imageTab": "Aworan",
     "audioTab": "Ohun",
-    "imageTitle": "Awọn awoṣe aworan",
-    "audioTitle": "Audio si dede",
     "imageDesc": "Awọn awoṣe iran ọrọ-si-image.",
     "audioDesc": "Ọrọ-si-ọrọ ati awọn awoṣe ọrọ-si-ọrọ.",
     "mediaHint": "Ṣe ina nipasẹ",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Fi sílẹ̀ ní òfìfo fún àìní ààlà."
+    "limitHint": "Fi sílẹ̀ ní òfìfo fún àìní ààlà.",
+    "usageThisMonth": "Ìlò oṣù yìí",
+    "usageEmpty": "Kò sí ìbéèrè kankan ní oṣù yìí.",
+    "usageRequestsMonth": "ìbéèrè {count} ní oṣù yìí"
   },
   "strategies": {
     "title": "Ilana ipa ọna",

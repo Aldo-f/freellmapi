@@ -133,8 +133,6 @@
     "embeddingsTab": "Osadzenia",
     "imageTab": "Obraz",
     "audioTab": "Dźwięk",
-    "imageTitle": "Modele obrazu",
-    "audioTitle": "Modele dźwiękowe",
     "imageDesc": "Modele generowania tekstu na obraz.",
     "audioDesc": "Modele zamiany tekstu na mowę i mowy na tekst.",
     "mediaHint": "Generuj przez",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Pozostaw puste, aby nie było limitu."
+    "limitHint": "Pozostaw puste, aby nie było limitu.",
+    "usageThisMonth": "Zużycie w tym miesiącu",
+    "usageEmpty": "Brak żądań w tym miesiącu.",
+    "usageRequestsMonth": "{count} żąd. w tym miesiącu"
   },
   "strategies": {
     "title": "Strategia routingu",

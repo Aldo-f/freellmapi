@@ -133,8 +133,6 @@
     "embeddingsTab": "Įterpimai",
     "imageTab": "Vaizdas",
     "audioTab": "Garsas",
-    "imageTitle": "Vaizdų modeliai",
-    "audioTitle": "Garso modeliai",
     "imageDesc": "Teksto į vaizdą generavimo modeliai.",
     "audioDesc": "Teksto į kalbą ir kalbos į tekstą modeliai.",
     "mediaHint": "Generuoti per",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Palikite tuščią, jei nėra ribos."
+    "limitHint": "Palikite tuščią, jei nėra ribos.",
+    "usageThisMonth": "Šio mėnesio naudojimas",
+    "usageEmpty": "Šį mėnesį užklausų dar nėra.",
+    "usageRequestsMonth": "{count} užkl. šį mėnesį"
   },
   "strategies": {
     "title": "Maršrutizavimo strategija",

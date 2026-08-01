@@ -133,8 +133,6 @@
     "embeddingsTab": "Ембеддингс",
     "imageTab": "Слика",
     "audioTab": "Аудио",
-    "imageTitle": "Модели слика",
-    "audioTitle": "Аудио модели",
     "imageDesc": "Модели генерисања текста у слику.",
     "audioDesc": "Модели претварања текста у говор и говора у текст.",
     "mediaHint": "Генеришите преко",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "Оставите празно за без ограничења."
+    "limitHint": "Оставите празно за без ограничења.",
+    "usageThisMonth": "Потрошња овог месеца",
+    "usageEmpty": "Овог месеца још нема захтева.",
+    "usageRequestsMonth": "{count} захтева овог месеца"
   },
   "strategies": {
     "title": "Стратегија рутирања",

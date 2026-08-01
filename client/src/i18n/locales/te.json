@@ -133,8 +133,6 @@
     "embeddingsTab": "పొందుపరచడం",
     "imageTab": "చిత్రం",
     "audioTab": "ఆడియో",
-    "imageTitle": "చిత్ర నమూనాలు",
-    "audioTitle": "ఆడియో నమూనాలు",
     "imageDesc": "టెక్స్ట్-టు-ఇమేజ్ జనరేషన్ మోడల్స్.",
     "audioDesc": "టెక్స్ట్-టు-స్పీచ్ మరియు స్పీచ్-టు-టెక్స్ట్ మోడల్స్.",
     "mediaHint": "ద్వారా రూపొందించండి",
@@ -219,7 +217,10 @@
     "limitRpd": "RPD",
     "limitTpm": "TPM",
     "limitTpd": "TPD",
-    "limitHint": "పరిమితి వద్దనుకుంటే ఖాళీగా వదిలేయండి."
+    "limitHint": "పరిమితి వద్దనుకుంటే ఖాళీగా వదిలేయండి.",
+    "usageThisMonth": "ఈ నెల వినియోగం",
+    "usageEmpty": "ఈ నెలలో ఇంకా అభ్యర్థనలు లేవు.",
+    "usageRequestsMonth": "ఈ నెలలో {count} అభ్యర్థనలు"
   },
   "strategies": {
     "title": "రూటింగ్ వ్యూహం",
