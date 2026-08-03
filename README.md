@@ -15,6 +15,8 @@ Aggregate free tiers from dozens of providers, plus custom OpenAI-compatible cha
 
 **[freellmapi.co](https://freellmapi.co/?utm_source=github&utm_medium=readme&utm_campaign=repository&utm_content=readme_top)** · browse the full catalog: 251 model families, 358 free endpoints
 
+**English** · [简体中文](docs/i18n/zh-CN/README.md)
+
 ![FreeLLMAPI dashboard — Models page with the monthly token budget](repo-assets/github-hero.png)
 
 
@@ -421,6 +423,8 @@ Contributors very welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for the dev lo
 <a href="https://github.com/ousamabenyounes"><img src="https://images.weserv.nl/?url=github.com/ousamabenyounes.png&w=60&h=60&fit=cover&mask=circle" width="60" alt="@ousamabenyounes" /></a>
 <a href="https://github.com/yfdyh000"><img src="https://images.weserv.nl/?url=github.com/yfdyh000.png&w=60&h=60&fit=cover&mask=circle" width="60" alt="@yfdyh000" /></a>
 <a href="https://github.com/s-uryansh"><img src="https://images.weserv.nl/?url=github.com/s-uryansh.png&w=60&h=60&fit=cover&mask=circle" width="60" alt="@s-uryansh" /></a>
+<a href="https://github.com/arsalanyavari"><img src="https://images.weserv.nl/?url=github.com/arsalanyavari.png&w=60&h=60&fit=cover&mask=circle" width="60" alt="@arsalanyavari" /></a>
+<a href="https://github.com/suantea"><img src="https://images.weserv.nl/?url=github.com/suantea.png&w=60&h=60&fit=cover&mask=circle" width="60" alt="@suantea" /></a>
 
 ## Disclaimer
 
