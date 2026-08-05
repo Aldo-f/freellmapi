@@ -145,7 +145,22 @@
     "compressionPreview": "Direkte forhåndsvisning",
     "compressionPreviewDescription": "Send en forespørselstekst gjennom pipelinen for å se hva en leverandør ville motta.",
     "compressionPreviewPlaceholder": "Lim inn forespørsels-JSON eller ren tekst",
-    "compressionRunPreview": "Kjør forhåndsvisning"
+    "compressionRunPreview": "Kjør forhåndsvisning",
+    "updatesTitle": "Oppdateringer",
+    "checkForUpdates": "Sjekk etter oppdateringer",
+    "lastChecked": "Sist sjekket: {when}",
+    "currentVersion": "Nåværende bygg:",
+    "updateAvailable": "Oppdatering tilgjengelig",
+    "changelog": "Hva er endret",
+    "upToDate": "Oppdatert",
+    "buildAhead": "Dette bygget ligger foran den offisielle main-grenen.",
+    "buildDiverged": "Dette bygget har skilt lag med den offisielle main-grenen.",
+    "buildUnknown": "Dette egendefinerte bygget kan ikke sammenlignes med den offisielle main-grenen.",
+    "notGitInstall": "Denne installasjonen inneholder ikke commit-informasjon.",
+    "checkFailed": "Kunne ikke se etter oppdateringer.",
+    "contactsGithub": "Oppdateringssjekker kjøres manuelt og kontakter GitHub.",
+    "openReleases": "Åpne GitHub Releases",
+    "restartAfterUpdate": "Start FreeLLMAPI på nytt etter at byggingen er fullført."
   },
   "models": {
     "title": "Modeller",

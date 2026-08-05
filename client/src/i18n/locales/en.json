@@ -145,7 +145,22 @@
     "compressionPreview": "Live preview",
     "compressionPreviewDescription": "Send a request body through the pipeline to see what a provider would receive.",
     "compressionPreviewPlaceholder": "Paste request JSON or plain text",
-    "compressionRunPreview": "Run preview"
+    "compressionRunPreview": "Run preview",
+    "updatesTitle": "Updates",
+    "checkForUpdates": "Check for updates",
+    "lastChecked": "Last checked: {when}",
+    "currentVersion": "Current build:",
+    "updateAvailable": "Update available",
+    "changelog": "What's changed",
+    "upToDate": "Up to date",
+    "buildAhead": "This build is ahead of official main.",
+    "buildDiverged": "This build has diverged from official main.",
+    "buildUnknown": "This custom build cannot be compared with official main.",
+    "notGitInstall": "This installation does not include commit information.",
+    "checkFailed": "Could not check for updates.",
+    "contactsGithub": "Checks are manual and contact GitHub.",
+    "openReleases": "Open GitHub Releases",
+    "restartAfterUpdate": "Restart FreeLLMAPI after the build completes."
   },
   "models": {
     "title": "Models",

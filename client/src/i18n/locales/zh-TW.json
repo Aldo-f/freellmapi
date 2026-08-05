@@ -145,7 +145,22 @@
     "compressionPreview": "即時預覽",
     "compressionPreviewDescription": "將請求主體送入壓縮流程，查看提供者實際會收到的內容。",
     "compressionPreviewPlaceholder": "貼上請求 JSON 或純文字",
-    "compressionRunPreview": "執行預覽"
+    "compressionRunPreview": "執行預覽",
+    "updatesTitle": "更新",
+    "checkForUpdates": "檢查更新",
+    "lastChecked": "上次檢查：{when}",
+    "currentVersion": "目前建置：",
+    "updateAvailable": "有可用更新",
+    "changelog": "更新內容",
+    "upToDate": "已是最新版本",
+    "buildAhead": "此建置領先官方 main 分支。",
+    "buildDiverged": "此建置已偏離官方 main 分支。",
+    "buildUnknown": "無法將此自訂建置與官方 main 分支進行比較。",
+    "notGitInstall": "此安裝不包含 commit 資訊。",
+    "checkFailed": "無法檢查更新。",
+    "contactsGithub": "檢查需手動執行，並會連線至 GitHub。",
+    "openReleases": "開啟 GitHub Releases",
+    "restartAfterUpdate": "建置完成後重新啟動 FreeLLMAPI。"
   },
   "models": {
     "title": "模型",

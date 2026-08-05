@@ -145,7 +145,22 @@
     "compressionPreview": "پیش‌نمایش زنده",
     "compressionPreviewDescription": "بدنه یک درخواست را از خط پردازش عبور دهید تا ببینید ارائه‌دهنده چه چیزی دریافت می‌کند.",
     "compressionPreviewPlaceholder": "JSON درخواست یا متن ساده را جای‌گذاری کنید",
-    "compressionRunPreview": "اجرای پیش‌نمایش"
+    "compressionRunPreview": "اجرای پیش‌نمایش",
+    "updatesTitle": "به‌روزرسانی‌ها",
+    "checkForUpdates": "به روز رسانی را بررسی کنید",
+    "lastChecked": "آخرین بررسی: {when}",
+    "currentVersion": "بیلد فعلی:",
+    "updateAvailable": "به‌روزرسانی در دسترس است",
+    "changelog": "چه چیزهایی تغییر کرده است",
+    "upToDate": "به‌روز است",
+    "buildAhead": "این بیلد از شاخهٔ رسمی main جلوتر است.",
+    "buildDiverged": "این بیلد از شاخهٔ رسمی main واگرا شده است.",
+    "buildUnknown": "این بیلد سفارشی را نمی‌توان با شاخهٔ رسمی main مقایسه کرد.",
+    "notGitInstall": "این نصب شامل اطلاعات commit نیست.",
+    "checkFailed": "بررسی به‌روزرسانی‌ها ممکن نبود.",
+    "contactsGithub": "بررسی‌ها دستی هستند و با GitHub ارتباط برقرار می‌کنند.",
+    "openReleases": "باز کردن نسخه‌های منتشرشده در GitHub",
+    "restartAfterUpdate": "پس از تکمیل بیلد، FreeLLMAPI را راه‌اندازی مجدد کنید."
   },
   "models": {
     "title": "مدل ها",

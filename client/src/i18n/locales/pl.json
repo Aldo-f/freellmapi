@@ -145,7 +145,22 @@
     "compressionPreview": "Podgląd na żywo",
     "compressionPreviewDescription": "Prześlij treść żądania przez potok, aby zobaczyć, co otrzymałby dostawca.",
     "compressionPreviewPlaceholder": "Wklej JSON żądania lub zwykły tekst",
-    "compressionRunPreview": "Uruchom podgląd"
+    "compressionRunPreview": "Uruchom podgląd",
+    "updatesTitle": "Aktualizacje",
+    "checkForUpdates": "Sprawdź aktualizacje",
+    "lastChecked": "Ostatnio sprawdzane: {when}",
+    "currentVersion": "Bieżąca kompilacja:",
+    "updateAvailable": "Dostępna aktualizacja",
+    "changelog": "Co się zmieniło",
+    "upToDate": "Aktualne",
+    "buildAhead": "Ta kompilacja wyprzedza oficjalną gałąź main.",
+    "buildDiverged": "Ta kompilacja odbiega od oficjalnej gałęzi main.",
+    "buildUnknown": "Tej niestandardowej kompilacji nie można porównać z oficjalną gałęzią main.",
+    "notGitInstall": "Ta instalacja nie zawiera informacji o commicie.",
+    "checkFailed": "Nie udało się sprawdzić dostępności aktualizacji.",
+    "contactsGithub": "Sprawdzanie jest uruchamiane ręcznie i nawiązuje połączenie z GitHubem.",
+    "openReleases": "Otwórz wydania w GitHubie",
+    "restartAfterUpdate": "Uruchom ponownie FreeLLMAPI po zakończeniu kompilacji."
   },
   "models": {
     "title": "Modele",

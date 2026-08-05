@@ -145,7 +145,22 @@
     "compressionPreview": "Vista previa en vivo",
     "compressionPreviewDescription": "Envía un cuerpo de solicitud por el pipeline para ver lo que recibiría un proveedor.",
     "compressionPreviewPlaceholder": "Pega JSON de la solicitud o texto sin formato",
-    "compressionRunPreview": "Ejecutar vista previa"
+    "compressionRunPreview": "Ejecutar vista previa",
+    "updatesTitle": "Actualizaciones",
+    "checkForUpdates": "Buscar actualizaciones",
+    "lastChecked": "Última comprobación: {when}",
+    "currentVersion": "Compilación actual:",
+    "updateAvailable": "Actualización disponible",
+    "changelog": "Qué ha cambiado",
+    "upToDate": "Al día",
+    "buildAhead": "Esta compilación está por delante de la rama main oficial.",
+    "buildDiverged": "Esta compilación ha divergido de la rama main oficial.",
+    "buildUnknown": "Esta compilación personalizada no se puede comparar con la rama main oficial.",
+    "notGitInstall": "Esta instalación no incluye información de commits.",
+    "checkFailed": "No se pudo comprobar si hay actualizaciones.",
+    "contactsGithub": "Las comprobaciones se realizan manualmente y contactan con GitHub.",
+    "openReleases": "Abrir lanzamientos de GitHub",
+    "restartAfterUpdate": "Reinicia FreeLLMAPI cuando finalice la compilación."
   },
   "models": {
     "title": "Modelos",

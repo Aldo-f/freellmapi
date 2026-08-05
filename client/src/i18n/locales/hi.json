@@ -145,7 +145,22 @@
     "compressionPreview": "लाइव पूर्वावलोकन",
     "compressionPreviewDescription": "यह देखने के लिए कि प्रदाता को क्या मिलेगा, किसी अनुरोध बॉडी को पाइपलाइन से गुज़ारें।",
     "compressionPreviewPlaceholder": "अनुरोध JSON या सादा टेक्स्ट पेस्ट करें",
-    "compressionRunPreview": "पूर्वावलोकन चलाएँ"
+    "compressionRunPreview": "पूर्वावलोकन चलाएँ",
+    "updatesTitle": "अपडेट",
+    "checkForUpdates": "अपडेट के लिए जांचें",
+    "lastChecked": "अंतिम बार जाँच की गई: {when}",
+    "currentVersion": "वर्तमान बिल्ड:",
+    "updateAvailable": "अपडेट उपलब्ध है",
+    "changelog": "क्या बदला है",
+    "upToDate": "नवीनतम संस्करण",
+    "buildAhead": "यह बिल्ड आधिकारिक main शाखा से आगे है।",
+    "buildDiverged": "यह बिल्ड आधिकारिक main शाखा से अलग हो गया है।",
+    "buildUnknown": "इस कस्टम बिल्ड की तुलना आधिकारिक main शाखा से नहीं की जा सकती।",
+    "notGitInstall": "इस इंस्टॉलेशन में कमिट की जानकारी शामिल नहीं है।",
+    "checkFailed": "अपडेट की जाँच नहीं की जा सकी।",
+    "contactsGithub": "जाँच मैन्युअल रूप से होती है और GitHub से संपर्क करती है।",
+    "openReleases": "GitHub रिलीज़ खोलें",
+    "restartAfterUpdate": "बिल्ड पूरा होने के बाद FreeLLMAPI को पुनः आरंभ करें।"
   },
   "models": {
     "title": "मॉडल",
