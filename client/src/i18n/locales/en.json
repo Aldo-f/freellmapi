@@ -300,6 +300,8 @@
     "pageTitle": "Keys",
     "pageDescription": "Provider credentials and the unified API key your apps connect with.",
     "tabProviders": "Providers",
+    "checklistSummary": "{configured} of {total} providers configured",
+    "checklistKeyless": "no key needed",
     "tabQuotaSignals": "Quota signals",
     "tabApiKey": "Unified API key",
     "tabAnthropic": "Anthropic",
