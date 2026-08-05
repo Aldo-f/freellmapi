@@ -244,6 +244,8 @@
     "usageRequestsMonth": "{count} permintaan bulan ini"
   },
   "strategies": {
+    "explore": "Teroka model yang belum diukur",
+    "exploreHint": "Beri model tanpa data kebolehpercayaan/kelajuan peluang 10% untuk dicuba supaya sampel terkumpul.",
     "title": "Strategi penghalaan",
     "description": "Pilih strategi penghalaan. Dalam mod Manual anda seret untuk menetapkan susunan; Strategi lain menghala berdasarkan skor langsung merentasi kebolehpercayaan, kelajuan dan kecerdasan.",
     "weightsSummary": "kebolehpercayaan {reliability}% · kelajuan {speed}% · {intelligence}% kecerdasan",
