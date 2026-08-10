@@ -52,6 +52,7 @@ import { getSetting } from '../db/index.js';
 import { newBreaker, recordBreakerFailure } from './guardrails.js';
 import { getRequestTrace, newRequestTrace, runWithRequestTrace, type AttemptOutcome, type AttemptTraceRecord, type RequestTrace } from './attempt-trace.js';
 import { logRequest, persistRequestAttempts } from './request-log.js';
+import { withKeyProxy } from './proxy.js';
 
 // Every surface caps failover hops at the same number.
 export const FALLBACK_MAX_RETRIES = 20;
@@ -1080,7 +1081,12 @@ async function runFallbackLoopAttempts(hooks: FallbackHooks, trace: RequestTrace
     try {
     let outcome: DispatchOutcome;
     try {
-      outcome = await hooks.dispatch(route, attempt);
+      // #590 (per-key proxy): if THIS key carries its own proxy URL, route the
+      // attempt through it (withKeyProxy → proxyFetch reads the ALS store);
+      // otherwise the global proxy / direct path applies as before. The URL
+      // arrives already decrypted on the route (services/router.ts), so an
+      // attempt costs nothing extra — no query, no decrypt.
+      outcome = await withKeyProxy(route.proxyUrl, () => hooks.dispatch(route, attempt));
     } catch (err: any) {
       // Client-caused abort: the composed fetch signal fired because OUR
       // client hung up mid-attempt (see newClientAbortError). Not a
