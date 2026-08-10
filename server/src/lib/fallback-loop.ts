@@ -41,6 +41,7 @@ import {
   isModelAccessForbiddenError,
   isProviderBadRequestError,
   isProviderDegradedError,
+  isProviderLevelError,
   isContextTooLargeError,
   isTimeoutErrorText,
 } from './error-classify.js';
@@ -146,14 +147,18 @@ export function getFallbackTimeBudgetMs(): number {
 // Mutable per-request skip state threaded through the loop and mutated by
 // recordRetryableFailure / recordAuthFailure. skipKeys entries are
 // "platform:modelId:keyId"; skipModels holds model_db_ids ruled out for the
-// rest of this request.
+// rest of this request; skipPlatforms holds platforms ruled out wholesale
+// (#788) — every model and every key of them — for the rest of this request.
+// All three are request-scoped only: nothing here outlives the response, so a
+// provider that blipped once is a fresh candidate on the very next request.
 export interface FallbackState {
   skipKeys: Set<string>;
   skipModels: Set<number>;
+  skipPlatforms: Set<string>;
 }
 
 export function newFallbackState(): FallbackState {
-  return { skipKeys: new Set<string>(), skipModels: new Set<number>() };
+  return { skipKeys: new Set<string>(), skipModels: new Set<number>(), skipPlatforms: new Set<string>() };
 }
 
 // Milliseconds until the next UTC midnight — when most providers' daily free
@@ -294,6 +299,16 @@ export function recordRetryableFailure(route: RouteResult, err: any, state: Fall
   // sibling keys counts as the single observation it is.
   noteModelRetirementSignal(route, err, getRequestTrace());
   state.skipKeys.add(`${route.platform}:${route.modelId}:${route.keyId}`);
+  // #788: provider-level failures (5xx / timeout / transport / degraded) mean
+  // the PROVIDER is sick, not this key — every key AND every model of that
+  // platform would fail identically. Rule out the whole platform for this
+  // request so the loop moves to the NEXT provider instead of burning one
+  // failover hop per key. Key-scoped failures (auth/quota) stay on the
+  // single-key path, and the per-key cooldown below is still the only thing
+  // that outlives the request.
+  if (isProviderLevelError(err)) {
+    state.skipPlatforms.add(route.platform);
+  }
   if (consumeSkipBenchExemption(route, err)) return true;
   const decision = cooldownDecisionForError(route, err);
   setCooldown(route.platform, route.modelId, route.keyId, decision.durationMs, decision.source);
@@ -890,7 +905,8 @@ export interface FallbackHooks {
   state: FallbackState;
 
   /**
-   * Pick a route for this attempt. Reads state.skipKeys / state.skipModels.
+   * Pick a route for this attempt. Reads state.skipKeys / state.skipModels /
+   * state.skipPlatforms.
    * Throws the router's RouteError when the pool is exhausted before any
    * upstream is tried (caught by the loop → onRoutingExhausted).
    */
