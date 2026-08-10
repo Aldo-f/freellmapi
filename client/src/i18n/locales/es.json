@@ -159,6 +159,8 @@
     "notGitInstall": "Esta instalación no incluye información de commits.",
     "checkFailed": "No se pudo comprobar si hay actualizaciones.",
     "contactsGithub": "Las comprobaciones se realizan manualmente y contactan con GitHub.",
+    "autoUpdateCheck": "Comprobación automática de actualizaciones",
+    "autoUpdateCheckHelp": "Consulta GitHub una vez al día para ver si hay una nueva versión y muestra un recordatorio. Desactivado de forma predeterminada.",
     "openReleases": "Abrir lanzamientos de GitHub",
     "restartAfterUpdate": "Reinicia FreeLLMAPI cuando finalice la compilación."
   },
@@ -849,5 +851,14 @@
     "manualHint": "URL base y clave para introducir en los ajustes de la herramienta.",
     "endpoint": "Endpoint",
     "documentation": "Documentación"
+  },
+  "update": {
+    "available": "New version available",
+    "whatsNew": "What's new in v{version}",
+    "publishedOn": "Published {date}",
+    "noNotes": "No release notes were published for this version.",
+    "openRelease": "Open release page",
+    "dismissVersion": "Dismiss this version",
+    "dismiss": "Dismiss"
   }
 }

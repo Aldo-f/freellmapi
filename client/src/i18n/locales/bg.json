@@ -159,6 +159,8 @@
     "notGitInstall": "Тази инсталация не съдържа информация за commit.",
     "checkFailed": "Актуализациите не можаха да бъдат проверени.",
     "contactsGithub": "Проверките се стартират ръчно и се свързват с GitHub.",
+    "autoUpdateCheck": "Автоматична проверка за актуализации",
+    "autoUpdateCheckHelp": "Проверява GitHub веднъж дневно за ново издание и показва напомняне. По подразбиране е изключено.",
     "openReleases": "Отвори изданията в GitHub",
     "restartAfterUpdate": "Рестартирайте FreeLLMAPI след завършване на компилацията."
   },
@@ -849,5 +851,14 @@
     "manualHint": "Базов URL и ключ за въвеждане в настройките на самия инструмент.",
     "endpoint": "Крайна точка",
     "documentation": "Документация"
+  },
+  "update": {
+    "available": "New version available",
+    "whatsNew": "What's new in v{version}",
+    "publishedOn": "Published {date}",
+    "noNotes": "No release notes were published for this version.",
+    "openRelease": "Open release page",
+    "dismissVersion": "Dismiss this version",
+    "dismiss": "Dismiss"
   }
 }

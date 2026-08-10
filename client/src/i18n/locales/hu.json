@@ -159,6 +159,8 @@
     "notGitInstall": "Ez a telepítés nem tartalmaz commitinformációkat.",
     "checkFailed": "Nem sikerült ellenőrizni a frissítéseket.",
     "contactsGithub": "Az ellenőrzések manuálisak, és kapcsolatba lépnek a GitHubbal.",
+    "autoUpdateCheck": "Automatikus frissítésellenőrzés",
+    "autoUpdateCheckHelp": "Naponta egyszer ellenőrzi a GitHubon az új kiadást, és emlékeztetőt jelenít meg. Alapértelmezés szerint kikapcsolva.",
     "openReleases": "GitHub-kiadások megnyitása",
     "restartAfterUpdate": "A build befejezése után indítsa újra a FreeLLMAPI-t."
   },
@@ -849,5 +851,14 @@
     "manualHint": "Alap-URL és kulcs az eszköz saját beállításaihoz.",
     "endpoint": "Végpont",
     "documentation": "Dokumentáció"
+  },
+  "update": {
+    "available": "New version available",
+    "whatsNew": "What's new in v{version}",
+    "publishedOn": "Published {date}",
+    "noNotes": "No release notes were published for this version.",
+    "openRelease": "Open release page",
+    "dismissVersion": "Dismiss this version",
+    "dismiss": "Dismiss"
   }
 }

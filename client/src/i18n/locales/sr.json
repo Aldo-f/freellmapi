@@ -159,6 +159,8 @@
     "notGitInstall": "Ова инсталација не садржи информације о комиту.",
     "checkFailed": "Провера ажурирања није успела.",
     "contactsGithub": "Провере се покрећу ручно и повезују се са GitHub-ом.",
+    "autoUpdateCheck": "Аутоматска провера ажурирања",
+    "autoUpdateCheckHelp": "Једном дневно проверава GitHub за ново издање и приказује подсетник. Подразумевано искључено.",
     "openReleases": "Отвори GitHub издања",
     "restartAfterUpdate": "Поново покрените FreeLLMAPI након завршетка израде."
   },
@@ -849,5 +851,14 @@
     "manualHint": "Основни URL и кључ за унос у сопствена подешавања алата.",
     "endpoint": "Крајња тачка",
     "documentation": "Документација"
+  },
+  "update": {
+    "available": "New version available",
+    "whatsNew": "What's new in v{version}",
+    "publishedOn": "Published {date}",
+    "noNotes": "No release notes were published for this version.",
+    "openRelease": "Open release page",
+    "dismissVersion": "Dismiss this version",
+    "dismiss": "Dismiss"
   }
 }

@@ -159,6 +159,8 @@
     "notGitInstall": "Denne installasjonen inneholder ikke commit-informasjon.",
     "checkFailed": "Kunne ikke se etter oppdateringer.",
     "contactsGithub": "Oppdateringssjekker kjøres manuelt og kontakter GitHub.",
+    "autoUpdateCheck": "Automatisk oppdateringssjekk",
+    "autoUpdateCheckHelp": "Sjekker GitHub én gang om dagen for en ny utgivelse og viser en påminnelse. Av som standard.",
     "openReleases": "Åpne GitHub Releases",
     "restartAfterUpdate": "Start FreeLLMAPI på nytt etter at byggingen er fullført."
   },
@@ -849,5 +851,14 @@
     "manualHint": "Basis-URL og nøkkel til verktøyets egne innstillinger.",
     "endpoint": "Endepunkt",
     "documentation": "Dokumentasjon"
+  },
+  "update": {
+    "available": "New version available",
+    "whatsNew": "What's new in v{version}",
+    "publishedOn": "Published {date}",
+    "noNotes": "No release notes were published for this version.",
+    "openRelease": "Open release page",
+    "dismissVersion": "Dismiss this version",
+    "dismiss": "Dismiss"
   }
 }

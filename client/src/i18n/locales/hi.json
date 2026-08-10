@@ -159,6 +159,8 @@
     "notGitInstall": "इस इंस्टॉलेशन में कमिट की जानकारी शामिल नहीं है।",
     "checkFailed": "अपडेट की जाँच नहीं की जा सकी।",
     "contactsGithub": "जाँच मैन्युअल रूप से होती है और GitHub से संपर्क करती है।",
+    "autoUpdateCheck": "स्वचालित अपडेट जाँच",
+    "autoUpdateCheckHelp": "दिन में एक बार नई रिलीज़ के लिए GitHub की जाँच करता है और अनुस्मारक दिखाता है। डिफ़ॉल्ट रूप से बंद।",
     "openReleases": "GitHub रिलीज़ खोलें",
     "restartAfterUpdate": "बिल्ड पूरा होने के बाद FreeLLMAPI को पुनः आरंभ करें।"
   },
@@ -849,5 +851,14 @@
     "manualHint": "टूल की अपनी सेटिंग्स में डालने के लिए बेस URL और कुंजी।",
     "endpoint": "समापन बिंदु",
     "documentation": "दस्तावेज़ीकरण"
+  },
+  "update": {
+    "available": "New version available",
+    "whatsNew": "What's new in v{version}",
+    "publishedOn": "Published {date}",
+    "noNotes": "No release notes were published for this version.",
+    "openRelease": "Open release page",
+    "dismissVersion": "Dismiss this version",
+    "dismiss": "Dismiss"
   }
 }

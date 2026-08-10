@@ -159,6 +159,8 @@
     "notGitInstall": "此安裝不包含 commit 資訊。",
     "checkFailed": "無法檢查更新。",
     "contactsGithub": "檢查需手動執行，並會連線至 GitHub。",
+    "autoUpdateCheck": "自動檢查更新",
+    "autoUpdateCheckHelp": "每天檢查一次 GitHub 上是否有新版本，並顯示提醒。預設關閉。",
     "openReleases": "開啟 GitHub Releases",
     "restartAfterUpdate": "建置完成後重新啟動 FreeLLMAPI。"
   },
@@ -849,5 +851,14 @@
     "manualHint": "在該工具的設定中輸入基礎 URL 和金鑰。",
     "endpoint": "端點",
     "documentation": "文件"
+  },
+  "update": {
+    "available": "发现新版本",
+    "whatsNew": "v{version} 更新内容",
+    "publishedOn": "发布于 {date}",
+    "noNotes": "此版本未发布更新说明。",
+    "openRelease": "打开发布页",
+    "dismissVersion": "忽略此版本",
+    "dismiss": "忽略"
   }
 }

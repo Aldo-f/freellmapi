@@ -159,6 +159,8 @@
     "notGitInstall": "ይህ ጭነት የcommit መረጃን አያካትትም።",
     "checkFailed": "ዝማኔዎችን መፈተሽ አልተቻለም።",
     "contactsGithub": "ፍተሻዎች በእጅ የሚከናወኑ ሲሆን GitHubን ያገናኛሉ።",
+    "autoUpdateCheck": "ራስ-ሰር የዝማኔ ፍተሻ",
+    "autoUpdateCheckHelp": "በቀን አንድ ጊዜ ለአዲስ ልቀት GitHubን ይፈትሻል እና ማስታወሻ ያሳያል። በነባሪነት ጠፍቷል።",
     "openReleases": "የGitHub ልቀቶችን ክፈት",
     "restartAfterUpdate": "ግንባታው ከተጠናቀቀ በኋላ FreeLLMAPIን እንደገና ያስጀምሩ።"
   },
@@ -849,5 +851,14 @@
     "manualHint": "በመሣሪያው ራሱ ቅንብሮች ውስጥ የሚገባ የመሠረት URL እና ቁልፍ።",
     "endpoint": "የመዳረሻ ነጥብ",
     "documentation": "ሰነዶች"
+  },
+  "update": {
+    "available": "New version available",
+    "whatsNew": "What's new in v{version}",
+    "publishedOn": "Published {date}",
+    "noNotes": "No release notes were published for this version.",
+    "openRelease": "Open release page",
+    "dismissVersion": "Dismiss this version",
+    "dismiss": "Dismiss"
   }
 }

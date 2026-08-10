@@ -159,6 +159,8 @@
     "notGitInstall": "Fífìmọ́lẹ̀ yìí kò ní àlàyé commit.",
     "checkFailed": "A kò lè ṣàyẹ̀wò àwọn ìmúdójúìwọ̀n.",
     "contactsGithub": "Ọwọ́ ni a fi ń ṣe àwọn àyẹ̀wò, wọ́n sì ń kan sí GitHub.",
+    "autoUpdateCheck": "Àyẹ̀wò ìmúdójúìwọ̀n aládàáṣe",
+    "autoUpdateCheckHelp": "Ó ń ṣàyẹ̀wò GitHub lẹ́ẹ̀kan lóòjọ́ fún ìtújáde tuntun, ó sì ń fi ìránnilétí hàn. Ó pa ní àtìbẹ̀rẹ̀.",
     "openReleases": "Ṣí àwọn ìtújáde GitHub",
     "restartAfterUpdate": "Tun FreeLLMAPI bẹ̀rẹ̀ lẹ́yìn tí ìkọ́lé bá parí."
   },
@@ -849,5 +851,14 @@
     "manualHint": "URL ìpìlẹ̀ àti kọ́kọ́rọ́ láti tẹ̀ sínú ètò irinṣẹ́ náà.",
     "endpoint": "Ebute",
     "documentation": "Iwe akọsilẹ"
+  },
+  "update": {
+    "available": "New version available",
+    "whatsNew": "What's new in v{version}",
+    "publishedOn": "Published {date}",
+    "noNotes": "No release notes were published for this version.",
+    "openRelease": "Open release page",
+    "dismissVersion": "Dismiss this version",
+    "dismiss": "Dismiss"
   }
 }

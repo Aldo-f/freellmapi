@@ -159,6 +159,8 @@
     "notGitInstall": "Šiame diegime nėra informacijos apie Git įrašus.",
     "checkFailed": "Nepavyko patikrinti, ar yra naujinių.",
     "contactsGithub": "Tikrinimas atliekamas rankiniu būdu ir susisiekiama su GitHub.",
+    "autoUpdateCheck": "Automatinis atnaujinimų tikrinimas",
+    "autoUpdateCheckHelp": "Kartą per dieną patikrina „GitHub“, ar yra nauja laida, ir parodo priminimą. Pagal numatytuosius nustatymus išjungta.",
     "openReleases": "Atverti GitHub leidimus",
     "restartAfterUpdate": "Baigę komponuoti paleiskite FreeLLMAPI iš naujo."
   },
@@ -849,5 +851,14 @@
     "manualHint": "Bazinis URL ir raktas, kuriuos reikia įvesti paties įrankio nustatymuose.",
     "endpoint": "Galinis taškas",
     "documentation": "Dokumentacija"
+  },
+  "update": {
+    "available": "New version available",
+    "whatsNew": "What's new in v{version}",
+    "publishedOn": "Published {date}",
+    "noNotes": "No release notes were published for this version.",
+    "openRelease": "Open release page",
+    "dismissVersion": "Dismiss this version",
+    "dismiss": "Dismiss"
   }
 }

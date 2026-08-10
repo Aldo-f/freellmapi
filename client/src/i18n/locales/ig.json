@@ -159,6 +159,8 @@
     "notGitInstall": "Nwụnye a enweghị ozi commit.",
     "checkFailed": "Enweghị ike ịlele mmelite.",
     "contactsGithub": "A na-eji aka eme nyocha ndị a, ha na-akpọtụrụ GitHub.",
+    "autoUpdateCheck": "Nyocha mmelite akpaaka",
+    "autoUpdateCheckHelp": "Ọ na-enyocha GitHub otu ugboro n'ụbọchị maka ntọhapụ ọhụrụ ma gosi ncheta. A gbanyụrụ ya na ndabara.",
     "openReleases": "Mepee GitHub Releases",
     "restartAfterUpdate": "Malitegharịa FreeLLMAPI mgbe build ahụ gwụchara."
   },
@@ -849,5 +851,14 @@
     "manualHint": "Isi URL na igodo ị ga-etinye na ntọala nke ngwá ọrụ ahụ.",
     "endpoint": "Njedebe",
     "documentation": "Akwụkwọ ntuziaka"
+  },
+  "update": {
+    "available": "New version available",
+    "whatsNew": "What's new in v{version}",
+    "publishedOn": "Published {date}",
+    "noNotes": "No release notes were published for this version.",
+    "openRelease": "Open release page",
+    "dismissVersion": "Dismiss this version",
+    "dismiss": "Dismiss"
   }
 }
