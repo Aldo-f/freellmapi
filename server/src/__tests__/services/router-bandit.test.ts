@@ -30,12 +30,13 @@ const ORIGINAL_NODE_ENV = process.env.NODE_ENV;
 function addModel(opts: {
   platform: string; modelId: string; name: string;
   intelligenceRank: number; sizeLabel: string; budget: string; priority: number;
+  vision?: boolean;
 }): number {
   const db = getDb();
   db.prepare(`
-    INSERT INTO models (platform, model_id, display_name, intelligence_rank, speed_rank, size_label, monthly_token_budget, enabled)
-    VALUES (?, ?, ?, ?, ?, ?, ?, 1)
-  `).run(opts.platform, opts.modelId, opts.name, opts.intelligenceRank, 1, opts.sizeLabel, opts.budget);
+    INSERT INTO models (platform, model_id, display_name, intelligence_rank, speed_rank, size_label, monthly_token_budget, enabled, supports_vision, supports_tools)
+    VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, 1)
+  `).run(opts.platform, opts.modelId, opts.name, opts.intelligenceRank, 1, opts.sizeLabel, opts.budget, opts.vision ? 1 : 0);
   const id = (db.prepare('SELECT id FROM models WHERE platform = ? AND model_id = ?')
     .get(opts.platform, opts.modelId) as { id: number }).id;
   db.prepare('INSERT INTO fallback_config (model_db_id, priority, enabled) VALUES (?, ?, 1)').run(id, opts.priority);
@@ -128,6 +129,21 @@ describe('bandit router', () => {
     const counts = pickCounts(200);
     expect(counts['x'] ?? 0).toBeGreaterThan(0);
     expect(counts['y'] ?? 0).toBeGreaterThan(0);
+  });
+
+  it('vision requests never route to a text-only model, even with exploration on', () => {
+    setExploreEnabled(true);
+    addModel({ platform: 'google', modelId: 'vision-a', name: 'Vision A', intelligenceRank: 3, sizeLabel: 'Large', budget: '~50M', priority: 1, vision: true });
+    addModel({ platform: 'groq', modelId: 'text-b', name: 'Text B', intelligenceRank: 3, sizeLabel: 'Large', budget: '~50M', priority: 2 });
+    setRoutingStrategy('balanced');
+    refreshStatsCache(getDb(), true);
+    const counts: Record<string, number> = {};
+    for (let i = 0; i < 300; i++) {
+      const r = routeRequest(100, undefined, undefined, /*requireVision=*/ true);
+      counts[r.modelId] = (counts[r.modelId] ?? 0) + 1;
+    }
+    expect(counts['text-b'] ?? 0).toBe(0);
+    expect(counts['vision-a'] ?? 0).toBe(300);
   });
 
   it('smartest vs fastest flips which model wins, at equal reliability', () => {
