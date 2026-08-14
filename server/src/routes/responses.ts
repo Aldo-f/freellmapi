@@ -34,7 +34,7 @@ import { applyTokenBudget, tokenBudgetMessage } from '../lib/guardrails.js';
 import { samplingParamSchemaFields, pickSamplingParams, type ResponseFormat } from '../lib/sampling-params.js';
 import { enforceJsonContent } from '../lib/structured-output.js';
 import { sanitizeProviderErrorMessage } from '../lib/error-redaction.js';
-import { isClientAbortError, newClientAbortError } from '../lib/error-classify.js';
+import { isClientAbortError, newClientAbortError, newHedgeAbortError } from '../lib/error-classify.js';
 import { inferQuotaPoolKey, type QuotaObservationContext } from '../services/provider-quota.js';
 import { compressRequest, formatCompressionHeader } from '../services/compression/pipeline.js';
 
@@ -738,13 +738,17 @@ responsesRouter.post('/responses', async (req: Request, res: Response) => {
   // writableEnded distinguishes a real disconnect.
   let clientGone = false;
   const clientAbort = new AbortController();
+  // Fallback-v2 hedging: the loop aborts this controller (via abortInFlight)
+  // when the wall-clock retry budget expires mid-attempt, canceling the
+  // in-flight upstream instead of waiting for a stalled attempt to time out.
+  const hedgeAbort = new AbortController();
   res.on('close', () => {
     if (!res.writableEnded) {
       clientGone = true;
       clientAbort.abort(newClientAbortError());
     }
   });
-  const dispatchOpts = { ...completionOpts, signal: clientAbort.signal };
+  const dispatchOpts = { ...completionOpts, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) };
 
   // Stream bookkeeping (used only when stream === true). `streamStarted` is the
   // commit flag: true once the response.created/in_progress skeleton has left,
@@ -763,8 +767,9 @@ responsesRouter.post('/responses', async (req: Request, res: Response) => {
     state,
     attemptLog,
     clientGone: () => clientGone,
+    abortInFlight: () => hedgeAbort.abort(newHedgeAbortError()),
     route: () => routeRequest(estimatedTotal, state.skipKeys.size > 0 ? state.skipKeys : undefined, preferredModel, hasImage, wantsTools, state.skipModels.size > 0 ? state.skipModels : undefined, groupChain, completionOpts.response_format !== undefined, state.skipPlatforms.size > 0 ? state.skipPlatforms : undefined),
-    dispatch: async (route, attempt) => {
+    dispatch: async (route, attempt, ctx) => {
       traceRouteEvent('Responses', {
         event: attempt === 0 ? 'start' : 'next',
         requestId: requestGroupId,
@@ -826,6 +831,9 @@ responsesRouter.post('/responses', async (req: Request, res: Response) => {
           sse('response.created', { response: skeleton });
           sse('response.in_progress', { response: skeleton });
           streamStarted = true;
+          // Committed: the answer is on its way, so the retry budget must no
+          // longer cancel this attempt (it could not fail over now anyway).
+          ctx.disarmHedge();
         };
 
         // Open the text output item and stream `text` as its first delta.

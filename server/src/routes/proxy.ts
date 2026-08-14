@@ -18,7 +18,7 @@ import { sanitizeProviderErrorMessage } from '../lib/error-redaction.js';
 import { rescueInlineToolCalls, startsWithDialectMarker, couldBecomeDialectMarker, containsDialectMarker } from '../lib/tool-call-rescue.js';
 import { getContextHandoffMode, recordIncomingMessages, maybeInjectContextHandoff, recordSuccessfulModel, hasPriorModel, HANDOFF_MAX_TOKENS } from '../services/context-handoff.js';
 import { isFusionModel, runFusion, fusionConfigSchema, FusionError, FUSION_MODEL_ID } from '../services/fusion.js';
-import { isRetryableError, isPaymentRequiredError, isModelNotFoundError, isModelAccessForbiddenError, isClientAbortError, newClientAbortError, isUpstreamClassificationOutput } from '../lib/error-classify.js';
+import { isRetryableError, isPaymentRequiredError, isModelNotFoundError, isModelAccessForbiddenError, isClientAbortError, newClientAbortError, newHedgeAbortError, isUpstreamClassificationOutput } from '../lib/error-classify.js';
 import { logRequest } from '../lib/request-log.js';
 import { observeServedModel } from '../lib/served-model.js';
 import { parseCacheDirective, cacheActive, isCacheableTemperature, computeCacheKey, getCachedResponse, storeCachedResponse } from '../services/cache.js';
@@ -961,6 +961,10 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
   // writableEnded distinguishes a real disconnect.
   let clientGone = false;
   const clientAbort = new AbortController();
+  // Fallback-v2 hedging: the loop aborts this controller (via abortInFlight)
+  // when the wall-clock retry budget expires mid-attempt, canceling the
+  // in-flight upstream instead of waiting for a stalled attempt to time out.
+  const hedgeAbort = new AbortController();
   res.on('close', () => {
     if (!res.writableEnded) {
       clientGone = true;
@@ -976,6 +980,7 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
     state,
     attemptLog,
     clientGone: () => clientGone,
+    abortInFlight: () => hedgeAbort.abort(newHedgeAbortError()),
     route: () => routeRequest(
       estimatedTotal,
       state.skipKeys.size > 0 ? state.skipKeys : undefined,
@@ -987,7 +992,7 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
       false,
       state.skipPlatforms.size > 0 ? state.skipPlatforms : undefined,
     ),
-    dispatch: async (route, attempt) => {
+    dispatch: async (route, attempt, ctx) => {
       traceRouteEvent('Proxy', {
         event: attempt === 0 ? 'start' : 'next',
         requestId: requestGroupId,
@@ -1017,6 +1022,9 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
           res.setHeader('X-Routed-Via', routedViaValue(route.platform, route.modelId));
           setFallbackHeaders(res, attempt, attemptLog);
           headerSent = true;
+          // Committed: the answer is on its way, so the retry budget must no
+          // longer cancel this attempt (it could not fail over now anyway).
+          ctx.disarmHedge();
           for (const frame of buffered) res.write(`data: ${JSON.stringify(frame)}\n\n`);
           buffered.length = 0;
         };
@@ -1026,7 +1034,7 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
             route.apiKey,
             messages,
             route.modelId,
-            { temperature, max_tokens, top_p, stop, signal: clientAbort.signal },
+            { temperature, max_tokens, top_p, stop, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) },
             quotaContextForRoute(route, 'chat/completions'),
           );
 
@@ -1126,7 +1134,7 @@ proxyRouter.post('/completions', async (req: Request, res: Response) => {
         route.apiKey,
         messages,
         route.modelId,
-        { temperature, max_tokens, top_p, stop, signal: clientAbort.signal },
+        { temperature, max_tokens, top_p, stop, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) },
         quotaContextForRoute(route, 'chat/completions'),
       );
 
@@ -1777,6 +1785,10 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
   // writableEnded distinguishes a real disconnect.
   let clientGone = false;
   const clientAbort = new AbortController();
+  // Fallback-v2 hedging: the loop aborts this controller (via abortInFlight)
+  // when the wall-clock retry budget expires mid-attempt, canceling the
+  // in-flight upstream instead of waiting for a stalled attempt to time out.
+  const hedgeAbort = new AbortController();
   res.on('close', () => {
     if (!res.writableEnded) {
       clientGone = true;
@@ -1789,6 +1801,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
     state,
     attemptLog,
     clientGone: () => clientGone,
+    abortInFlight: () => hedgeAbort.abort(newHedgeAbortError()),
     route: () => {
       // When a handoff could fire this turn, pad the token estimate so the router's
       // context-window and TPM checks account for the extra system message overhead.
@@ -1799,7 +1812,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
       const routingEstimate = handoffPossible ? estimatedTotal + HANDOFF_MAX_TOKENS : estimatedTotal;
       return routeRequest(routingEstimate, state.skipKeys.size > 0 ? state.skipKeys : undefined, preferredModel, hasImage, wantsTools, state.skipModels.size > 0 ? state.skipModels : undefined, groupChain ?? resolvedChain?.chain, samplingParams.response_format !== undefined, state.skipPlatforms.size > 0 ? state.skipPlatforms : undefined);
     },
-    dispatch: async (route, attempt) => {
+    dispatch: async (route, attempt, ctx) => {
     const modelKey = `${route.platform}:${route.modelId}`;
     traceRouteEvent('Proxy', {
       event: attempt === 0 ? 'start' : 'next',
@@ -1883,6 +1896,9 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
           res.setHeader('X-Routed-Via', routedViaValue(route.platform, route.modelId));
           setFallbackHeaders(res, attempt, attemptLog);
           headerSent = true;
+          // Committed: the answer is on its way, so the retry budget must no
+          // longer cancel this attempt (it could not fail over now anyway).
+          ctx.disarmHedge();
           for (const p of preamble) res.write(`data: ${JSON.stringify(p)}\n\n`);
           preamble.length = 0;
         };
@@ -1898,7 +1914,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
         try {
           const gen = route.provider.streamChatCompletion(
             route.apiKey, outboundMessages, route.modelId,
-            { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, stream_options: parsed.data.stream_options, ...samplingParams, signal: clientAbort.signal },
+            { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, stream_options: parsed.data.stream_options, ...samplingParams, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) },
             quotaContextForRoute(route, 'chat/completions'),
           );
 
@@ -2182,7 +2198,7 @@ proxyRouter.post('/chat/completions', async (req: Request, res: Response) => {
       } else {
         const result = await route.provider.chatCompletion(
           route.apiKey, outboundMessages, route.modelId,
-          { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, ...samplingParams, signal: clientAbort.signal },
+          { temperature, max_tokens, top_p, stop, tools, tool_choice, parallel_tool_calls, ...samplingParams, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) },
           quotaContextForRoute(route, 'chat/completions'),
         );
 
