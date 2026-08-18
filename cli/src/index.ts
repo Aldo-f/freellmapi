@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { applyGeneratedFiles, printDryRunDiff } from './config-files.js';
 import { getTool, tools } from './tools.js';
 import { resolveLaunchModel, type ResolvedModel } from './models.js';
+import { DOCTOR_TOOLS, diagnose, exitCodeFor, formatReport, type ToolReport } from './doctor.js';
 import type { CatalogModel, GenerateContext } from './types.js';
 
 interface CliOptions {
@@ -18,6 +19,11 @@ interface CliOptions {
   profile: string;
   model?: string;
   dryRun: boolean;
+  /** `doctor --timeout`: how long to wait for the /livez probe. */
+  timeoutMs?: number;
+  /** Positional arguments after the command. Only `doctor` takes any; every
+   *  other command still rejects a second positional as it always has. */
+  args: string[];
 }
 
 function rootUrl(url: string): string {
@@ -37,12 +43,24 @@ function validateProfile(profile: string): string {
   return profile;
 }
 
+function parseTimeout(value: string): number {
+  const ms = Number(value);
+  // Rejected rather than clamped: a typo'd `--timeout 5s` parsing to NaN and
+  // silently becoming the default is the kind of quiet no-op this command is
+  // supposed to be immune to.
+  if (!Number.isFinite(ms) || ms <= 0) {
+    throw new Error(`--timeout must be a positive number of milliseconds, got '${value}'`);
+  }
+  return ms;
+}
+
 export function parseArgs(argv: string[]): { command?: string; options: CliOptions } {
   const options: CliOptions = {
     url: process.env.FREELLMAPI_URL || 'http://localhost:3000',
     apiKey: process.env.FREELLMAPI_API_KEY,
     profile: 'default',
     dryRun: false,
+    args: [],
   };
   let command: string | undefined;
   for (let index = 0; index < argv.length; index += 1) {
@@ -51,13 +69,23 @@ export function parseArgs(argv: string[]): { command?: string; options: CliOptio
       command = arg;
       continue;
     }
+    if (!arg.startsWith('-')) {
+      // Collected rather than rejected here so the parser stays generic; the
+      // dispatcher rejects extras for commands that take none, which keeps
+      // `setup-claude typo` an error instead of a silently ignored word.
+      options.args.push(arg);
+      continue;
+    }
     if (arg === '--dry-run') {
       options.dryRun = true;
       continue;
     }
     const [flag, inline] = arg.split('=', 2);
     const value = inline ?? argv[index + 1];
-    if (flag === '--url' || flag === '--api-key' || flag === '--profile' || flag === '--model') {
+    if (
+      flag === '--url' || flag === '--api-key' || flag === '--profile'
+      || flag === '--model' || flag === '--timeout'
+    ) {
       if (inline === undefined) index += 1;
       if (!value || (inline === undefined && value.startsWith('-'))) {
         throw new Error(`${flag} requires a value`);
@@ -65,6 +93,7 @@ export function parseArgs(argv: string[]): { command?: string; options: CliOptio
       if (flag === '--url') options.url = value;
       else if (flag === '--api-key') options.apiKey = value;
       else if (flag === '--profile') options.profile = validateProfile(value);
+      else if (flag === '--timeout') options.timeoutMs = parseTimeout(value);
       else options.model = value;
       continue;
     }
@@ -214,6 +243,8 @@ function help(): string {
     '',
     'Commands:',
     ...tools.map(tool => `  ${tool.command.padEnd(17)} ${tool.name}`),
+    '  doctor [tool…]    Check whether a tool\'s requests actually reach this gateway',
+    '                    (--timeout MS raises the probe wait on a slow link)',
     '  launch            Run Claude Code with credentials injected into the child environment',
     '  launch-codex      Run Codex with provider overrides and injected credentials',
     '  list              List supported coding agents',
@@ -380,11 +411,33 @@ async function launchCodex(options: CliOptions): Promise<number> {
   return runChild('codex', args, env);
 }
 
+async function runDoctor(options: CliOptions): Promise<number> {
+  const requested = options.args.length ? options.args : DOCTOR_TOOLS;
+  const reports: ToolReport[] = [];
+  for (const tool of requested) {
+    reports.push(await diagnose(tool, {
+      expectedUrl: rootUrl(options.url),
+      timeoutMs: options.timeoutMs,
+    }));
+  }
+  for (const report of reports) process.stdout.write(`${formatReport(report)}\n`);
+  // Nonzero when anything is not routed, so this is usable as a precondition
+  // in a script rather than only readable by eye.
+  return exitCodeFor(reports);
+}
+
 export async function main(argv = process.argv.slice(2)): Promise<number> {
   const { command, options } = parseArgs(argv);
   if (!command || command === 'help' || argv.includes('--help') || argv.includes('-h')) {
     process.stdout.write(`${help()}\n`);
     return 0;
+  }
+  // `doctor` is the only command that takes positional arguments. Every other
+  // one rejects them here, BEFORE dispatch — checking after the setup-* branch
+  // would let `setup-claude typo` run with the stray word silently ignored,
+  // where it used to be an error.
+  if (command !== 'doctor' && options.args.length) {
+    throw new Error(`Unknown option: ${options.args[0]}`);
   }
   if (command === 'list') {
     for (const tool of tools) {
@@ -396,6 +449,7 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     await setup(command, options);
     return 0;
   }
+  if (command === 'doctor') return runDoctor(options);
   if (command === 'launch') return launchClaude(options);
   if (command === 'launch-codex') return launchCodex(options);
   throw new Error(`Unknown command '${command}'\n\n${help()}`);
