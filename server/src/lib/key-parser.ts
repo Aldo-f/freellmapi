@@ -289,8 +289,6 @@ export function parseJavaScript(content: string): Array<{ key: string; value: st
 
   /**
    * Extract string-literal key/value pairs from an ObjectExpression node.
-   * Non-string values are silently skipped (they are not reported — the
-   * caller tracks skipped entries separately when needed).
    */
   function extractFromObjectExpression(objExpr: Record<string, unknown>): void {
     const properties = objExpr.properties;
@@ -306,7 +304,6 @@ export function parseJavaScript(content: string): Array<{ key: string; value: st
 
       if (!keyNode || !valNode) continue;
 
-      // Key: Identifier ('FOO') or string Literal ('"FOO"')
       let key: string | null = null;
       if (keyNode.type === 'Identifier' && typeof keyNode.name === 'string') {
         key = keyNode.name;
@@ -315,81 +312,13 @@ export function parseJavaScript(content: string): Array<{ key: string; value: st
       }
       if (key === null) continue;
 
-      // Value must be a string Literal
       if (valNode.type === 'Literal' && typeof (valNode as Record<string, unknown>).value === 'string') {
         result.push({ key, value: (valNode as Record<string, unknown>).value as string });
       }
     }
   }
 
-  /**
-   * Walk the AST looking for:
-   *   module.exports = { … }
-   *   export default { … }
-   */
-  function walk(node: unknown): void {
-    if (!node || typeof node !== 'object') return;
-
-    const n = node as Record<string, unknown>;
-
-    // ExpressionStatement: module.exports = { … }
-    if (
-      n.type === 'ExpressionStatement' &&
-      n.expression &&
-      typeof n.expression === 'object'
-    ) {
-      const expr = n.expression as Record<string, unknown>;
-      if (
-        expr.type === 'AssignmentExpression' &&
-        expr.left &&
-        typeof expr.left === 'object'
-      ) {
-        const left = expr.left as Record<string, unknown>;
-        if (
-          left.type === 'MemberExpression' &&
-          left.object &&
-          typeof left.object === 'object' &&
-          (left.object as Record<string, unknown>).type === 'Identifier' &&
-          (left.object as Record<string, unknown>).name === 'module' &&
-          left.property &&
-          typeof left.property === 'object' &&
-          (left.property as Record<string, unknown>).type === 'Identifier' &&
-          (left.property as Record<string, unknown>).name === 'exports' &&
-          expr.right &&
-          typeof expr.right === 'object' &&
-          (expr.right as Record<string, unknown>).type === 'ObjectExpression'
-        ) {
-          extractFromObjectExpression(expr.right as Record<string, unknown>);
-          return; // stop — we found what we need
-        }
-      }
-    }
-
-    // ExportDefaultDeclaration: export default { … }
-    if (
-      n.type === 'ExportDefaultDeclaration' &&
-      n.declaration &&
-      typeof n.declaration === 'object' &&
-      (n.declaration as Record<string, unknown>).type === 'ObjectExpression'
-    ) {
-      extractFromObjectExpression(n.declaration as Record<string, unknown>);
-      return;
-    }
-
-    // Recurse into children
-    for (const key of Object.keys(n)) {
-      if (key === 'type' || key === 'start' || key === 'end') continue;
-      const val = n[key];
-      if (Array.isArray(val)) {
-        for (const item of val) {
-          if (item && typeof item === 'object') walk(item);
-        }
-      } else if (val && typeof val === 'object') {
-        walk(val);
-      }
-    }
-  }
-
+  const walk = createJsWalker(extractFromObjectExpression);
   walk(ast);
 
   return result;
@@ -569,6 +498,76 @@ export function looksLikeApiKey(value: string): boolean {
 // ---------------------------------------------------------------------------
 
 /**
+ * Create an AST walker for JavaScript files that looks for:
+ *   module.exports = { … }
+ *   export default { … }
+ */
+function createJsWalker(onObjectExpression: (obj: Record<string, unknown>) => void): (node: unknown) => void {
+  return function walk(node: unknown): void {
+    if (!node || typeof node !== 'object') return;
+
+    const n = node as Record<string, unknown>;
+
+    // ExpressionStatement: module.exports = { … }
+    if (n.type === 'ExpressionStatement' && n.expression && typeof n.expression === 'object') {
+      const expr = n.expression as Record<string, unknown>;
+      if (
+        expr.type === 'AssignmentExpression' &&
+        expr.left &&
+        typeof expr.left === 'object'
+      ) {
+        const left = expr.left as Record<string, unknown>;
+        if (
+          left.type === 'MemberExpression' &&
+          left.object &&
+          typeof left.object === 'object' &&
+          (left.object as Record<string, unknown>).type === 'Identifier' &&
+          (left.object as Record<string, unknown>).name === 'module' &&
+          left.property &&
+          typeof left.property === 'object' &&
+          (left.property as Record<string, unknown>).type === 'Identifier' &&
+          (left.property as Record<string, unknown>).name === 'exports'
+        ) {
+          if (
+            expr.right &&
+            typeof expr.right === 'object' &&
+            (expr.right as Record<string, unknown>).type === 'ObjectExpression'
+          ) {
+            onObjectExpression(expr.right as Record<string, unknown>);
+          }
+          return;
+        }
+      }
+    }
+
+    // ExportDefaultDeclaration: export default { … }
+    if (n.type === 'ExportDefaultDeclaration') {
+      if (
+        n.declaration &&
+        typeof n.declaration === 'object' &&
+        (n.declaration as Record<string, unknown>).type === 'ObjectExpression'
+      ) {
+        onObjectExpression(n.declaration as Record<string, unknown>);
+      }
+      return;
+    }
+
+    // Recurse into children
+    for (const key of Object.keys(n)) {
+      if (key === 'type' || key === 'start' || key === 'end') continue;
+      const val = n[key];
+      if (Array.isArray(val)) {
+        for (const item of val) {
+          if (item && typeof item === 'object') walk(item);
+        }
+      } else if (val && typeof val === 'object') {
+        walk(val);
+      }
+    }
+  };
+}
+
+/**
  * Parse a `.env` file (or unknown/file extension → env fallback).
  */
 function parseEnvFile(text: string): ParseResult {
@@ -695,72 +694,7 @@ function parseJsFile(text: string): ParseResult {
     }
   }
 
-  function walk(node: unknown): void {
-    if (!node || typeof node !== 'object') return;
-
-    const n = node as Record<string, unknown>;
-
-    // ExpressionStatement: module.exports = …
-    if (n.type === 'ExpressionStatement' && n.expression && typeof n.expression === 'object') {
-      const expr = n.expression as Record<string, unknown>;
-      if (
-        expr.type === 'AssignmentExpression' &&
-        expr.left &&
-        typeof expr.left === 'object'
-      ) {
-        const left = expr.left as Record<string, unknown>;
-        if (
-          left.type === 'MemberExpression' &&
-          left.object &&
-          typeof left.object === 'object' &&
-          (left.object as Record<string, unknown>).type === 'Identifier' &&
-          (left.object as Record<string, unknown>).name === 'module' &&
-          left.property &&
-          typeof left.property === 'object' &&
-          (left.property as Record<string, unknown>).type === 'Identifier' &&
-          (left.property as Record<string, unknown>).name === 'exports'
-        ) {
-          foundExport = true;
-          // Only extract when the right-hand side is an ObjectExpression
-          if (
-            expr.right &&
-            typeof expr.right === 'object' &&
-            (expr.right as Record<string, unknown>).type === 'ObjectExpression'
-          ) {
-            extractObjectProps(expr.right as Record<string, unknown>);
-          }
-          return;
-        }
-      }
-    }
-
-    // ExportDefaultDeclaration: export default …
-    if (n.type === 'ExportDefaultDeclaration') {
-      foundExport = true;
-      if (
-        n.declaration &&
-        typeof n.declaration === 'object' &&
-        (n.declaration as Record<string, unknown>).type === 'ObjectExpression'
-      ) {
-        extractObjectProps(n.declaration as Record<string, unknown>);
-      }
-      return;
-    }
-
-    // Recurse into children
-    for (const key of Object.keys(n)) {
-      if (key === 'type' || key === 'start' || key === 'end') continue;
-      const val = n[key];
-      if (Array.isArray(val)) {
-        for (const item of val) {
-          if (item && typeof item === 'object') walk(item);
-        }
-      } else if (val && typeof val === 'object') {
-        walk(val);
-      }
-    }
-  }
-
+  const walk = createJsWalker((obj) => extractObjectProps(obj));
   walk(ast);
 
   // If the file had no export pattern at all, return empty.
