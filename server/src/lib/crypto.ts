@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import { restrictToOwner } from './file-permissions.js';
 import type { Db } from '../db/types.js';
 
 const ALGORITHM = 'aes-256-gcm';
@@ -67,14 +68,19 @@ function keyFilePathFor(db: Db): string | null {
 }
 
 // Write the hex key with a temp-file-and-rename so a crash never leaves a
-// half-written key, and chmod 0600 so it isn't readable by other local users.
+// half-written key, and restrict it to the owner so it isn't readable by other
+// local users. The temp file is restricted BEFORE the rename so the key is
+// never briefly world-readable under its final name; a rename carries the DACL
+// with it, and the second call is idempotent belt-and-braces.
 function writeKeyFileAtomic(keyFile: string, hex: string): void {
   const dir = path.dirname(keyFile);
   const tmp = path.join(dir, `${KEY_FILE_NAME}.tmp-${crypto.randomBytes(6).toString('hex')}`);
   fs.writeFileSync(tmp, hex, { mode: 0o600 });
-  try { fs.chmodSync(tmp, 0o600); } catch { /* best effort — e.g. filesystems without POSIX modes */ }
+  restrictToOwner(tmp);
   fs.renameSync(tmp, keyFile);
-  try { fs.chmodSync(keyFile, 0o600); } catch { /* best effort */ }
+  if (!restrictToOwner(keyFile)) {
+    console.warn(`[crypto] could not restrict permissions on ${KEY_FILE_NAME} — it may be readable by other local accounts`);
+  }
 }
 
 /**
@@ -189,7 +195,21 @@ export function decrypt(encrypted: string, iv: string, authTag: string): string 
   return decrypted;
 }
 
+// A masked key is display-only — it feeds the `maskedKey` field every key,
+// media, embedding and client-profile route hands to the dashboard — so it must
+// never be enough to reconstruct the secret. The old short-key branch was
+// `'****' + key.slice(-4)`, and slice(-4) keeps the last four characters no
+// matter how short the input is: a 4-character key was echoed back IN FULL, and
+// a 5-character key gave away 4 of its 5 characters. Short keys are not
+// hypothetical — proxy credentials, self-hosted Ollama tokens and local dev
+// keys all land here.
+//
+// So reveal nothing at all below 5 characters, and at most the last TWO up to
+// 8: enough tail to tell two rows apart in the UI, not enough to be a
+// meaningful share of the secret. Long keys keep the familiar prefix+suffix
+// form, where 8 revealed characters out of 20+ is a fixed, small fraction.
 export function maskKey(key: string): string {
-  if (key.length <= 8) return '****' + key.slice(-4);
+  if (key.length < 5) return '****';
+  if (key.length <= 8) return '****' + key.slice(-2);
   return key.slice(0, 4) + '...' + key.slice(-4);
 }

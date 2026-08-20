@@ -34,6 +34,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=3001
+ENV FREELLMAPI_INSTALL_METHOD=docker
 
 COPY --from=build --chown=node:node /app/package.json /app/package-lock.json ./
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
@@ -53,10 +54,22 @@ COPY --from=build --chown=node:node /app/client/dist ./client/dist
 
 RUN mkdir -p /app/server/data && chown -R node:node /app/server/data
 
+# Deliberately last of the runtime layers: the SHA changes on every commit, and
+# an ARG/ENV above the COPYs invalidates the cache for all of them on each build.
+ARG FREELLMAPI_COMMIT_SHA
+ENV FREELLMAPI_COMMIT_SHA=${FREELLMAPI_COMMIT_SHA}
+
 USER node
 
 EXPOSE 3001
-VOLUME ["/app/server/data"]
+
+# No VOLUME for /app/server/data on purpose. Persistence is the deployment's
+# job — docker-compose.yml maps the named `freellmapi-data` volume there, and a
+# plain `docker run` takes -v. Declaring it here instead creates an ANONYMOUS
+# volume on every container that doesn't override it: PaaS runtimes that build
+# from the Dockerfile (Railway, Render, Coolify, Dokploy, CapRover) then either
+# refuse the image or silently hand each redeploy a fresh empty volume, and the
+# declaration also shadows a bind mount made at the same path.
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD node -e "fetch('http://127.0.0.1:' + (process.env.PORT || 3001) + '/api/ping').then((res) => { if (!res.ok) process.exit(1); }).catch(() => process.exit(1));"

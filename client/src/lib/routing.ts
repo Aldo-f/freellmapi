@@ -75,6 +75,10 @@ export interface RoutingData {
   strategy: RoutingStrategy
   weights: RoutingWeights | null
   customWeights: RoutingWeights
+  /** Exploration toggle: when on, unmeasured models get a guaranteed chance to
+   *  be tried so they build reliability/speed data (#685 follow-up). Required:
+   *  the server always sends it, and the checkbox renders straight from it. */
+  exploreEnabled: boolean
   scores: (RoutingScore & { platform: string; modelId: string; displayName: string; enabled: boolean })[]
 }
 
@@ -280,6 +284,7 @@ export const platformColors: Record<string, string> = {
   google:      '#4285f4',
   groq:        '#f55036',
   cerebras:    '#8b5cf6',
+  bai:         '#111827',
   nvidia:      '#76b900',
   mistral:     '#f59e0b',
   openrouter:  '#ec4899',
@@ -300,8 +305,14 @@ export const platformColors: Record<string, string> = {
   navy:         '#1d4ed8',
   nara:         '#2563eb',
   sealion:     '#0ea5e9',
+  orcarouter:  '#f97316',
+  anyapi:      '#0891b2',
   modelscope:  '#624aff',
   aihorde:     '#dc2626',
+  qianfan:     '#2932e1',
+  volcengine:  '#00b8d9',
+  longcat:     '#ffd100',
+  xfyun:       '#1f6fd0',
 }
 
 // ── Grouped (unified) rendering ──────────────────────────────────────────────

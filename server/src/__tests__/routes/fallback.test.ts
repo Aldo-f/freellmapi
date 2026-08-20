@@ -10,7 +10,8 @@ import { mintDashboardToken, isGatedApiPath } from '../helpers/auth.js';
 let dashToken = '';
 
 async function request(app: Express, method: string, path: string, body?: any) {
-  const server = app.listen(0);
+  const server = app.listen(0, '127.0.0.1');
+  if (!server.listening) await new Promise<void>(resolve => server.once('listening', () => resolve()));
   const addr = server.address() as any;
   const url = `http://127.0.0.1:${addr.port}${path}`;
 
@@ -210,6 +211,29 @@ describe('Fallback API', () => {
 
     // Restore a neutral preset so later tests start clean.
     await request(app, 'PUT', '/api/fallback/routing', { strategy: 'balanced' });
+  });
+
+  // Regression: the toggle state must ride on GET /routing, not just the PUT
+  // echo — the dashboard checkbox renders from the GET payload, so a missing
+  // field made it look permanently off and impossible to disable from the UI.
+  it('GET /api/fallback/routing reflects the exploration toggle set via PUT', async () => {
+    const get0 = await request(app, 'GET', '/api/fallback/routing');
+    expect(get0.body.exploreEnabled).toBe(false);
+
+    const put = await request(app, 'PUT', '/api/fallback/routing', {
+      strategy: 'balanced',
+      exploreEnabled: true,
+    });
+    expect(put.status).toBe(200);
+    expect(put.body.exploreEnabled).toBe(true);
+
+    const get1 = await request(app, 'GET', '/api/fallback/routing');
+    expect(get1.body.exploreEnabled).toBe(true);
+
+    // Restore the default so later tests start clean.
+    await request(app, 'PUT', '/api/fallback/routing', { strategy: 'balanced', exploreEnabled: false });
+    const get2 = await request(app, 'GET', '/api/fallback/routing');
+    expect(get2.body.exploreEnabled).toBe(false);
   });
 
   it('PUT /api/fallback/routing rejects all-zero custom weights', async () => {
