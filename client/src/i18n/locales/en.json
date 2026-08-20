@@ -308,6 +308,7 @@
     "factor": "score x{factor}",
     "noCooldown": "No cooldown",
     "cooldownChip": "{key} - {time}",
+    "resetCooldown": "Reset cooldown",
     "errorsHeading": "{count} recent errors",
     "noRecentErrors": "No recent errors",
     "noKey": "no key",

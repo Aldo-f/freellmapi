@@ -308,6 +308,7 @@
     "factor": "maki x{factor}",
     "noCooldown": "Babu sanyi",
     "cooldownChip": "{key} - {time}",
+    "resetCooldown": "Reset cooldown",
     "errorsHeading": "{count} kurakurai na baya-bayan nan",
     "noRecentErrors": "Babu kurakurai na baya-bayan nan",
     "noKey": "babu makulli",
