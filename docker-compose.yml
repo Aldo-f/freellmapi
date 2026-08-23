@@ -1,6 +1,6 @@
 services:
   freellmapi:
-    image: ghcr.io/tashfeenahmed/freellmapi@sha256:aeb57c7e9599971000787023f1c02fdd7cc87aecdddd4cb07abe4945157afe50
+    image: freellmapi:local-001
     build:
       context: .
       dockerfile: Dockerfile
