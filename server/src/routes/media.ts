@@ -102,7 +102,10 @@ const customMediaSchema = z.object({
   baseUrl: z.string().url('baseUrl must be a valid URL'),
   model: z.string().min(1),
   displayName: z.string().optional(),
-  modality: z.enum(['image', 'audio']),
+  // 'transcription' registers a custom OpenAI-compatible STT endpoint. The
+  // media_models table, GET /api/media/usage, the /v1/audio/transcriptions
+  // handler and the media service's 'custom' adapter all accept it.
+  modality: z.enum(['image', 'audio', 'transcription']),
   apiKey: z.string().optional(),
   label: z.string().optional(),
   quotaLabel: z.string().optional(),
