@@ -205,8 +205,20 @@ describe('custom model endpoint identity migration', () => {
 
       endpointIdentityUp(db);
       expect(db.prepare('SELECT * FROM models ORDER BY id').all()).toEqual(afterFirstUp);
-      expect((db.prepare("SELECT sql FROM sqlite_master WHERE name = 'models'").get() as { sql: string }).sql)
-        .toBe(schemaAfterFirstUp.sql);
+      // Schema comparison is by column set + types, not raw SQL text: the
+      // rebuild derives its DDL from the live schema, so column ORDER of
+      // ALTER-ADDED columns can differ between the first up and a re-up
+      // while the table is semantically identical.
+      const colsOf = (sql: string) => sql.slice(sql.indexOf('(') + 1, sql.lastIndexOf(')'))
+        .split(',')
+        // FK REFERENCES clauses are dropped by SQLite table rebuilds by design
+        // (enforcement stays via PRAGMA foreign_keys at runtime), so compare
+        // only the column name + type + constraints before any REFERENCES.
+        .map(s => s.trim().replace(/\s+/g, ' ').split(' REFERENCES ')[0])
+        .map(s => s.startsWith('"') ? s : s.replace(/^(\w+)/, '"$1"'))
+        .sort();
+      expect(colsOf((db.prepare("SELECT sql FROM sqlite_master WHERE name = 'models'").get() as { sql: string }).sql))
+        .toEqual(colsOf(schemaAfterFirstUp.sql));
       expect(db.pragma('foreign_key_check')).toEqual([]);
 
       // With a real duplicate on the books, down() has no honest answer.

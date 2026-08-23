@@ -51,13 +51,14 @@ const MODELS_COLUMNS = `
       supports_tools INTEGER NOT NULL DEFAULT 0,
       paid_input_per_m REAL,
       paid_output_per_m REAL,
-      source TEXT NOT NULL DEFAULT 'catalog'`;
+      source TEXT NOT NULL DEFAULT 'catalog',
+      pinned INTEGER NOT NULL DEFAULT 0`;
 
 const CARRIED_COLUMNS = [
   'id', 'platform', 'model_id', 'display_name', 'intelligence_rank', 'speed_rank',
   'size_label', 'rpm_limit', 'rpd_limit', 'tpm_limit', 'tpd_limit',
   'monthly_token_budget', 'context_window', 'enabled', 'supports_vision', 'key_id',
-  'supports_tools', 'paid_input_per_m', 'paid_output_per_m', 'source',
+  'supports_tools', 'paid_input_per_m', 'paid_output_per_m', 'source', 'pinned',
 ].join(', ');
 
 // Tables whose rows must survive the DROP. Discovered from the schema rather
@@ -75,6 +76,27 @@ function childTablesOfModels(db: Db): string[] {
 }
 
 function rebuildModels(db: Db, extraColumns: string, copiedColumns: string, unique: string): void {
+  // Column list is DERIVED from the live schema rather than hard-coded: later
+  // migrations add columns via ALTER TABLE (e.g. model_sources' source_ref_id /
+  // pinned), and a down/up round trip of THIS migration must carry them through
+  // instead of silently dropping them. Defaults/notnull are preserved verbatim.
+  const liveCols = db.prepare('PRAGMA table_info(models)').all() as {
+    name: string; type: string; notnull: number; dflt_value: string | null; pk: number;
+  }[];
+  const colDefs = liveCols
+    .filter(c => c.name !== 'endpoint_scope')
+    .map(c => {
+      let def = `"${c.name}" ${c.type}`;
+      if (c.pk) def += ' PRIMARY KEY';
+      if (c.notnull && !c.pk) def += ' NOT NULL';
+      if (c.dflt_value !== null) def += ` DEFAULT ${c.dflt_value}`;
+      return def;
+    });
+  const createDefs = colDefs.map(d =>
+    d.startsWith('"id"') ? '"id" INTEGER PRIMARY KEY AUTOINCREMENT' : d,
+  );
+  const allNames = liveCols.filter(c => c.name !== 'endpoint_scope').map(c => `"${c.name}"`);
+  const addEndpointScope = !liveCols.some(c => c.name === 'endpoint_scope');
   const children = childTablesOfModels(db);
   // AUTOINCREMENT's high-water mark. DROP TABLE takes the sqlite_sequence row
   // with it, and copying rows back only pushes the counter to the highest id
@@ -90,11 +112,12 @@ function rebuildModels(db: Db, extraColumns: string, copiedColumns: string, uniq
   }
 
   db.exec(`
-    CREATE TABLE models_endpoint_identity (${MODELS_COLUMNS}${extraColumns},
+    CREATE TABLE models_endpoint_identity (${createDefs.join(',\n      ')},
+      ${addEndpointScope ? "endpoint_scope TEXT NOT NULL DEFAULT ''," : ''}
       ${unique}
     );
-    INSERT INTO models_endpoint_identity (${copiedColumns})
-      SELECT ${copiedColumns} FROM models;
+    INSERT INTO models_endpoint_identity (${allNames.join(', ')})
+      SELECT ${allNames.join(', ')} FROM models;
     DROP TABLE models;
     ALTER TABLE models_endpoint_identity RENAME TO models;
   `);
