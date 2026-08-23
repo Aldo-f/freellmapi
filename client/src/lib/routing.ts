@@ -296,6 +296,74 @@ export function groupQuotaBadge(
   return null
 }
 
+// ── Remaining time-window quota (#876) ───────────────────────────────────────
+// Server-reported per-model RPM/RPD/TPM usage, served by
+// GET /api/fallback/rate-limit-usage. Each row already reflects the key the
+// router would pick next for that model (the routable key with the most
+// headroom), so the client only has to aggregate across a group's members.
+
+export interface RateLimitWindow {
+  used: number
+  limit: number
+}
+
+export interface RateLimitUsageRow {
+  modelDbId: number
+  platform: string
+  modelId: string
+  rpm: RateLimitWindow | null
+  rpd: RateLimitWindow | null
+  tpm: RateLimitWindow | null
+}
+
+export interface RateLimitUsageData {
+  generatedAtMs: number
+  rows: RateLimitUsageRow[]
+}
+
+export type RateLimitKind = 'RPM' | 'RPD' | 'TPM'
+
+// The badge answers one question: how close is this logical model to being
+// unusable? A group is unusable only when EVERY provider serving it is out of
+// headroom, so the group-level number is the BEST member, not the worst — a
+// five-provider group with one exhausted provider and four idle ones routes
+// perfectly well and must not show red.
+//
+// Within a single member the opposite holds: that member is blocked by its
+// TIGHTEST window, so its own pressure is the max ratio across RPM/RPD/TPM.
+// Returns null when there is no data, or when nothing has been used yet (an
+// idle model gets no badge rather than a "0/30" that reads as a warning).
+export function tightestRateLimit(
+  rows: RateLimitUsageRow[],
+): { kind: RateLimitKind; used: number; limit: number } | null {
+  let best: { kind: RateLimitKind; used: number; limit: number } | null = null
+  let bestRatio = Infinity
+  for (const row of rows) {
+    const windows: { kind: RateLimitKind; used: number; limit: number }[] = []
+    if (row.rpm) windows.push({ kind: 'RPM', ...row.rpm })
+    if (row.rpd) windows.push({ kind: 'RPD', ...row.rpd })
+    if (row.tpm) windows.push({ kind: 'TPM', ...row.tpm })
+    // This member's own binding constraint.
+    let tight: { kind: RateLimitKind; used: number; limit: number } | null = null
+    let tightRatio = 0
+    for (const w of windows) {
+      const ratio = w.limit > 0 ? w.used / w.limit : 0
+      if (tight === null || ratio > tightRatio) {
+        tightRatio = ratio
+        tight = w
+      }
+    }
+    if (!tight) continue
+    if (tightRatio < bestRatio) {
+      bestRatio = tightRatio
+      best = tight
+    }
+  }
+  // bestRatio === 0 means every provider is idle: no badge, same as no data.
+  if (!best || bestRatio <= 0) return null
+  return best
+}
+
 export const platformColors: Record<string, string> = {
   google:      '#4285f4',
   groq:        '#f55036',
