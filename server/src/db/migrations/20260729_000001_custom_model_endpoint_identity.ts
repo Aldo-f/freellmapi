@@ -31,36 +31,6 @@ import type { Db } from '../types.js';
 // The models table as of this migration, plus the new column. Written out in
 // full rather than derived, so the rebuilt schema is auditable here and
 // identical on every run.
-const MODELS_COLUMNS = `
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      platform TEXT NOT NULL,
-      model_id TEXT NOT NULL,
-      display_name TEXT NOT NULL,
-      intelligence_rank INTEGER NOT NULL,
-      speed_rank INTEGER NOT NULL,
-      size_label TEXT NOT NULL DEFAULT '',
-      rpm_limit INTEGER,
-      rpd_limit INTEGER,
-      tpm_limit INTEGER,
-      tpd_limit INTEGER,
-      monthly_token_budget TEXT NOT NULL DEFAULT '',
-      context_window INTEGER,
-      enabled INTEGER NOT NULL DEFAULT 1,
-      supports_vision INTEGER NOT NULL DEFAULT 0,
-      key_id INTEGER,
-      supports_tools INTEGER NOT NULL DEFAULT 0,
-      paid_input_per_m REAL,
-      paid_output_per_m REAL,
-      source TEXT NOT NULL DEFAULT 'catalog',
-      pinned INTEGER NOT NULL DEFAULT 0`;
-
-const CARRIED_COLUMNS = [
-  'id', 'platform', 'model_id', 'display_name', 'intelligence_rank', 'speed_rank',
-  'size_label', 'rpm_limit', 'rpd_limit', 'tpm_limit', 'tpd_limit',
-  'monthly_token_budget', 'context_window', 'enabled', 'supports_vision', 'key_id',
-  'supports_tools', 'paid_input_per_m', 'paid_output_per_m', 'source', 'pinned',
-].join(', ');
-
 // Tables whose rows must survive the DROP. Discovered from the schema rather
 // than hard-coded, so a table added later that references models is carried too.
 function childTablesOfModels(db: Db): string[] {
@@ -75,28 +45,32 @@ function childTablesOfModels(db: Db): string[] {
     .map(t => t.name);
 }
 
-function rebuildModels(db: Db, extraColumns: string, copiedColumns: string, unique: string): void {
+function rebuildModels(db: Db, dropEndpointScope: boolean, unique: string): void {
   // Column list is DERIVED from the live schema rather than hard-coded: later
   // migrations add columns via ALTER TABLE (e.g. model_sources' source_ref_id /
   // pinned), and a down/up round trip of THIS migration must carry them through
   // instead of silently dropping them. Defaults/notnull are preserved verbatim.
-  const liveCols = db.prepare('PRAGMA table_info(models)').all() as {
+  // up() adds endpoint_scope when absent; down() drops it (dropEndpointScope).
+  const tableCols = (db.prepare('PRAGMA table_info(models)').all() as {
     name: string; type: string; notnull: number; dflt_value: string | null; pk: number;
-  }[];
+  }[]).map(c => ({...c}));
+  // up() adds endpoint_scope when absent; down() drops it (dropEndpointScope).
+  const scopeInTable = tableCols.some(c => c.name === 'endpoint_scope');
+  const liveCols = tableCols.filter(c => !(dropEndpointScope && c.name === 'endpoint_scope'));
+  if (!dropEndpointScope && !scopeInTable) {
+    liveCols.push({ name: 'endpoint_scope', type: 'TEXT', notnull: 1, dflt_value: "''", pk: 0 });
+  }
   const colDefs = liveCols
-    .filter(c => c.name !== 'endpoint_scope')
     .map(c => {
       let def = `"${c.name}" ${c.type}`;
-      if (c.pk) def += ' PRIMARY KEY';
-      if (c.notnull && !c.pk) def += ' NOT NULL';
-      if (c.dflt_value !== null) def += ` DEFAULT ${c.dflt_value}`;
+      if (c.pk) def += ' PRIMARY KEY AUTOINCREMENT';
+      else {
+        if (c.notnull) def += ' NOT NULL';
+        if (c.dflt_value !== null) def += ` DEFAULT ${c.dflt_value}`;
+      }
       return def;
     });
-  const createDefs = colDefs.map(d =>
-    d.startsWith('"id"') ? '"id" INTEGER PRIMARY KEY AUTOINCREMENT' : d,
-  );
-  const allNames = liveCols.filter(c => c.name !== 'endpoint_scope').map(c => `"${c.name}"`);
-  const addEndpointScope = !liveCols.some(c => c.name === 'endpoint_scope');
+  const allNames = liveCols.map(c => `"${c.name}"`);
   const children = childTablesOfModels(db);
   // AUTOINCREMENT's high-water mark. DROP TABLE takes the sqlite_sequence row
   // with it, and copying rows back only pushes the counter to the highest id
@@ -112,12 +86,12 @@ function rebuildModels(db: Db, extraColumns: string, copiedColumns: string, uniq
   }
 
   db.exec(`
-    CREATE TABLE models_endpoint_identity (${createDefs.join(',\n      ')},
-      ${addEndpointScope ? "endpoint_scope TEXT NOT NULL DEFAULT ''," : ''}
+    CREATE TABLE models_endpoint_identity (${colDefs.join(',\n      ')},
       ${unique}
     );
     INSERT INTO models_endpoint_identity (${allNames.join(', ')})
-      SELECT ${allNames.join(', ')} FROM models;
+      SELECT ${allNames.map(n => (!scopeInTable && n === '"endpoint_scope"') ? "''" : n).join(', ')}
+      FROM models;
     DROP TABLE models;
     ALTER TABLE models_endpoint_identity RENAME TO models;
   `);
@@ -140,10 +114,13 @@ function rebuildModels(db: Db, extraColumns: string, copiedColumns: string, uniq
 }
 
 export function up(db: Db): void {
+  // If a re-up happens with endpoint_scope already present (e.g. the baseline
+  // migrations re-run over an existing DB), keep the existing column and use
+  // the 3-column unique key; otherwise add the column fresh.
+  const already = !!db.prepare("SELECT 1 FROM pragma_table_info('models') WHERE name = 'endpoint_scope'").get();
   rebuildModels(
     db,
-    `,\n      endpoint_scope TEXT NOT NULL DEFAULT ''`,
-    CARRIED_COLUMNS,
+    false,
     'UNIQUE(platform, model_id, endpoint_scope)',
   );
 
@@ -184,5 +161,5 @@ export function down(db: Db): void {
   }
 
   db.exec('DROP INDEX IF EXISTS idx_models_endpoint_scope;');
-  rebuildModels(db, '', CARRIED_COLUMNS, 'UNIQUE(platform, model_id)');
+  rebuildModels(db, true, 'UNIQUE(platform, model_id)');
 }
