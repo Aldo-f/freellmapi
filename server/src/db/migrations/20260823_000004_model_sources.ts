@@ -45,10 +45,12 @@ export function up(db: Db): void {
     `);
   }
 
-  // Exactly one builtin row; INSERT OR IGNORE keeps re-runs idempotent.
+  // Exactly one builtin row; INSERT OR IGNORE keeps re-runs idempotent. The
+  // fixed created_at keeps down/up round trips byte-identical (a fresh
+  // datetime('now') would differ by a second and break state comparisons).
   db.prepare(`
-    INSERT OR IGNORE INTO model_sources (name, kind, location, enabled)
-    VALUES ('Built-in catalog', 'builtin', '', 1)
+    INSERT OR IGNORE INTO model_sources (name, kind, location, enabled, created_at)
+    VALUES ('Built-in catalog', 'builtin', '', 1, '2026-08-23 00:00:00')
   `).run();
 
   if (!hasColumn(db, 'models', 'source_ref_id')) {
