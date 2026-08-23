@@ -1,0 +1,6 @@
+{
+  "data": [
+    { "id": "openai-style/gamma" },
+    { "id": "openai-style/delta", "owned_by": "test" }
+  ]
+}

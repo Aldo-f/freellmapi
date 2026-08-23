@@ -219,6 +219,8 @@ modelsRouter.get('/', (_req: Request, res: Response) => {
     LEFT JOIN fallback_config fc ON fc.model_db_id = m.id
     LEFT JOIN model_overrides mo ON mo.platform = m.platform AND mo.model_id = m.model_id
     LEFT JOIN api_keys ak ON ak.id = m.key_id
+    WHERE (m.source_ref_id IS NULL OR EXISTS (
+      SELECT 1 FROM model_sources ms WHERE ms.id = m.source_ref_id AND ms.enabled = 1))
     ORDER BY COALESCE(fc.priority, m.intelligence_rank) ASC
   `).all() as any[] : db.prepare(`
     SELECT m.*, COALESCE(pm.priority, fc.priority) AS priority,
@@ -230,6 +232,8 @@ modelsRouter.get('/', (_req: Request, res: Response) => {
     LEFT JOIN profile_models pm ON pm.profile_id = ? AND pm.model_db_id = m.id
     LEFT JOIN model_overrides mo ON mo.platform = m.platform AND mo.model_id = m.model_id
     LEFT JOIN api_keys ak ON ak.id = m.key_id
+    WHERE (m.source_ref_id IS NULL OR EXISTS (
+      SELECT 1 FROM model_sources ms WHERE ms.id = m.source_ref_id AND ms.enabled = 1))
     ORDER BY COALESCE(pm.priority, fc.priority, m.intelligence_rank) ASC
   `).all(activeProfileId) as any[];
 

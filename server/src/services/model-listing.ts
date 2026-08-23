@@ -41,6 +41,14 @@ export function buildModelListing(): ModelListing {
       ) THEN 1 ELSE 0 END)`;
   const db = getDb();
 
+  // Feature 001: rows imported from a model source that is currently DISABLED
+  // do not participate in the merged listing at all (spec FR-8). NULL
+  // source_ref_id = builtin/legacy rows, always listed.
+  const sourceVisibleExpr = `
+    (m.source_ref_id IS NULL OR EXISTS (
+      SELECT 1 FROM model_sources ms WHERE ms.id = m.source_ref_id AND ms.enabled = 1
+    ))`;
+
   let allListed: NormalizedModel[];
 
   if (isUnifyEnabled()) {
@@ -83,7 +91,7 @@ export function buildModelListing(): ModelListing {
                ) AS rn
         FROM models m
       )
-      WHERE rn = 1
+      WHERE rn = 1 AND ${sourceVisibleExpr.replace(/\bm\./g, '')}
     `).all() as (ModelListRow & { intelligence_rank: number; id: number; supports_tools: number })[];
     allListed = models.map(m => ({
       id: m.model_id, name: m.display_name, ownedBy: m.platform,
