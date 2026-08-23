@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "Pool del piano gratuito ({count})",
+    "poolsToggleBare": "Pool del piano gratuito",
+    "summary": "{pools} pool · {budget} token/mese conteggiati una volta per pool · {credits} a crediti · {unpublished} non pubblicati",
+    "pool": "Pool",
+    "models": "Modelli",
+    "budget": "Budget mensile",
+    "kind": "Tipo",
+    "kindDocumented": "Documentato",
+    "kindCredits": "Crediti",
+    "kindUnpublished": "Non pubblicato",
+    "remaining": "Residuo",
+    "resetAt": "Reset",
+    "disabledModels": "({count} disattivati)",
+    "metricTokens": "token",
+    "metricRequests": "richieste",
+    "metricCredits": "crediti",
+    "metricNeurons": "neuroni",
+    "metricOther": "unità",
+    "empty": "Nessun modello abilitato con dati di budget del piano gratuito."
   }
 }

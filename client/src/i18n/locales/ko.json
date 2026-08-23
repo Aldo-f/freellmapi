@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "무료 등급 풀 ({count})",
+    "poolsToggleBare": "무료 등급 풀",
+    "summary": "{pools}개 풀 · {budget} 토큰/월, 풀당 한 번만 집계 · 크레딧 기반 {credits}개 · 미공개 {unpublished}개",
+    "pool": "풀",
+    "models": "모델 수",
+    "budget": "월간 예산",
+    "kind": "종류",
+    "kindDocumented": "공개됨",
+    "kindCredits": "크레딧",
+    "kindUnpublished": "미공개",
+    "remaining": "남음",
+    "resetAt": "재설정 시각",
+    "disabledModels": "({count}개 꺼짐)",
+    "metricTokens": "토큰",
+    "metricRequests": "요청",
+    "metricCredits": "크레딧",
+    "metricNeurons": "뉴런",
+    "metricOther": "단위",
+    "empty": "무료 등급 예산 데이터가 있는 활성화된 모델이 없습니다."
   }
 }

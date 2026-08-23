@@ -983,5 +983,26 @@
     "openRelease": "打开发布页",
     "dismissVersion": "忽略此版本",
     "dismiss": "忽略"
+  },
+  "freeTier": {
+    "poolsToggle": "Free-tier pools ({count})",
+    "poolsToggleBare": "Free-tier pools",
+    "summary": "{pools} pools · {budget} tokens/mo counted once per pool · {credits} credits-based · {unpublished} unpublished",
+    "pool": "Pool",
+    "models": "Models",
+    "budget": "Monthly budget",
+    "kind": "Kind",
+    "kindDocumented": "Documented",
+    "kindCredits": "Credits",
+    "kindUnpublished": "Unpublished",
+    "remaining": "Remaining",
+    "resetAt": "Resets at",
+    "disabledModels": "({count} off)",
+    "metricTokens": "tokens",
+    "metricRequests": "requests",
+    "metricCredits": "credits",
+    "metricNeurons": "neurons",
+    "metricOther": "units",
+    "empty": "No enabled models with free-tier budget data."
   }
 }

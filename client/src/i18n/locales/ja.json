@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "無料枠プール（{count}）",
+    "poolsToggleBare": "無料枠プール",
+    "summary": "{pools} プール · {budget} トークン/月（プールごとに1回だけ計上） · クレジット制 {credits} · 未公開 {unpublished}",
+    "pool": "プール",
+    "models": "モデル数",
+    "budget": "月間予算",
+    "kind": "種別",
+    "kindDocumented": "公開値",
+    "kindCredits": "クレジット",
+    "kindUnpublished": "未公開",
+    "remaining": "残り",
+    "resetAt": "リセット時刻",
+    "disabledModels": "（{count} 件無効）",
+    "metricTokens": "トークン",
+    "metricRequests": "リクエスト",
+    "metricCredits": "クレジット",
+    "metricNeurons": "ニューロン",
+    "metricOther": "単位",
+    "empty": "無料枠の予算データを持つ有効なモデルがありません。"
   }
 }

@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "Pools de l'offre gratuite ({count})",
+    "poolsToggleBare": "Pools de l'offre gratuite",
+    "summary": "{pools} pools · {budget} jetons/mois comptés une seule fois par pool · {credits} à crédits · {unpublished} non publiés",
+    "pool": "Pool",
+    "models": "Modèles",
+    "budget": "Budget mensuel",
+    "kind": "Type",
+    "kindDocumented": "Documenté",
+    "kindCredits": "Crédits",
+    "kindUnpublished": "Non publié",
+    "remaining": "Restant",
+    "resetAt": "Réinitialisation",
+    "disabledModels": "({count} désactivés)",
+    "metricTokens": "jetons",
+    "metricRequests": "requêtes",
+    "metricCredits": "crédits",
+    "metricNeurons": "neurones",
+    "metricOther": "unités",
+    "empty": "Aucun modèle activé avec des données de budget d'offre gratuite."
   }
 }

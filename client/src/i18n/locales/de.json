@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "Free-Tier-Pools ({count})",
+    "poolsToggleBare": "Free-Tier-Pools",
+    "summary": "{pools} Pools · {budget} Token/Monat, pro Pool nur einmal gezählt · {credits} guthabenbasiert · {unpublished} unveröffentlicht",
+    "pool": "Pool",
+    "models": "Modelle",
+    "budget": "Monatsbudget",
+    "kind": "Art",
+    "kindDocumented": "Dokumentiert",
+    "kindCredits": "Guthaben",
+    "kindUnpublished": "Unveröffentlicht",
+    "remaining": "Verbleibend",
+    "resetAt": "Zurücksetzung",
+    "disabledModels": "({count} aus)",
+    "metricTokens": "Token",
+    "metricRequests": "Anfragen",
+    "metricCredits": "Guthaben",
+    "metricNeurons": "Neuronen",
+    "metricOther": "Einheiten",
+    "empty": "Keine aktivierten Modelle mit Free-Tier-Budgetdaten."
   }
 }

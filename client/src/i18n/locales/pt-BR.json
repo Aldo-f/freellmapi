@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "Grupos do nível gratuito ({count})",
+    "poolsToggleBare": "Grupos do nível gratuito",
+    "summary": "{pools} grupos · {budget} tokens/mês contados uma vez por grupo · {credits} baseados em créditos · {unpublished} não publicados",
+    "pool": "Grupo",
+    "models": "Modelos",
+    "budget": "Orçamento mensal",
+    "kind": "Tipo",
+    "kindDocumented": "Documentado",
+    "kindCredits": "Créditos",
+    "kindUnpublished": "Não publicado",
+    "remaining": "Restante",
+    "resetAt": "Reinicia em",
+    "disabledModels": "({count} desligados)",
+    "metricTokens": "tokens",
+    "metricRequests": "requisições",
+    "metricCredits": "créditos",
+    "metricNeurons": "neurônios",
+    "metricOther": "unidades",
+    "empty": "Nenhum modelo ativado com dados de orçamento do nível gratuito."
   }
 }

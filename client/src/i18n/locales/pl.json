@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "Pule darmowego poziomu ({count})",
+    "poolsToggleBare": "Pule darmowego poziomu",
+    "summary": "{pools} pul · {budget} tokenów/mies. liczonych raz na pulę · {credits} na kredytach · {unpublished} bez danych",
+    "pool": "Pula",
+    "models": "Modele",
+    "budget": "Budżet miesięczny",
+    "kind": "Rodzaj",
+    "kindDocumented": "Udokumentowany",
+    "kindCredits": "Kredyty",
+    "kindUnpublished": "Nieopublikowany",
+    "remaining": "Pozostało",
+    "resetAt": "Reset",
+    "disabledModels": "({count} wył.)",
+    "metricTokens": "tokenów",
+    "metricRequests": "zapytań",
+    "metricCredits": "kredytów",
+    "metricNeurons": "neuronów",
+    "metricOther": "jednostek",
+    "empty": "Brak włączonych modeli z danymi o budżecie darmowego poziomu."
   }
 }

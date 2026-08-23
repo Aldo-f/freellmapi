@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "Пулы бесплатного тарифа ({count})",
+    "poolsToggleBare": "Пулы бесплатного тарифа",
+    "summary": "{pools} пулов · {budget} токенов/мес, каждый пул учтён один раз · {credits} на кредитах · {unpublished} без данных",
+    "pool": "Пул",
+    "models": "Модели",
+    "budget": "Месячный лимит",
+    "kind": "Тип",
+    "kindDocumented": "Задокументирован",
+    "kindCredits": "Кредиты",
+    "kindUnpublished": "Не опубликован",
+    "remaining": "Осталось",
+    "resetAt": "Сброс",
+    "disabledModels": "({count} выкл.)",
+    "metricTokens": "токенов",
+    "metricRequests": "запросов",
+    "metricCredits": "кредитов",
+    "metricNeurons": "нейронов",
+    "metricOther": "единиц",
+    "empty": "Нет включённых моделей с данными о бесплатном лимите."
   }
 }

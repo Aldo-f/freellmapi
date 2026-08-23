@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "Nhóm hạn mức miễn phí ({count})",
+    "poolsToggleBare": "Nhóm hạn mức miễn phí",
+    "summary": "{pools} nhóm · {budget} token/tháng, mỗi nhóm chỉ tính một lần · {credits} theo tín dụng · {unpublished} chưa công bố",
+    "pool": "Nhóm",
+    "models": "Mô hình",
+    "budget": "Hạn mức hàng tháng",
+    "kind": "Loại",
+    "kindDocumented": "Đã công bố",
+    "kindCredits": "Tín dụng",
+    "kindUnpublished": "Chưa công bố",
+    "remaining": "Còn lại",
+    "resetAt": "Đặt lại lúc",
+    "disabledModels": "({count} đã tắt)",
+    "metricTokens": "token",
+    "metricRequests": "yêu cầu",
+    "metricCredits": "tín dụng",
+    "metricNeurons": "nơ-ron",
+    "metricOther": "đơn vị",
+    "empty": "Không có mô hình đang bật nào có dữ liệu hạn mức miễn phí."
   }
 }

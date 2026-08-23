@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "Gratis-tierpools ({count})",
+    "poolsToggleBare": "Gratis-tierpools",
+    "summary": "{pools} pools · {budget} tokens/maand, per pool één keer geteld · {credits} op tegoed · {unpublished} niet gepubliceerd",
+    "pool": "Pool",
+    "models": "Modellen",
+    "budget": "Maandbudget",
+    "kind": "Soort",
+    "kindDocumented": "Gedocumenteerd",
+    "kindCredits": "Tegoed",
+    "kindUnpublished": "Niet gepubliceerd",
+    "remaining": "Resterend",
+    "resetAt": "Reset op",
+    "disabledModels": "({count} uit)",
+    "metricTokens": "tokens",
+    "metricRequests": "verzoeken",
+    "metricCredits": "tegoeden",
+    "metricNeurons": "neuronen",
+    "metricOther": "eenheden",
+    "empty": "Geen ingeschakelde modellen met gegevens over het gratis budget."
   }
 }

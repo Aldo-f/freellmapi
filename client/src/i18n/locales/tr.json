@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "Ücretsiz katman havuzları ({count})",
+    "poolsToggleBare": "Ücretsiz katman havuzları",
+    "summary": "{pools} havuz · {budget} jeton/ay, her havuz bir kez sayılır · {credits} kredi tabanlı · {unpublished} yayımlanmamış",
+    "pool": "Havuz",
+    "models": "Modeller",
+    "budget": "Aylık bütçe",
+    "kind": "Tür",
+    "kindDocumented": "Belgelenmiş",
+    "kindCredits": "Kredi",
+    "kindUnpublished": "Yayımlanmamış",
+    "remaining": "Kalan",
+    "resetAt": "Sıfırlanma",
+    "disabledModels": "({count} kapalı)",
+    "metricTokens": "jeton",
+    "metricRequests": "istek",
+    "metricCredits": "kredi",
+    "metricNeurons": "nöron",
+    "metricOther": "birim",
+    "empty": "Ücretsiz katman bütçe verisi olan etkin model yok."
   }
 }

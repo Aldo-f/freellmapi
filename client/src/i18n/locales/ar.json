@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "مجمّعات الطبقة المجانية ({count})",
+    "poolsToggleBare": "مجمّعات الطبقة المجانية",
+    "summary": "{pools} مجمّعات · {budget} رمز/شهر تُحتسب مرة واحدة لكل مجمّع · {credits} بالأرصدة · {unpublished} غير معلنة",
+    "pool": "المجمّع",
+    "models": "النماذج",
+    "budget": "الميزانية الشهرية",
+    "kind": "النوع",
+    "kindDocumented": "موثّق",
+    "kindCredits": "أرصدة",
+    "kindUnpublished": "غير معلن",
+    "remaining": "المتبقي",
+    "resetAt": "يُعاد الضبط",
+    "disabledModels": "({count} معطّل)",
+    "metricTokens": "رمز",
+    "metricRequests": "طلب",
+    "metricCredits": "رصيد",
+    "metricNeurons": "خلية عصبية",
+    "metricOther": "وحدة",
+    "empty": "لا توجد نماذج مفعّلة تحتوي على بيانات ميزانية الطبقة المجانية."
   }
 }

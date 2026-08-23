@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "फ्री टियर पूल ({count})",
+    "poolsToggleBare": "फ्री टियर पूल",
+    "summary": "{pools} पूल · {budget} टोकन/माह, हर पूल एक ही बार गिना गया · {credits} क्रेडिट-आधारित · {unpublished} अप्रकाशित",
+    "pool": "पूल",
+    "models": "मॉडल",
+    "budget": "मासिक बजट",
+    "kind": "प्रकार",
+    "kindDocumented": "प्रलेखित",
+    "kindCredits": "क्रेडिट",
+    "kindUnpublished": "अप्रकाशित",
+    "remaining": "शेष",
+    "resetAt": "रीसेट",
+    "disabledModels": "({count} बंद)",
+    "metricTokens": "टोकन",
+    "metricRequests": "अनुरोध",
+    "metricCredits": "क्रेडिट",
+    "metricNeurons": "न्यूरॉन",
+    "metricOther": "इकाई",
+    "empty": "फ्री टियर बजट डेटा वाला कोई सक्षम मॉडल नहीं।"
   }
 }

@@ -983,5 +983,26 @@
     "openRelease": "Open release page",
     "dismissVersion": "Dismiss this version",
     "dismiss": "Dismiss"
+  },
+  "freeTier": {
+    "poolsToggle": "Kumpulan tingkat gratis ({count})",
+    "poolsToggleBare": "Kumpulan tingkat gratis",
+    "summary": "{pools} kumpulan · {budget} token/bln dihitung sekali per kumpulan · {credits} berbasis kredit · {unpublished} tidak dipublikasikan",
+    "pool": "Kumpulan",
+    "models": "Model",
+    "budget": "Anggaran bulanan",
+    "kind": "Jenis",
+    "kindDocumented": "Terdokumentasi",
+    "kindCredits": "Kredit",
+    "kindUnpublished": "Tidak dipublikasikan",
+    "remaining": "Sisa",
+    "resetAt": "Reset pada",
+    "disabledModels": "({count} nonaktif)",
+    "metricTokens": "token",
+    "metricRequests": "permintaan",
+    "metricCredits": "kredit",
+    "metricNeurons": "neuron",
+    "metricOther": "unit",
+    "empty": "Tidak ada model aktif dengan data anggaran tingkat gratis."
   }
 }

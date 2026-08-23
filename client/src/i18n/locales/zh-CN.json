@@ -983,5 +983,26 @@
     "openRelease": "打开发布页",
     "dismissVersion": "忽略此版本",
     "dismiss": "忽略"
+  },
+  "freeTier": {
+    "poolsToggle": "免费额度池（{count}）",
+    "poolsToggleBare": "免费额度池",
+    "summary": "{pools} 个池 · {budget} 令牌/月，每个池只计一次 · 积分制 {credits} 个 · 未公布 {unpublished} 个",
+    "pool": "额度池",
+    "models": "模型数",
+    "budget": "月度额度",
+    "kind": "类型",
+    "kindDocumented": "已公布",
+    "kindCredits": "积分",
+    "kindUnpublished": "未公布",
+    "remaining": "剩余",
+    "resetAt": "重置时间",
+    "disabledModels": "（{count} 个已关闭）",
+    "metricTokens": "令牌",
+    "metricRequests": "请求",
+    "metricCredits": "积分",
+    "metricNeurons": "神经元",
+    "metricOther": "单位",
+    "empty": "没有启用且带免费额度数据的模型。"
   }
 }
