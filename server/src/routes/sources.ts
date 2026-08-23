@@ -2,6 +2,7 @@
 // Mounted with requireAuth in app.ts, like the other dashboard routes.
 
 import { Router } from 'express';
+import { getDb } from '../db/index.js';
 import type { Request, Response } from 'express';
 import {
   listSources,
@@ -30,6 +31,7 @@ function view(row: any) {
     last_error: row.last_error,
     created_at: row.created_at,
     ...(row.model_count !== undefined ? { model_count: row.model_count } : {}),
+    ...(row.pinned_count !== undefined ? { pinned_count: row.pinned_count } : {}),
   };
 }
 
@@ -44,7 +46,7 @@ sourcesRouter.post('/', (req: Request, res: Response) => {
       return res.status(400).json({ error: 'name and location are required strings' });
     }
     const row = createSource(name, location);
-    return res.status(201).json({ source: { ...view(row), model_count: 0 } });
+    return res.status(201).json({ source: view(listSources().find(s => s.id === row.id)) });
   } catch (err) {
     if (err instanceof ValidationError) return res.status(400).json({ error: err.message });
     if (err instanceof ConflictError) return res.status(409).json({ error: err.message });
@@ -67,9 +69,14 @@ sourcesRouter.patch('/:id', (req: Request, res: Response) => {
     ) {
       return res.status(400).json({ error: 'invalid field types in patch' });
     }
-    // `pinned` toggling is applied directly to this source's imported rows.
-    const row = updateSource(id, patch);
-    return res.json({ source: view(row) });
+    // `pinned` toggles protection for ALL of this source's imported models.
+    if (patch.pinned !== undefined) {
+      getDb().prepare('UPDATE models SET pinned = ? WHERE source_ref_id = ?')
+        .run(patch.pinned ? 1 : 0, id);
+    }
+    updateSource(id, patch);
+    const updated = listSources().find(s => s.id === id);
+    return res.json({ source: view(updated) });
   } catch (err) {
     if (err instanceof NotFoundError) return res.status(404).json({ error: err.message });
     if (err instanceof ValidationError) return res.status(400).json({ error: err.message });

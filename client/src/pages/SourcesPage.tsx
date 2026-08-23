@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Plus, RefreshCw, Trash2, Power, Pencil } from 'lucide-react'
+import { Plus, RefreshCw, Trash2, Power, Pencil, Pin, PinOff } from 'lucide-react'
 import { apiFetch } from '@/lib/api'
 import { PageHeader } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
@@ -21,6 +21,7 @@ interface ModelSource {
   last_sync_status: 'ok' | 'error' | 'never'
   last_error: string | null
   model_count: number
+  pinned_count?: number
 }
 
 interface SourcesResponse {
@@ -80,6 +81,12 @@ export default function SourcesPage() {
   const toggleSource = useMutation({
     mutationFn: ({ id, enabled }: { id: number; enabled: boolean }) =>
       apiFetch(`/api/sources/${id}`, { method: 'PATCH', body: JSON.stringify({ enabled }) }),
+    onSuccess: invalidate,
+  })
+
+  const pinSource = useMutation({
+    mutationFn: ({ id, pinned }: { id: number; pinned: boolean }) =>
+      apiFetch(`/api/sources/${id}`, { method: 'PATCH', body: JSON.stringify({ pinned }) }),
     onSuccess: invalidate,
   })
 
@@ -154,6 +161,21 @@ export default function SourcesPage() {
                         onClick={() => toggleSource.mutate({ id: s.id, enabled: !s.enabled })}
                       >
                         <Power className="size-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        aria-label={`${(s.pinned_count ?? 0) > 0 ? 'Unpin' : 'Pin'} imported models of ${s.name}`}
+                        title={(s.pinned_count ?? 0) > 0
+                          ? 'Imported models are pinned — protected from removal on sync'
+                          : 'Pin imported models to protect them from removal when the source no longer lists them'}
+                        onClick={() => pinSource.mutate({ id: s.id, pinned: (s.pinned_count ?? 0) === 0 })}
+                        disabled={s.kind !== 'url' || s.model_count === 0}
+                      >
+                        {(s.pinned_count ?? 0) > 0 ? <PinOff className="size-4" /> : <Pin className="size-4" />}
+                        {(s.pinned_count ?? 0) > 0 && (
+                          <span className="text-xs">{s.pinned_count}</span>
+                        )}
                       </Button>
                       <Button
                         variant="ghost"

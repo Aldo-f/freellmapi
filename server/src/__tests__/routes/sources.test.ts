@@ -242,6 +242,35 @@ describe('Sync tombstones (US4)', () => {
     dashToken = mintDashboardToken();
   });
 
+  it('PATCH pinned toggles protection for all imported models of a source', async () => {
+    const created = await request('POST', '/api/sources', {
+      name: 'PinToggle', location: 'https://example.invalid/p.json',
+    });
+    const id = created.body.source.id;
+    const origFetch = globalThis.fetch;
+    globalThis.fetch = (async (input: any, init?: any) =>
+      String(input).includes('127.0.0.1')
+        ? origFetch(input, init)
+        : new Response(JSON.stringify({ models: [{ model_id: 'p/one' }, { model_id: 'p/two' }] }),
+            { status: 200 })) as typeof fetch;
+    await request('POST', `/api/sources/${id}/sync`);
+    globalThis.fetch = origFetch;
+
+    // pin everything via PATCH
+    const st = await request('PATCH', `/api/sources/${id}`, { pinned: true });
+    expect(st.status).toBe(200);
+    expect(st.body.source.pinned_count).toBe(2);
+    let rows = getDb().prepare(
+      'SELECT COUNT(*) AS n FROM models WHERE source_ref_id = ? AND pinned = 1').get(id) as any;
+    expect(rows.n).toBe(2);
+
+    // unpin
+    await request('PATCH', `/api/sources/${id}`, { pinned: false });
+    rows = getDb().prepare(
+      'SELECT COUNT(*) AS n FROM models WHERE source_ref_id = ? AND pinned = 1').get(id) as any;
+    expect(rows.n).toBe(0);
+  });
+
   it('removes vanished models on re-sync unless pinned', async () => {
     const created = await request('POST', '/api/sources', {
       name: 'Tombstoner', location: 'https://example.invalid/t.json',

@@ -36,15 +36,18 @@ export interface SourceRow {
 export interface SourceView extends SourceRow {
   enabled_bool: boolean;
   model_count: number;
+  /** How many of this source's imported models are pinned (tombstone-protected). */
+  pinned_count?: number;
 }
 
 const URL_RE = /^https?:\/\/[^\s]+$/i;
 
 function rowToView(row: SourceRow): SourceView {
-  const count = getDb().prepare(
-    'SELECT COUNT(*) AS n FROM models WHERE source_ref_id = ?'
-  ).get(row.id) as { n: number };
-  return { ...row, enabled_bool: row.enabled === 1, model_count: count.n };
+  const counts = getDb().prepare(
+    'SELECT COUNT(*) AS n, COALESCE(SUM(pinned), 0) AS pinned FROM models WHERE source_ref_id = ?'
+  ).get(row.id) as { n: number; pinned: number };
+  return { ...row, enabled_bool: row.enabled === 1, model_count: counts.n,
+           pinned_count: Number(counts.pinned) };
 }
 
 export function listSources(): SourceView[] {
