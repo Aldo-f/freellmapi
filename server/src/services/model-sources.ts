@@ -134,6 +134,8 @@ export function deleteSource(id: number): { removedModels: number } {
 
   const remove = db.prepare('DELETE FROM models WHERE id = ?');
   const reown = db.prepare('UPDATE models SET source_ref_id = ? WHERE id = ?');
+  const clearFallback = db.prepare('DELETE FROM fallback_config WHERE model_db_id = ?');
+  const clearProfile = db.prepare('DELETE FROM profile_models WHERE model_db_id = ?');
   const tx = db.transaction(() => {
     for (const row of shared) {
       if (row.next_owner !== null && row.next_owner !== undefined) {
@@ -145,7 +147,11 @@ export function deleteSource(id: number): { removedModels: number } {
           JOIN model_sources ms ON ms.id = s.source_id
           WHERE s.platform = ? AND s.model_id = ? AND s.source_id != ? AND ms.enabled = 1
         `).get(row.platform, row.model_id, id);
-        if (!other) remove.run(row.id);
+        if (!other) {
+          clearFallback.run(row.id);
+          clearProfile.run(row.id);
+          remove.run(row.id);
+        }
       }
     }
     db.prepare('DELETE FROM source_model_index WHERE source_id = ?').run(id);
@@ -243,11 +249,20 @@ export async function syncSource(id: number): Promise<SyncResult> {
       imported += 1;
     }
     // Tombstones: this source's rows absent from the latest doc, unless pinned.
+    // fallback_config / profile_models reference models(id) with FK constraints,
+    // so their rows go first or the delete fails (SqliteError FOREIGN KEY).
     const tombstone = db.prepare(
       'DELETE FROM models WHERE source_ref_id = ? AND pinned = 0 AND model_id = ?'
     );
+    const clearFallback = db.prepare('DELETE FROM fallback_config WHERE model_db_id = ?');
+    const clearProfile = db.prepare('DELETE FROM profile_models WHERE model_db_id = ?');
     for (const own of ownIds) {
       if (!seen.has(own)) {
+        const victim = findRow.get(own) as { id: number } | undefined;
+        if (victim) {
+          clearFallback.run(victim.id);
+          clearProfile.run(victim.id);
+        }
         tombstone.run(id, own);
       }
     }
