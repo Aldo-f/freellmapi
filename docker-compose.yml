@@ -1,6 +1,6 @@
 services:
   freellmapi:
-    image: ghcr.io/tashfeenahmed/freellmapi:latest
+    image: ghcr.io/tashfeenahmed/freellmapi@sha256:aeb57c7e9599971000787023f1c02fdd7cc87aecdddd4cb07abe4945157afe50
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,31 +9,29 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-    # Bound to localhost by default — FreeLLMAPI is single-user and must not be
-    # exposed to the internet. Set HOST_BIND=0.0.0.0 to reach it from your LAN.
+      HOST_BIND: 0.0.0.0
     ports:
-      - "${HOST_BIND:-127.0.0.1}:${PORT:-3001}:3001"
+      - "3001:3001"
     volumes:
       - freellmapi-data:/app/server/data
-    # Makes `host.docker.internal` resolve to the host from inside the
-    # container. Docker Desktop provides it already; plain Docker on Linux does
-    # not, and without it the documented way to reach a proxy running on the
-    # host (PROXY_URL=http://host.docker.internal:7890) fails to resolve.
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - ./.env.template:/app/server/.env:ro
     restart: unless-stopped
     healthcheck:
       test:
-        [
-          "CMD",
-          "node",
-          "-e",
-          "fetch('http://127.0.0.1:3001/api/ping').then((res) => { if (!res.ok) process.exit(1); }).catch(() => process.exit(1));"
-        ]
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3001/api/ping').then((res) => { if (!res.ok) process.exit(1); }).catch(() => process.exit(1));"
       interval: 30s
       timeout: 5s
-      start_period: 15s
+      start_period: 30s
       retries: 3
+    networks:
+      - traefik_net
+
+networks:
+  traefik_net:
+    external: true
 
 volumes:
   freellmapi-data:
