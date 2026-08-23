@@ -1040,5 +1040,20 @@
     "metricNeurons": "神经元",
     "metricOther": "单位",
     "empty": "没有启用且带免费额度数据的模型。"
+  },
+  "chains": {
+    "title": "回退链",
+    "description": "命名链，每条都可在 /v1/models 中以 auto:<name> 调用。",
+    "count": "{count} 条链",
+    "active": "使用中",
+    "default": "默认",
+    "activate": "激活",
+    "activateHint": "让下方表格编辑这条链，auto 路由也走这条链",
+    "deleteHint": "删除此链",
+    "deleteConfirm": "删除链「{name}」？",
+    "create": "创建",
+    "createPlaceholder": "链名称",
+    "createFailed": "无法创建该链。",
+    "nameRules": "最多 20 个字符：字母、数字、连字符和下划线。"
   }
 }
