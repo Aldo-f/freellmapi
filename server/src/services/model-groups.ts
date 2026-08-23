@@ -370,6 +370,8 @@ export function getModelGroups(): ModelGroup[] {
     SELECT m.id as model_db_id, m.platform, m.model_id, m.display_name, m.intelligence_rank,
            m.endpoint_scope
     FROM models m
+    WHERE (m.source_ref_id IS NULL OR EXISTS (
+      SELECT 1 FROM model_sources ms WHERE ms.id = m.source_ref_id AND ms.enabled = 1))
     ORDER BY m.id
   `).all() as GroupableRow[];
   return groupRows(rows, getUnifyOverrides());
