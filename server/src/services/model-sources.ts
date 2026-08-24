@@ -525,6 +525,18 @@ export function listCatalogSourceModels(
   if (opts.included === 'in') items = items.filter(m => m.curated_in);
   if (opts.included === 'out') items = items.filter(m => !m.curated_in);
 
+  const priceOf = (m: CatalogModelRow): number =>
+    m.metadata && typeof m.metadata.cost_input === 'number' ? m.metadata.cost_input : Infinity;
+  const ctxOf = (m: CatalogModelRow): number => m.context_window ?? -1;
+  switch (opts.sort) {
+    case 'price': items.sort((a, b2) => priceOf(a) - priceOf(b2)); break;
+    case '-price': items.sort((a, b2) => priceOf(b2) - priceOf(a)); break;
+    case 'context': items.sort((a, b2) => ctxOf(a) - ctxOf(b2)); break;
+    case '-context': items.sort((a, b2) => ctxOf(b2) - ctxOf(a)); break;
+    case 'name': items.sort((a, b2) => a.display_name.localeCompare(b2.display_name)); break;
+    default: break; // default order = platform/model_id (SQL)
+  }
+
   const total = items.length;
   const start = (page - 1) * perPage;
   return { total, page, per_page: perPage, models: items.slice(start, start + perPage) };

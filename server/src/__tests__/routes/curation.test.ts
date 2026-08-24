@@ -215,3 +215,117 @@ describe('catalog source CRUD + sync (US1/US2)', () => {
     expect(opus.override).toBeNull();
   });
 });
+
+describe('curated lists (US3/US4)', () => {
+  it('seeds five builtin lists with match counts', async () => {
+    const r = await request('GET', '/api/curated-lists');
+    expect(r.status).toBe(200);
+    const builtins = r.body.lists.filter((l: any) => l.is_builtin);
+    expect(builtins.length).toBe(5);
+    expect(builtins[0].match_count).toBeTypeOf('number');
+  });
+
+  it('creates custom lists and rejects unknown criteria keys', async () => {
+    const ok = await request('POST', '/api/curated-lists', {
+      name: 'My cheap tools',
+      criteria: { free_only: true, tool_call: true },
+    });
+    expect(ok.status).toBe(201);
+    const bad = await request('POST', '/api/curated-lists', {
+      name: 'Bad criteria',
+      criteria: { hax: true },
+    });
+    expect(bad.status).toBe(400);
+  });
+
+  it('refuses to edit or delete builtin lists but allows overrides on them', async () => {
+    const lists = (await request('GET', '/api/curated-lists')).body.lists;
+    const builtin = lists.find((l: any) => l.is_builtin);
+    expect((await request('PATCH', `/api/curated-lists/${builtin.id}`, { name: 'x' })).status).toBe(403);
+    expect((await request('DELETE', `/api/curated-lists/${builtin.id}`)).status).toBe(403);
+    // Overrides ARE allowed on builtins.
+    const ov = await request('PUT', `/api/curated-lists/${builtin.id}/models`, {
+      platform: 'br_anthropic', model_id: 'claude-opus-5', decision: 'exclude',
+    });
+    expect(ov.status).toBe(200);
+  });
+
+  it('applies a list to a catalog source via active_list_id and filters the browser', async () => {
+    const srcId = await makeCatalogSource('ListedCat', 'lc');
+    await request('POST', `/api/sources/${srcId}/sync`);
+    const lists = (await request('GET', '/api/curated-lists')).body.lists;
+    const freeTools = lists.find((l: any) => l.name === 'Free & Tool-capable');
+    const patched = await request('PATCH', `/api/sources/${srcId}`, { active_list_id: freeTools.id });
+    expect(patched.status).toBe(200);
+
+    const browse = await request('GET', `/api/sources/${srcId}/models`);
+    const ins = browse.body.models.filter((m: any) => m.curated_in);
+    // Fixture ms/lc_anthropic+meta+mysterylabs: zero-cost AND tool_call models only.
+    for (const m of ins) {
+      expect(m.metadata.cost_input).toBe(0);
+      expect(m.metadata.tool_call).toBe(true);
+    }
+    expect(ins.length).toBeGreaterThan(0);
+    expect(ins.length).toBeLessThan(browse.body.total);
+  });
+
+  it('preview returns live count + sample for unsaved criteria', async () => {
+    const r = await request('POST', '/api/curated-lists/preview', {
+      criteria: { min_context: 100000 },
+    });
+    expect(r.status).toBe(200);
+    expect(r.body.match_count).toBeTypeOf('number');
+    expect(Array.isArray(r.body.sample)).toBe(true);
+  });
+
+  it('override wins over static criteria in effective state', async () => {
+    const srcId = await makeCatalogSource('OvCat', 'ov');
+    await request('POST', `/api/sources/${srcId}/sync`);
+    const lists = (await request('GET', '/api/curated-lists')).body.lists;
+    const vision = lists.find((l: any) => l.name === 'Vision chat');
+    await request('PATCH', `/api/sources/${srcId}`, { active_list_id: vision.id });
+    // Exclude an image-input model → drops out despite matching.
+    const opusId = getDb().prepare(
+      "SELECT model_id FROM models WHERE platform='ov_anthropic' AND model_id='claude-opus-5'"
+    ).get() as any;
+    expect(opusId).toBeTruthy();
+    const ex = await request('PUT', `/api/curated-lists/${vision.id}/models`, {
+      platform: 'ov_anthropic', model_id: 'claude-opus-5', decision: 'exclude',
+    });
+    expect(ex.status).toBe(200);
+    let browse = await request('GET', `/api/sources/${srcId}/models?included=in`);
+    expect(browse.body.models.some((m: any) => m.model_id === 'claude-opus-5')).toBe(false);
+    // Include a non-vision model → resurrects despite failing the filter.
+    const inc = await request('PUT', `/api/curated-lists/${vision.id}/models`, {
+      platform: 'ov_mysterylabs', model_id: 'tiny-context', decision: 'include',
+    });
+    expect(inc.status).toBe(200);
+    browse = await request('GET', `/api/sources/${srcId}/models?included=in`);
+    expect(browse.body.models.some((m: any) => m.model_id === 'tiny-context')).toBe(true);
+  });
+
+  it('deleting a custom list clears referencing sources and cascades overrides', async () => {
+    const created = await request('POST', '/api/curated-lists', {
+      name: 'Doomed list', criteria: { open_weights: true },
+    });
+    const listId = created.body.list.id;
+    const srcId = await makeCatalogSource('DoomedSrc', 'dm');
+    await request('PATCH', `/api/sources/${srcId}`, { active_list_id: listId });
+    const del = await request('DELETE', `/api/curated-lists/${listId}`);
+    expect(del.status).toBe(200);
+    const srcRow = (await request('GET', '/api/sources')).body.sources
+      .find((s: any) => s.id === srcId);
+    expect(srcRow.active_list_id).toBeNull();
+  });
+
+  it('sorts the model browser by price and context', async () => {
+    const srcId = await makeCatalogSource('SortCat', 'so');
+    await request('POST', `/api/sources/${srcId}/sync`);
+    const asc = await request('GET', `/api/sources/${srcId}/models?sort=price&per_page=100`);
+    const prices = asc.body.models.map((m: any) => m.metadata?.cost_input ?? Infinity);
+    for (let i = 1; i < prices.length; i++) expect(prices[i - 1] <= prices[i]).toBe(true);
+    const descCtx = await request('GET', `/api/sources/${srcId}/models?sort=-context&per_page=100`);
+    const ctxs = descCtx.body.models.map((m: any) => m.context_window ?? -1);
+    expect([...ctxs].sort((a: number, b: number) => b - a)).toEqual(ctxs);
+  });
+});

@@ -19,6 +19,7 @@ import { analyticsRouter } from './routes/analytics.js';
 import { healthRouter } from './routes/health.js';
 import { settingsRouter } from './routes/settings.js';
 import { sourcesRouter } from './routes/sources.js';
+import { curatedListsRouter } from './routes/curated-lists.js';
 import { premiumRouter } from './routes/premium.js';
 import { cacheRouter } from './routes/cache.js';
 import { compressionRouter } from './routes/compression.js';
@@ -242,6 +243,7 @@ export function createApp(config?: Config) {
   app.use('/api/health', requireAuth, healthRouter);
   app.use('/api/settings', requireAuth, settingsRouter);
   app.use('/api/sources', requireAuth, sourcesRouter);
+  app.use('/api/curated-lists', requireAuth, curatedListsRouter);
   app.use('/api/premium', requireAuth, premiumRouter);
   app.use('/api/cache', requireAuth, cacheRouter);
   app.use('/api/compression', requireAuth, compressionRouter);

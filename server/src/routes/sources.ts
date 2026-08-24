@@ -70,9 +70,20 @@ sourcesRouter.patch('/:id', (req: Request, res: Response) => {
       patch.name !== undefined && typeof patch.name !== 'string' ||
       patch.location !== undefined && typeof patch.location !== 'string' ||
       patch.enabled !== undefined && typeof patch.enabled !== 'boolean' ||
-      patch.pinned !== undefined && typeof patch.pinned !== 'boolean'
+      patch.pinned !== undefined && typeof patch.pinned !== 'boolean' ||
+      patch.active_list_id !== undefined &&
+        patch.active_list_id !== null && !Number.isInteger(patch.active_list_id)
     ) {
       return res.status(400).json({ error: 'invalid field types in patch' });
+    }
+    if (patch.active_list_id !== undefined) {
+      if (patch.active_list_id !== null) {
+        const list = getDb().prepare('SELECT id FROM curation_lists WHERE id = ?')
+          .get(patch.active_list_id) as { id: number } | undefined;
+        if (!list) return res.status(400).json({ error: 'unknown curated list' });
+      }
+      getDb().prepare('UPDATE model_sources SET active_list_id = ? WHERE id = ?')
+        .run(patch.active_list_id, id);
     }
     // `pinned` toggles protection for ALL of this source's imported models.
     if (patch.pinned !== undefined) {

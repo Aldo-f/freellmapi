@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Plus, RefreshCw, Trash2, Power, Pencil, Pin, PinOff } from 'lucide-react'
+import { Plus, RefreshCw, Trash2, Power, Pencil, Pin, PinOff, SlidersHorizontal } from 'lucide-react'
 import { apiFetch } from '@/lib/api'
+import { Link } from 'react-router-dom'
 import { PageHeader } from '@/components/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -14,7 +15,7 @@ import { Badge } from '@/components/ui/badge'
 interface ModelSource {
   id: number
   name: string
-  kind: 'builtin' | 'url'
+  kind: 'builtin' | 'url' | 'catalog'
   location: string
   enabled: boolean
   last_synced_at: string | null
@@ -22,6 +23,7 @@ interface ModelSource {
   last_error: string | null
   model_count: number
   pinned_count?: number
+  active_list_id: number | null
 }
 
 interface SourcesResponse {
@@ -44,6 +46,7 @@ export default function SourcesPage() {
   const queryClient = useQueryClient()
   const [name, setName] = useState('')
   const [location, setLocation] = useState('')
+  const [kind, setKind] = useState<'url' | 'catalog'>('url')
   const [formError, setFormError] = useState<string | null>(null)
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editName, setEditName] = useState('')
@@ -60,7 +63,7 @@ export default function SourcesPage() {
   }
 
   const addSource = useMutation({
-    mutationFn: (body: { name: string; location: string }) =>
+    mutationFn: (body: { name: string; location: string; kind?: string }) =>
       apiFetch('/api/sources', { method: 'POST', body: JSON.stringify(body) }),
     onSuccess: () => {
       setName('')
@@ -117,15 +120,27 @@ export default function SourcesPage() {
         <h2 className="text-sm font-medium">Add a source</h2>
         <div className="flex flex-wrap items-end gap-3">
           <div className="space-y-1">
+            <Label htmlFor="src-kind">Kind</Label>
+            <select
+              id="src-kind"
+              value={kind}
+              onChange={e => setKind(e.target.value as 'url' | 'catalog')}
+              className="h-9 rounded-md border bg-transparent px-2 text-sm"
+            >
+              <option value="url">Model list (custom / OpenAI format)</option>
+              <option value="catalog">Metadata catalog (models.dev)</option>
+            </select>
+          </div>
+          <div className="space-y-1">
             <Label htmlFor="src-name">Name</Label>
-            <Input id="src-name" value={name} onChange={e => setName(e.target.value)} placeholder="My model list" />
+            <Input id="src-name" value={name} onChange={e => setName(e.target.value)} placeholder={kind === 'catalog' ? 'models.dev' : 'My model list'} />
           </div>
           <div className="space-y-1 grow min-w-64">
-            <Label htmlFor="src-url">URL (JSON model list)</Label>
-            <Input id="src-url" value={location} onChange={e => setLocation(e.target.value)} placeholder="https://example.com/models.json" />
+            <Label htmlFor="src-url">{kind === 'catalog' ? 'Catalog document URL (models.dev api.json)' : 'URL (JSON model list)'}</Label>
+            <Input id="src-url" value={location} onChange={e => setLocation(e.target.value)} placeholder={kind === 'catalog' ? 'https://models.dev/api.json' : 'https://example.com/models.json'} />
           </div>
           <Button
-            onClick={() => addSource.mutate({ name, location })}
+            onClick={() => addSource.mutate({ name, location, kind })}
             disabled={!name.trim() || !location.trim() || addSource.isPending}
           >
             <Plus className="size-4" /> Add source
@@ -149,11 +164,18 @@ export default function SourcesPage() {
                   {s.last_synced_at ? ` · last sync ${new Date(s.last_synced_at).toLocaleString()}` : ''}
                 </span>
                 <div className="ms-auto flex items-center gap-2">
-                  {s.kind === 'url' && (
+                  {(s.kind === 'url' || s.kind === 'catalog') && (
                     <>
                       <Button variant="outline" size="sm" onClick={() => syncSource.mutate(s.id)} disabled={syncSource.isPending}>
                         <RefreshCw className="size-4" /> Sync now
                       </Button>
+                      {s.kind === 'catalog' && (
+                        <Link to="/curate">
+                          <Button variant="outline" size="sm">
+                            <SlidersHorizontal className="size-4" /> Curate
+                          </Button>
+                        </Link>
+                      )}
                       <Button
                         variant="ghost"
                         size="sm"
@@ -170,7 +192,7 @@ export default function SourcesPage() {
                           ? 'Imported models are pinned — protected from removal on sync'
                           : 'Pin imported models to protect them from removal when the source no longer lists them'}
                         onClick={() => pinSource.mutate({ id: s.id, pinned: (s.pinned_count ?? 0) === 0 })}
-                        disabled={s.kind !== 'url' || s.model_count === 0}
+                        disabled={s.kind !== 'url' && s.kind !== 'catalog' ? true : s.model_count === 0}
                       >
                         {(s.pinned_count ?? 0) > 0 ? <PinOff className="size-4" /> : <Pin className="size-4" />}
                         {(s.pinned_count ?? 0) > 0 && (

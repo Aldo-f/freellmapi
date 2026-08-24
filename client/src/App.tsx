@@ -40,6 +40,8 @@ import AnalyticsPage from '@/pages/AnalyticsPage'
 import PremiumPage from '@/pages/PremiumPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import AgentsPage from '@/pages/AgentsPage'
+import SourcesPage from '@/pages/SourcesPage'
+import CuratePage from '@/pages/CuratePage'
 
 // Every failed mutation surfaces as an error toast, so no action fails
 // silently. A page that already shows the failure inline can opt out with
@@ -59,6 +61,8 @@ const navItems = [
   { to: '/keys', labelKey: 'nav.keys' },
   { to: '/agents', labelKey: 'nav.agents' },
   { to: '/analytics', labelKey: 'nav.analytics' },
+  { to: '/sources', labelKey: 'nav.sources' },
+  { to: '/curate', labelKey: 'nav.curate' },
   { to: '/premium', labelKey: 'nav.premium' },
 ]
 
@@ -386,6 +390,8 @@ function App() {
                       <Route path="/playground" element={<PlaygroundPage />} />
                       <Route path="/keys" element={<KeysPage />} />
                       <Route path="/agents" element={<AgentsPage />} />
+                      <Route path="/sources" element={<SourcesPage />} />
+                      <Route path="/curate" element={<CuratePage />} />
                       <Route path="/fallback" element={<Navigate to="/models/chat" replace />} />
                       <Route path="/analytics" element={<AnalyticsPage />} />
                       <Route path="/premium" element={<PremiumPage />} />
