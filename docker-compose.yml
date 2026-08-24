@@ -1,6 +1,6 @@
 services:
   freellmapi:
-    image: freellmapi:local-001
+    image: freellmapi:local-002
     build:
       context: .
       dockerfile: Dockerfile
