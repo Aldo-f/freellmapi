@@ -144,6 +144,7 @@ sourcesRouter.get('/:id/models', (req: Request, res: Response) => {
     const result = listCatalogSourceModels(id, {
       search: typeof req.query.search === 'string' ? req.query.search : undefined,
       included: includedParam,
+      sort: typeof req.query.sort === 'string' ? req.query.sort : undefined,
       page: Number(req.query.page) || 1,
       perPage: Number(req.query.per_page) || 50,
     });
