@@ -24,6 +24,7 @@ import * as apiKeyProxy from '../migrations/20260810_000001_api_key_proxy.js';
 import * as playgroundConversations from '../migrations/20260820_000001_playground_conversations.js';
 import * as customModelTombstones from '../migrations/20260819_000001_custom_model_tombstones.js';
 import * as modelSources from '../migrations/20260823_000004_model_sources.js';
+import * as modelCuration from '../migrations/20260824_000005_model_curation.js';
 
 export interface MigrationModule {
   up(db: Db): void;
@@ -60,6 +61,7 @@ export const API_KEY_PROXY_FILENAME = '20260810_000001_api_key_proxy.ts';
 export const PLAYGROUND_CONVERSATIONS_FILENAME = '20260820_000001_playground_conversations.ts';
 export const CUSTOM_MODEL_TOMBSTONES_FILENAME = '20260819_000001_custom_model_tombstones.ts';
 export const MODEL_SOURCES_FILENAME = '20260823_000004_model_sources.ts';
+export const MODEL_CURATION_FILENAME = '20260824_000005_model_curation.ts';
 
 export const DEFAULT_MIGRATIONS: readonly DefaultMigration[] = [
   { filename: LEGACY_BASELINE_FILENAME, module: legacyBaseline },
@@ -87,4 +89,5 @@ export const DEFAULT_MIGRATIONS: readonly DefaultMigration[] = [
   { filename: CUSTOM_MODEL_TOMBSTONES_FILENAME, module: customModelTombstones },
   { filename: PLAYGROUND_CONVERSATIONS_FILENAME, module: playgroundConversations },
   { filename: MODEL_SOURCES_FILENAME, module: modelSources },
+  { filename: MODEL_CURATION_FILENAME, module: modelCuration },
 ];
