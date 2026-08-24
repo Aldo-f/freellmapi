@@ -1,0 +1,83 @@
+{
+  "anthropic": {
+    "id": "anthropic",
+    "name": "Anthropic",
+    "env": ["ANTHROPIC_API_KEY"],
+    "models": {
+      "claude-opus-5": {
+        "id": "claude-opus-5",
+        "name": "Claude Opus 5",
+        "attachment": true,
+        "reasoning": false,
+        "tool_call": true,
+        "structured_output": true,
+        "temperature": true,
+        "release_date": "2026-07-24",
+        "last_updated": "2026-07-24",
+        "modalities": { "input": ["text", "image"], "output": ["text"] },
+        "open_weights": false,
+        "limit": { "context": 1000000, "output": 128000 },
+        "cost": { "input": 0, "output": 0 }
+      },
+      "claude-haiku-cheapie": {
+        "id": "claude-haiku-cheapie",
+        "name": "Claude Haiku Cheapie",
+        "tool_call": false,
+        "structured_output": true,
+        "modalities": { "input": ["text"], "output": ["text"] },
+        "open_weights": false,
+        "limit": { "context": 200000, "output": 4096 },
+        "cost": { "input": 0.25, "output": 1.25 }
+      }
+    }
+  },
+  "meta": {
+    "id": "meta",
+    "name": "Meta",
+    "models": {
+      "muse-glimmer-30b": {
+        "id": "muse-glimmer-30b",
+        "name": "Muse Glimmer 30B",
+        "reasoning": true,
+        "tool_call": true,
+        "structured_output": true,
+        "modalities": { "input": ["text"], "output": ["text"] },
+        "open_weights": true,
+        "limit": { "context": 131072, "output": 131072 },
+        "cost": { "input": 0, "output": 0 }
+      },
+      "muse-vision-open": {
+        "id": "muse-vision-open",
+        "name": "Muse Vision Open",
+        "tool_call": false,
+        "modalities": { "input": ["text", "image"], "output": ["text"] },
+        "open_weights": true,
+        "limit": { "context": 262144 },
+        "cost": { "input": 0.1, "output": 0.3 }
+      }
+    }
+  },
+  "mysterylabs": {
+    "id": "mysterylabs",
+    "name": "Mystery Labs",
+    "models": {
+      "ghost-free": {
+        "id": "ghost-free",
+        "name": "Ghost Free (unknown cost & limits)",
+        "tool_call": true,
+        "open_weights": false,
+        "modalities": { "input": ["text"], "output": ["text"] }
+      },
+      "tiny-context": {
+        "id": "tiny-context",
+        "name": "Tiny Context",
+        "tool_call": true,
+        "reasoning": true,
+        "open_weights": true,
+        "modalities": { "input": ["text"], "output": ["text", "image"] },
+        "limit": { "context": 8192, "output": 2048 },
+        "cost": { "input": 0.05, "output": 0.09 }
+      }
+    }
+  }
+}
