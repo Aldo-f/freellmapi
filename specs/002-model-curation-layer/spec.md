@@ -72,33 +72,44 @@ models.dev document values.
    listed alongside catalog models, **Then** it has empty metadata and is not
    broken by the metadata layer.
 
-### User Story 3 - Curation filter builder and include/exclude toggles (Priority: P2)
+### User Story 3 - Curated lists: build, browse a catalog of lists (Priority: P2)
 
-As an administrator, I can build a filter over the catalog-imported models —
-free only (zero input+output cost), minimum context window, tool_call support,
-image (or other modality) input, open weights — see the matching subset, and
-toggle individual models in/out of the curated selection. The filter
-definition is saved per catalog source and survives restarts; per-model manual
-overrides win over the filter.
+As an administrator, I can create my own named curated lists (a saved filter
+plus optional per-model include/exclude overrides), and I can browse a catalog
+of ready-made built-in curated lists and apply any of them to a catalog source
+with one click. A list's *criteria are static* once defined, but its *model
+membership is always live* — re-evaluated against the current catalog contents
+at every sync and listing request, so newly imported matching models flow in
+automatically.
 
-**Why this priority**: This is the actual "curation" value, but it depends on
-US1+US2 data existing first.
+Built-in lists (seeded, maintained in-repo): Free & Tool-capable, Vision chat,
+Big-context reasoning (≥200k), Open weights only, Budget (<$0.50/Mtok input).
 
-**Independent Test**: Apply a "free AND tool_call AND min-context 100k"
-filter, verify only matching models match, exclude two of them manually, save,
-reload the page, and confirm filter + exclusions persist.
+**Why this priority**: This is the actual "curation" value and makes it
+shareable/reusable rather than one hidden filter; depends on US1+US2 data.
+
+**Independent Test**: Apply the built-in "Free & Tool-capable" list to the
+catalog source, verify only matching models appear in the merged listing;
+create a custom list with a min-context filter, verify it evaluates live when
+new models sync in.
 
 **Acceptance Scenarios**:
 
-1. **Given** synced catalog data, **When** the admin sets free-only +
-   min-context filters, **Then** only zero-cost models meeting the context
-   threshold are shown as included.
-2. **Given** a filtered set, **When** the admin excludes a model, **Then** it
-   drops out of the curated selection even though it matches the filter.
-3. **Given** an excluded model, **When** the admin explicitly includes it,
-   **Then** it returns to the curated selection despite the filter.
-4. **Given** saved filter criteria and overrides, **When** the server
-   restarts, **Then** both persist and the effective selection is unchanged.
+1. **Given** synced catalog data, **When** the admin applies a built-in list,
+   **Then** exactly the matching models are curated-in, and the list's
+   definition cannot be edited in place (immutable built-ins).
+2. **Given** the admin builds a custom list with free-only + min-context
+   filters, **When** saved, **Then** a live match-count preview shows how many
+   current models match before/after saving.
+3. **Given** a custom or applied list, **When** the admin excludes/includes an
+   individual model from the list's model view, **Then** that override wins
+   over the static filter for that list.
+4. **Given** a new sync imports additional matching models, **Then** they join
+   the curated selection automatically without touching the list definition.
+5. **Given** saved lists and overrides, **When** the server restarts, **Then**
+   all persist and effective selections are unchanged.
+6. **Given** the model browser, **When** the admin sorts or searches by price,
+   context, or name, **Then** results reorder/filter accordingly.
 
 ### User Story 4 - Curated selection drives /v1/models (Priority: P2)
 
@@ -166,12 +177,16 @@ catalog source entirely: all its models vanish regardless of curation.
   structured_output, reasoning, input/output modalities, open_weights.
 - **FR-004**: Non-catalog sources MUST continue to work unchanged; their
   models have no metadata and curation does not alter their visibility.
-- **FR-005**: The dashboard MUST offer a curation view (on /sources or a
-  dedicated page) with a filter builder over: free-only (price), minimum
-  context window, tool_call, input modalities (at least image), open_weights.
-- **FR-006**: The curation view MUST allow per-model include/exclude toggles
-  that override the filter result, and MUST persist both filter criteria and
-  overrides across restarts.
+- **FR-005**: The dashboard MUST offer a dedicated curation view (/curate)
+  where the admin can create named curated lists with a filter builder over:
+  free-only (price), minimum context window, tool_call, input modalities (at
+  least image), open_weights — plus sort/search of matching models by price,
+  context, and name, and a live match-count preview before saving.
+- **FR-006**: The dashboard MUST present a catalog of built-in curated lists
+  (seeded in-repo, immutable) that can be applied to a catalog source with one
+  click; custom lists are fully editable. Per-model include/exclude overrides
+  attach to a list and win over its static filter. List criteria are static;
+  membership is re-evaluated live against current catalog contents.
 - **FR-007**: The merged models listing (`/v1/models`, dashboard
   `/api/models`) MUST exclude curated-out catalog models while continuing to
   honor feature 001's enabled-source visibility and pin semantics.
@@ -187,13 +202,15 @@ catalog source entirely: all its models vanish regardless of curation.
 
 ### Key Entities *(include if feature involves data)*
 
-- **ModelSource (extended)**: gains kind value `catalog`; stores saved filter
-  criteria JSON for curation (per catalog source).
-- **ModelMetadata (new or columns)**: per model — costs, limits, capability
-  flags, modalities, open_weights, raw catalog provenance; linked to the model
-  row owned by a catalog source.
+- **ModelSource (extended)**: gains kind value `catalog` and an
+  active curated-list reference.
+- **ModelMetadata**: per model — costs, limits, capability flags, modalities,
+  open_weights; linked to the model row owned by a catalog source.
+- **CurationList**: named entity = static criteria JSON + optional
+  per-model include/exclude overrides; flagged builtin (immutable) or custom
+  (editable). Applied per catalog source; evaluated live at listing time.
 - **CurationOverride**: per-model include/exclude decision attached to a
-  catalog source, taking precedence over filter evaluation.
+  list, taking precedence over its criteria.
 
 ## Success Criteria *(mandatory)*
 

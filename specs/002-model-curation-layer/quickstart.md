@@ -30,14 +30,14 @@ sqlite3 server/data/freeapi.db 'SELECT COUNT(*) FROM model_metadata'   # > 0 (or
 # 3) Curated listing feeds /v1/models
 curl -s $BASE/v1/models | jq '.data | length'
 
-# 4) Save a free+tools+big-context filter → list shrinks
+# 4) Apply the builtin "Free & Tool-capable" list → merged listing shrinks
+curl -s $BASE/api/curated-lists -H "Authorization: Bearer $ADMIN_KEY"   # 5 builtins seeded
 curl -s -X PATCH $BASE/api/sources/<id> -H "Authorization: Bearer $ADMIN_KEY" \
-  -H 'Content-Type: application/json' \
-  -d '{"filter_criteria":{"free_only":true,"tool_call":true,"min_context":100000}}'
+  -H 'Content-Type: application/json' -d '{"active_list_id":<listId>}'
 curl -s $BASE/v1/models | jq '.data | length'   # smaller than step 3
 
 # 5) Per-model exclude wins over filter
-curl -s -X PUT $BASE/api/sources/<id>/curate -H "Authorization: Bearer $ADMIN_KEY" \
+curl -s -X PUT $BASE/api/curated-lists/<listId>/models -H "Authorization: Bearer $ADMIN_KEY" \
   -H 'Content-Type: application/json' \
   -d '{"platform":"<p>","model_id":"<m>","decision":"exclude"}'
 curl -s "$BASE/api/sources/<id>/models?included=out" -H "Authorization: Bearer $ADMIN_KEY"

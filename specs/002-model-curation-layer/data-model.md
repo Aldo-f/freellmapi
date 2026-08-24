@@ -6,8 +6,9 @@
   row (existing rule); many 'catalog' rows allowed; 'catalog' behaves like
   'url' for lifecycle (create/edit/delete/sync/status) but its sync uses the
   models.dev document parser and imports metadata.
-- New column `filter_criteria TEXT` (nullable JSON) — the saved curation
-  filter for this source. NULL/empty ⇒ everything included. Shape:
+- New column `active_list_id INTEGER REFERENCES curation_lists(id)` (nullable)
+  — the curated list driving this source. NULL ⇒ no list applied. The old
+  per-source filter_criteria idea is superseded by lists.
   ```jsonc
   {
     "free_only": false,        // cost.input==0 && cost.output==0 (unknown ⇒ NOT free)
@@ -40,26 +41,58 @@
 Written ONLY by catalog-source syncs. Rows cascade away with their model
 (tombstone/delete). Non-catalog models simply have no row.
 
+## New table: curation_lists
+
+| Column | Type | Constraints |
+|---|---|---|
+| id | INTEGER PK AUTOINCREMENT | |
+| name | TEXT NOT NULL UNIQUE | 1–100 chars |
+| description | TEXT NOT NULL DEFAULT '' | shown in the list catalog |
+| criteria | TEXT NOT NULL DEFAULT '{}' | static filter JSON, shape below |
+| is_builtin | INTEGER NOT NULL DEFAULT 0 | builtin rows are immutable, seeded by migration |
+| created_at | TEXT NOT NULL DEFAULT (datetime('now')) | |
+
+Criteria shape (same keys as before; absent keys not filtered on):
+```jsonc
+{
+  "free_only": false,        // cost.input==0 && cost.output==0 (unknown ⇒ NOT free)
+  "max_cost_input": 0.5,     // cost.input <= N (unknown cost fails)
+  "min_context": 100000,     // limit.context >= N (null context fails)
+  "tool_call": true,
+  "input_image": false,      // modalities.input contains "image"
+  "open_weights": true
+}
+```
+
+Builtin seeds (criteria static forever; membership live):
+`Free & Tool-capable` {free_only,tool_call} · `Vision chat` {input_image} ·
+`Big-context reasoning ≥200k` {min_context:200000,reasoning:true} ·
+`Open weights only` {open_weights} · `Budget <$0.50 in` {max_cost_input:0.5}.
+
 ## New table: curation_overrides
 
 | Column | Type | Constraints |
 |---|---|---|
 | id | INTEGER PK AUTOINCREMENT | |
-| source_id | INTEGER NOT NULL REFERENCES model_sources(id) ON DELETE CASCADE | per catalog source |
+| list_id | INTEGER NOT NULL REFERENCES curation_lists(id) ON DELETE CASCADE | per list |
 | platform | TEXT NOT NULL | |
 | model_id | TEXT NOT NULL | |
-| decision | TEXT NOT NULL CHECK(decision IN ('include','exclude')) | wins over filter |
+| decision | TEXT NOT NULL CHECK(decision IN ('include','exclude')) | wins over list criteria |
 
-UNIQUE(source_id, platform, model_id). Deleting the source cascades overrides.
+UNIQUE(list_id, platform, model_id). Deleting a list cascades its overrides.
+Overrides on a builtin list are ALLOWED (stored separately from the immutable
+definition) — admins can fine-tune a built-in without forking.
 
 ## Effective visibility (merged listing)
 
 A model row participates in `buildModelListing()` iff ALL of:
 
 1. existing rules: enabled + key availability + source enabled (001);
-2. NEW: if its owner source is kind='catalog', it is curated-in:
-   - explicit override decision, else
-   - passes the source's saved filter (empty filter ⇒ included).
+2. NEW: if its owner source is kind='catalog' with an active list, it is
+   curated-in:
+   - explicit override decision on that list, else
+   - passes the list's static criteria evaluated against model_metadata
+     (no active list ⇒ everything included).
 
 Implemented as one extra EXISTS/NOT-EXISTS clause in `model-listing.ts`
 (`sourceVisibleExpr`) so `/v1/models`, Anthropic `/v1/models`, Gemini, MCP,

@@ -36,9 +36,13 @@
 - **D2 — separate `model_metadata` table** (not columns on `models`). Keeps
   the hot catalog table narrow, cascades with tombstones via FK, and NULLable
   columns cleanly express "unknown". One row per model, PK = model_db_id.
-- **D3 — filter stored as JSON on `model_sources.filter_criteria`**, evaluated
-  in SQL as part of the listing query so curation costs one subquery per
-  catalog-sourced row. Override rows in `curation_overrides` win over filter.
+- **D3 — Curated lists as first-class entities** (user-directed revision,
+  2026-08-24): `curation_lists` table = static criteria + name/description +
+  builtin flag; `model_sources.active_list_id` applies a list to a catalog
+  source. Five builtin lists seeded in-repo (immutable definitions; per-model
+  overrides still allowed on them). List criteria are STATIC; membership is
+  LIVE — re-evaluated in SQL at listing time so new matching imports join
+  automatically. Overrides live in `curation_overrides` keyed by list.
 - **D4 — visibility enforced inside `buildModelListing()`'s
   `sourceVisibleExpr`.** Every consumer (/v1/models OpenAI+Anthropic, Gemini,
   MCP, Ollama, dashboard /api/models) inherits curation automatically —
@@ -52,8 +56,12 @@
   to existing platforms become new platform entries; no forced mapping table
   in v1.
 - **D8 — UI: dedicated `/curate` page** (`client/src/pages/CuratePage.tsx`),
-  server-side paging/search via GET /api/sources/:id/models (thousands of rows
-  never enter client state raw).
+  server-side paging/search (thousands of rows never enter client state raw):
+  list catalog view (built-ins + custom with match counts), builder form with
+  live match-count preview, model browser with sort by price/context/name and
+  include/exclude toggles.
+- Dropped features (user decision): cost badge, list-diff view, scheduled
+  auto-sync, per-API-key list scoping — NOT backlog items, simply out.
 
 ## Clarify decisions (2026-08-24)
 
