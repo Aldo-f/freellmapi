@@ -5,12 +5,39 @@
 //   OpenAI : {"data":[{"id","owned_by?"}]}
 //
 // Deliberate bounds (spec): 15s timeout, 5 MB body cap, max 5,000 models.
+// Feature 002 adds catalog sources (models.dev api.json shape) with their own
+// generous caps: the live document is ~4 MB / thousands of models.
 
 import type { NormalizedModelEntry } from './model-sources.js';
 
 export const FETCH_TIMEOUT_MS = 15_000;
 export const MAX_BODY_BYTES = 5 * 1024 * 1024;
 export const MAX_MODELS = 5_000;
+export const CATALOG_MAX_BODY_BYTES = 20 * 1024 * 1024;
+export const CATALOG_MAX_MODELS = 25_000;
+
+/** Raw per-model metadata as found in a catalog document (all optional). */
+export interface CatalogMetadata {
+  cost_input: number | null;
+  cost_output: number | null;
+  context_limit: number | null;
+  output_limit: number | null;
+  tool_call: boolean | null;
+  structured_output: boolean | null;
+  reasoning: boolean | null;
+  modalities_input: string[];
+  modalities_output: string[];
+  open_weights: boolean | null;
+}
+
+export interface CatalogEntry {
+  platform: string;          // models.dev provider slug, verbatim
+  model_id: string;
+  display_name: string;
+  context_window: number | null;
+  supports_vision: boolean;
+  metadata: CatalogMetadata;
+}
 
 export class SourceFetchError extends Error {
   constructor(message: string) {
@@ -19,9 +46,11 @@ export class SourceFetchError extends Error {
   }
 }
 
-/** Fetch + parse + normalize a source document. Throws SourceFetchError on
- *  any failure (network, size, schema) with an operator-safe message. */
-export async function fetchSourceModels(location: string): Promise<NormalizedModelEntry[]> {
+/** Shared fetch+parse with caller-chosen bounds. */
+async function fetchJsonDocument(
+  location: string,
+  maxBodyBytes: number,
+): Promise<unknown> {
   let res: Response;
   try {
     res = await fetch(location, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
@@ -34,20 +63,24 @@ export async function fetchSourceModels(location: string): Promise<NormalizedMod
     throw new SourceFetchError(`source returned HTTP ${res.status}`);
   }
   const len = Number(res.headers.get('content-length') ?? 0);
-  if (len > MAX_BODY_BYTES) {
-    throw new SourceFetchError(`document too large (${len} bytes > ${MAX_BODY_BYTES})`);
+  if (len > maxBodyBytes) {
+    throw new SourceFetchError(`document too large (${len} bytes > ${maxBodyBytes})`);
   }
   const text = await res.text();
-  if (Buffer.byteLength(text, 'utf8') > MAX_BODY_BYTES) {
-    throw new SourceFetchError(`document too large (> ${MAX_BODY_BYTES} bytes)`);
+  if (Buffer.byteLength(text, 'utf8') > maxBodyBytes) {
+    throw new SourceFetchError(`document too large (> ${maxBodyBytes} bytes)`);
   }
-
-  let doc: unknown;
   try {
-    doc = JSON.parse(text);
+    return JSON.parse(text);
   } catch {
     throw new SourceFetchError('document is not valid JSON');
   }
+}
+
+/** Fetch + parse + normalize a source document. Throws SourceFetchError on
+ *  any failure (network, size, schema) with an operator-safe message. */
+export async function fetchSourceModels(location: string): Promise<NormalizedModelEntry[]> {
+  const doc = await fetchJsonDocument(location, MAX_BODY_BYTES);
 
   const entries = normalizeDocument(doc);
   if (entries.length > MAX_MODELS) {
@@ -109,4 +142,78 @@ function sanitizeId(id: string): string {
   if (!trimmed || trimmed.length > 200) return '';
   if (!/^[A-Za-z0-9._:\-\/]+$/.test(trimmed)) return '';
   return trimmed;
+}
+
+
+// ── Feature 002: catalog documents (models.dev api.json shape) ──────────────
+
+function optBool(v: unknown): boolean | null {
+  return typeof v === 'boolean' ? v : null;
+}
+
+function optNum(v: unknown): number | null {
+  return typeof v === 'number' && Number.isFinite(v) ? v : null;
+}
+
+function modalityList(v: unknown): string[] {
+  return Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : ['text'];
+}
+
+function toCatalogMetadata(raw: Record<string, unknown>): CatalogMetadata {
+  const limit = (raw.limit ?? {}) as Record<string, unknown>;
+  const cost = (raw.cost ?? {}) as Record<string, unknown>;
+  const modalities = (raw.modalities ?? {}) as Record<string, unknown>;
+  return {
+    cost_input: optNum(cost.input),
+    cost_output: optNum(cost.output),
+    context_limit: optNum(limit.context),
+    output_limit: optNum(limit.output),
+    tool_call: optBool(raw.tool_call),
+    structured_output: optBool(raw.structured_output),
+    reasoning: optBool(raw.reasoning),
+    modalities_input: modalityList(modalities.input),
+    modalities_output: modalityList(modalities.output),
+    open_weights: optBool(raw.open_weights),
+  };
+}
+
+function slugOk(slug: string): boolean {
+  return /^[A-Za-z0-9._\-]{1,64}$/.test(slug);
+}
+
+/** Fetch + parse a models.dev-style catalog document into entries carrying
+ *  full metadata. Caps are the generous catalog ones. */
+export async function fetchCatalogDocument(location: string): Promise<CatalogEntry[]> {
+  const doc = await fetchJsonDocument(location, CATALOG_MAX_BODY_BYTES);
+  if (doc === null || typeof doc !== 'object' || Array.isArray(doc)) {
+    throw new SourceFetchError('catalog root is not an object');
+  }
+  const entries: CatalogEntry[] = [];
+  for (const [slug, providerRaw] of Object.entries(doc as Record<string, unknown>)) {
+    if (!slugOk(slug)) continue;
+    if (providerRaw === null || typeof providerRaw !== 'object') continue;
+    const models = (providerRaw as Record<string, unknown>).models;
+    if (models === null || typeof models !== 'object') continue;
+    for (const [modelId, modelRaw] of Object.entries(models as Record<string, unknown>)) {
+      if (modelRaw === null || typeof modelRaw !== 'object') continue;
+      const cleanId = sanitizeId(modelId);
+      if (!cleanId) continue;
+      const r = modelRaw as Record<string, unknown>;
+      const metadata = toCatalogMetadata(r);
+      entries.push({
+        platform: slug,
+        model_id: cleanId,
+        display_name: typeof r.name === 'string' && r.name.trim() ? r.name.trim() : cleanId,
+        context_window: metadata.context_limit,
+        supports_vision: metadata.modalities_input.includes('image'),
+        metadata,
+      });
+    }
+  }
+  if (entries.length > CATALOG_MAX_MODELS) {
+    throw new SourceFetchError(
+      `catalog lists ${entries.length} models (max ${CATALOG_MAX_MODELS})`,
+    );
+  }
+  return entries;
 }

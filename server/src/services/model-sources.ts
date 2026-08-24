@@ -12,7 +12,12 @@
 //  - failures update last_sync_status/error and never delete prior imports
 
 import { getDb } from '../db/index.js';
-import { SourceFetchError, fetchSourceModels } from './source-fetch.js';
+import {
+  SourceFetchError,
+  fetchSourceModels,
+  fetchCatalogDocument,
+  type CatalogEntry,
+} from './source-fetch.js';
 
 export interface NormalizedModelEntry {
   model_id: string;
@@ -24,12 +29,13 @@ export interface NormalizedModelEntry {
 export interface SourceRow {
   id: number;
   name: string;
-  kind: 'builtin' | 'url';
+  kind: 'builtin' | 'url' | 'catalog';
   location: string;
   enabled: number;
   last_synced_at: string | null;
   last_sync_status: 'ok' | 'error' | 'never';
   last_error: string | null;
+  active_list_id: number | null;
   created_at: string;
 }
 
@@ -62,7 +68,14 @@ export function getSource(id: number): SourceRow | null {
     null) as SourceRow | null;
 }
 
-export function createSource(name: string, location: string): SourceRow {
+export function createSource(
+  name: string,
+  location: string,
+  kind: 'url' | 'catalog' = 'url',
+): SourceRow {
+  if (kind !== 'url' && kind !== 'catalog') {
+    throw new ValidationError(`unknown source kind: ${String(kind)}`);
+  }
   const trimmedName = name.trim();
   if (!trimmedName || trimmedName.length > 100) {
     throw new ValidationError('name must be 1-100 characters');
@@ -74,8 +87,8 @@ export function createSource(name: string, location: string): SourceRow {
   if (dup) throw new ConflictError(`a source named "${trimmedName}" already exists`);
   const info = getDb().prepare(`
     INSERT INTO model_sources (name, kind, location, enabled)
-    VALUES (?, 'url', ?, 1)
-  `).run(trimmedName, location.trim());
+    VALUES (?, ?, ?, 1)
+  `).run(trimmedName, kind, location.trim());
   return getSource(Number(info.lastInsertRowid))!;
 }
 
@@ -184,6 +197,13 @@ export async function syncSource(id: number): Promise<SyncResult> {
 
   const now = new Date().toISOString();
   const db = getDb();
+
+  // Feature 002: catalog sources use the models.dev parser and additionally
+  // upsert per-model metadata in the same transaction.
+  if (source.kind === 'catalog') {
+    return syncCatalogSource(source, now);
+  }
+
   let entries: NormalizedModelEntry[];
   try {
     entries = await fetchSourceModels(source.location);
@@ -284,6 +304,260 @@ export async function syncSource(id: number): Promise<SyncResult> {
     duplicates_skipped: duplicates,
     last_synced_at: now,
   };
+}
+
+/** Catalog (models.dev) sync: same dedupe/tombstone semantics as url sources
+ *  plus model_metadata upserts. List overrides are never touched here — list
+ *  membership is evaluated live at listing time. */
+async function syncCatalogSource(
+  source: SourceRow,
+  now: string,
+): Promise<SyncResult> {
+  const db = getDb();
+  const id = source.id;
+  let entries: CatalogEntry[];
+  try {
+    entries = await fetchCatalogDocument(source.location);
+  } catch (err) {
+    const message = err instanceof SourceFetchError ? err.message : String(err);
+    db.prepare(`
+      UPDATE model_sources SET last_synced_at = ?, last_sync_status = 'error', last_error = ?
+      WHERE id = ?
+    `).run(now, message, id);
+    throw new SyncFailureError(message);
+  }
+
+  const existingIds = new Set(
+    (db.prepare(`
+      SELECT platform || '/' || model_id AS key FROM models
+      WHERE source_ref_id IS NOT NULL AND source_ref_id != ?
+    `).all(id) as { key: string }[]).map(r => r.key),
+  );
+  const ownIds = new Set(
+    (db.prepare("SELECT platform || '/' || model_id AS key FROM models WHERE source_ref_id = ?")
+      .all(id) as { key: string }[]).map(r => r.key),
+  );
+
+  const findRow = db.prepare(
+    'SELECT id FROM models WHERE platform = ? AND model_id = ?'
+  );
+  const indexInsert = db.prepare(
+    'INSERT OR REPLACE INTO source_model_index (source_id, platform, model_id) VALUES (?, ?, ?)'
+  );
+  const insert = db.prepare(`
+    INSERT INTO models (platform, model_id, display_name, intelligence_rank, speed_rank,
+                        size_label, monthly_token_budget, enabled, supports_vision,
+                        context_window, source_ref_id, source)
+    VALUES (?, ?, ?, 999, 999, '', '', 1, ?, ?, ?, 'user')
+  `);
+  const update = db.prepare(`
+    UPDATE models SET display_name = ?, context_window = ?, supports_vision = ?,
+                      source_ref_id = ?
+    WHERE id = ?
+  `);
+
+  const metaUpsert = db.prepare(`
+    INSERT INTO model_metadata (model_db_id, cost_input, cost_output, context_limit,
+      output_limit, tool_call, structured_output, reasoning,
+      modalities_input, modalities_output, open_weights, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(model_db_id) DO UPDATE SET
+      cost_input=excluded.cost_input, cost_output=excluded.cost_output,
+      context_limit=excluded.context_limit, output_limit=excluded.output_limit,
+      tool_call=excluded.tool_call, structured_output=excluded.structured_output,
+      reasoning=excluded.reasoning, modalities_input=excluded.modalities_input,
+      modalities_output=excluded.modalities_output, open_weights=excluded.open_weights,
+      updated_at=excluded.updated_at
+  `);
+
+  const b = (v: boolean | null): number | null => (v === null ? null : v ? 1 : 0);
+
+  let imported = 0;
+  let duplicates = 0;
+  const seen = new Set<string>();
+  const txUpsert = db.transaction(() => {
+    for (const e of entries) {
+      indexInsert.run(id, e.platform, e.model_id);
+      const key = e.platform + '/' + e.model_id;
+      if (seen.has(key)) { duplicates += 1; continue; }
+      seen.add(key);
+      const own = ownIds.has(key);
+      if (existingIds.has(key) && !own) {
+        duplicates += 1; // first-enabled-source-wins: another source owns it
+        continue;
+      }
+      const row = findRow.get(e.platform, e.model_id) as { id: number } | undefined;
+      let rowId: number;
+      if (row && own) {
+        update.run(e.display_name, e.context_window, e.supports_vision ? 1 : 0, id, row.id);
+        rowId = row.id;
+      } else if (row) {
+        duplicates += 1;
+        continue;
+      } else {
+        const info = insert.run(e.platform, e.model_id, e.display_name,
+          e.supports_vision ? 1 : 0, e.context_window, id);
+        rowId = Number(info.lastInsertRowid);
+      }
+      metaUpsert.run(rowId, e.metadata.cost_input, e.metadata.cost_output,
+        e.metadata.context_limit, e.metadata.output_limit,
+        b(e.metadata.tool_call), b(e.metadata.structured_output), b(e.metadata.reasoning),
+        JSON.stringify(e.metadata.modalities_input), JSON.stringify(e.metadata.modalities_output),
+        b(e.metadata.open_weights), now);
+      imported += 1;
+    }
+    // Tombstones: this source's rows absent from the latest doc, unless pinned.
+    // fallback_config / profile_models reference models(id) with FK constraints,
+    // so their rows go first; metadata cascades via FK ON DELETE CASCADE.
+    const tombstone = db.prepare(
+      'DELETE FROM models WHERE source_ref_id = ? AND pinned = 0 AND platform = ? AND model_id = ?'
+    );
+    const clearFallback = db.prepare('DELETE FROM fallback_config WHERE model_db_id = ?');
+    const clearProfile = db.prepare('DELETE FROM profile_models WHERE model_db_id = ?');
+    for (const ownKey of ownIds) {
+      if (!seen.has(ownKey)) {
+        const slash = ownKey.indexOf('/');
+        const plat = ownKey.slice(0, slash);
+        const mid = ownKey.slice(slash + 1);
+        const victim = findRow.get(plat, mid) as { id: number } | undefined;
+        if (victim) {
+          clearFallback.run(victim.id);
+          clearProfile.run(victim.id);
+          tombstone.run(id, plat, mid);
+        }
+      }
+    }
+  });
+  txUpsert();
+
+  db.prepare(`
+    UPDATE model_sources SET last_synced_at = ?, last_sync_status = 'ok', last_error = NULL
+    WHERE id = ?
+  `).run(now, id);
+
+  return {
+    status: 'ok',
+    imported,
+    removed: Math.max(0, ownIds.size - seen.size),
+    duplicates_skipped: duplicates,
+    last_synced_at: now,
+  };
+}
+
+// ── Feature 002: catalog model browser ──────────────────────────────────────
+
+export interface CatalogModelRow {
+  platform: string;
+  model_id: string;
+  display_name: string;
+  context_window: number | null;
+  curated_in: boolean;
+  override: 'include' | 'exclude' | null;
+  metadata: Record<string, unknown> | null;
+}
+
+/** List a catalog source's models with metadata and effective curation state
+ *  (override wins over active-list criteria; no list ⇒ all included). */
+export function listCatalogSourceModels(
+  id: number,
+  opts: { search?: string; included?: 'all' | 'in' | 'out'; sort?: string; page?: number; perPage?: number } = {},
+): { total: number; page: number; per_page: number; models: CatalogModelRow[] } {
+  const source = getSource(id);
+  if (!source) throw new NotFoundError('source not found');
+  if (source.kind !== 'catalog') {
+    throw new ValidationError('model browsing is only available for catalog sources');
+  }
+
+  const db = getDb();
+  const page = Math.max(1, opts.page ?? 1);
+  const perPage = Math.min(200, Math.max(1, opts.perPage ?? 50));
+  const search = (opts.search ?? '').trim().toLowerCase();
+
+  const rows = db.prepare(`
+    SELECT m.id AS db_id, m.platform, m.model_id, m.display_name,
+           mm.cost_input, mm.cost_output, mm.context_limit, mm.output_limit,
+           mm.tool_call, mm.structured_output, mm.reasoning,
+           mm.modalities_input, mm.modalities_output, mm.open_weights,
+           ov.decision AS override
+    FROM models m
+    LEFT JOIN model_metadata mm ON mm.model_db_id = m.id
+    LEFT JOIN curation_overrides ov ON ov.list_id = ? AND ov.platform = m.platform AND ov.model_id = m.model_id
+    WHERE m.source_ref_id = ?
+    ORDER BY m.platform ASC, m.model_id ASC
+  `).all(source.active_list_id ?? -1, id) as any[];
+
+  let items = rows.map(r => {
+    const metadata = r.db_id && r.modalities_input !== undefined ? {
+      cost_input: r.cost_input, cost_output: r.cost_output,
+      context_limit: r.context_limit, output_limit: r.output_limit,
+      tool_call: r.tool_call === null ? null : r.tool_call === 1,
+      structured_output: r.structured_output === null ? null : r.structured_output === 1,
+      reasoning: r.reasoning === null ? null : r.reasoning === 1,
+      modalities_input: JSON.parse(r.modalities_input ?? '["text"]'),
+      modalities_output: JSON.parse(r.modalities_output ?? '["text"]'),
+      open_weights: r.open_weights === null ? null : r.open_weights === 1,
+    } : null;
+
+    // Effective state: override wins over static criteria of the active list.
+    let curatedIn = true;
+    if (source.active_list_id !== null) {
+      const list = db.prepare('SELECT criteria FROM curation_lists WHERE id = ?')
+        .get(source.active_list_id) as { criteria: string } | undefined;
+      if (list) {
+        curatedIn = matchesCriteria(metadata, JSON.parse(list.criteria || '{}'));
+      }
+    }
+    const override = (r.override as 'include' | 'exclude' | null) ?? null;
+    if (override === 'include') curatedIn = true;
+    if (override === 'exclude') curatedIn = false;
+
+    return {
+      platform: r.platform, model_id: r.model_id, display_name: r.display_name,
+      context_window: r.context_limit, curated_in: curatedIn, override, metadata,
+    };
+  });
+
+  if (search) {
+    items = items.filter(m =>
+      `${m.platform}/${m.model_id}`.toLowerCase().includes(search) ||
+      m.display_name.toLowerCase().includes(search));
+  }
+  if (opts.included === 'in') items = items.filter(m => m.curated_in);
+  if (opts.included === 'out') items = items.filter(m => !m.curated_in);
+
+  const total = items.length;
+  const start = (page - 1) * perPage;
+  return { total, page, per_page: perPage, models: items.slice(start, start + perPage) };
+}
+
+/** Evaluate a list's STATIC criteria against one model's metadata.
+ *  Unknown values fail positive filters (clarified: unknown cost ≠ free). */
+export function matchesCriteria(
+  md: Record<string, unknown> | null,
+  criteria: Record<string, unknown>,
+): boolean {
+  if (!criteria || Object.keys(criteria).length === 0) return true;
+  if (!md) return false;
+  const num = (v: unknown): number | null => (typeof v === 'number' ? v : null);
+  if (criteria.free_only === true) {
+    if (num(md.cost_input) !== 0 || num(md.cost_output) !== 0) return false;
+  }
+  if (typeof criteria.max_cost_input === 'number') {
+    const ci = num(md.cost_input);
+    if (ci === null || ci > criteria.max_cost_input) return false;
+  }
+  if (typeof criteria.min_context === 'number') {
+    const cl = num(md.context_limit);
+    if (cl === null || cl < criteria.min_context) return false;
+  }
+  if (criteria.tool_call === true && md.tool_call !== true) return false;
+  if (criteria.reasoning === true && md.reasoning !== true) return false;
+  if (criteria.open_weights === true && md.open_weights !== true) return false;
+  if (criteria.input_image === true) {
+    const mi = Array.isArray(md.modalities_input) ? md.modalities_input : [];
+    if (!mi.includes('image')) return false;
+  }
+  return true;
 }
 
 // ── Typed errors the route layer maps to HTTP statuses ──────────────────────
