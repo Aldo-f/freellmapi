@@ -1,6 +1,7 @@
 import type { ModelListRow } from '@freellmapi/shared/types.js';
 import { getDb } from '../db/index.js';
 import { isUnifyEnabled, getModelGroups } from './model-groups.js';
+import { sourceVisibilityExpr } from './source-visibility.js';
 
 // Shared catalog-listing logic behind both the OpenAI `GET /v1/models` and the
 // Anthropic `GET /v1/models` endpoints, so the two wire formats list the exact
@@ -44,10 +45,12 @@ export function buildModelListing(): ModelListing {
   // Feature 001: rows imported from a model source that is currently DISABLED
   // do not participate in the merged listing at all (spec FR-8). NULL
   // source_ref_id = builtin/legacy rows, always listed.
-  const sourceVisibleExpr = `
-    (m.source_ref_id IS NULL OR EXISTS (
-      SELECT 1 FROM model_sources ms WHERE ms.id = m.source_ref_id AND ms.enabled = 1
-    ))`;
+  //
+  // Feature 002: catalog sources additionally respect their active curated
+  // list. A row passes when its owner source either has no list or the model
+  // matches the static criteria / carries an include override; an exclude
+  // override always hides it. Membership is evaluated LIVE per request.
+  const sourceVisibleExpr = sourceVisibilityExpr();
 
   let allListed: NormalizedModel[];
 
@@ -59,6 +62,8 @@ export function buildModelListing(): ModelListing {
       SELECT m.id, m.platform, m.intelligence_rank, m.context_window, m.supports_tools,
              m.enabled AS enabled, ${availableExpr} AS available
       FROM models m
+      LEFT JOIN model_metadata mm ON mm.model_db_id = m.id
+      WHERE ${sourceVisibleExpr}
     `).all() as AvailRow[];
     const byId = new Map(rows.map(r => [r.id, r]));
     allListed = getModelGroups().map(g => {
@@ -90,8 +95,10 @@ export function buildModelListing(): ModelListing {
                  ORDER BY ${availableExpr} DESC, m.intelligence_rank ASC, m.id ASC
                ) AS rn
         FROM models m
+        LEFT JOIN model_metadata mm ON mm.model_db_id = m.id
+        WHERE ${sourceVisibleExpr}
       )
-      WHERE rn = 1 AND ${sourceVisibleExpr.replace(/\bm\./g, '')}
+      WHERE rn = 1
     `).all() as (ModelListRow & { intelligence_rank: number; id: number; supports_tools: number })[];
     allListed = models.map(m => ({
       id: m.model_id, name: m.display_name, ownedBy: m.platform,

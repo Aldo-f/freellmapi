@@ -15,6 +15,7 @@
  */
 import { z } from 'zod';
 import { getDb, getSetting, setSetting } from '../db/index.js';
+import { sourceVisibilityExpr } from './source-visibility.js';
 import {
   ENDPOINT_ID_SEPARATOR,
   endpointRefMatches,
@@ -366,12 +367,16 @@ export function resolveRequestedIdForDispatch(
  */
 export function getModelGroups(): ModelGroup[] {
   const db = getDb();
+  // Feature 002: the curation predicate lives in model-listing.ts as
+  // sourceVisibleExpr; importing it here would be circular (model-listing
+  // imports this module), so the same clause is evaluated via a tiny shared
+  // helper that both modules use.
   const rows = db.prepare(`
     SELECT m.id as model_db_id, m.platform, m.model_id, m.display_name, m.intelligence_rank,
            m.endpoint_scope
     FROM models m
-    WHERE (m.source_ref_id IS NULL OR EXISTS (
-      SELECT 1 FROM model_sources ms WHERE ms.id = m.source_ref_id AND ms.enabled = 1))
+    LEFT JOIN model_metadata mm ON mm.model_db_id = m.id
+    WHERE ${sourceVisibilityExpr()}
     ORDER BY m.id
   `).all() as GroupableRow[];
   return groupRows(rows, getUnifyOverrides());
