@@ -1,8 +1,8 @@
 import './env.js';
 import { createApp } from './app.js';
-import { initDb, getDb, getSetting } from './db/index.js';
+import { initDb, getDb } from './db/index.js';
 import { startHealthChecker, checkAllKeys } from './services/health.js';
-import { applyProxyUrl, applyProxyEnabled, applyProxyBypass, flushProxyCache } from './lib/proxy.js';
+import { restoreProxySettings, flushProxyCache } from './lib/proxy.js';
 import { startWakeDetect } from './lib/wake-detect.js';
 import { startCatalogSync } from './services/catalog-sync.js';
 import { startCooldownProbe } from './services/cooldown-probe.js';
@@ -12,6 +12,7 @@ import { NodeScheduler } from './lib/scheduler.js';
 import { loadConfig } from './lib/config.js';
 import { applyDeclarativeConfigFromEnv } from './services/declarative-config.js';
 import { restoreDbBackupIfNeeded, startDbBackupPump } from './lib/db-backup.js';
+import { startBackupScheduler } from './services/backups.js';
 import { userCount } from './services/auth.js';
 import { generateSetupCode } from './lib/setup-code.js';
 import { warnOnEnvDrift } from './lib/env-drift.js';
@@ -64,9 +65,7 @@ async function main() {
 
   // Load the persisted proxy settings from the DB (env var wins if set).
   // Must happen after initDb so the settings table is ready.
-  applyProxyUrl(getSetting('proxy_url') ?? '');
-  applyProxyEnabled(getSetting('proxy_enabled') !== '0'); // default: enabled
-  applyProxyBypass(getSetting('proxy_bypass') ?? '');
+  restoreProxySettings();
 
   const app = createApp(config);
 
@@ -78,6 +77,7 @@ async function main() {
     startCatalogSync(scheduler);
     startCooldownProbe(scheduler);
     startDbBackupPump(getDb(), scheduler, config.dbPath ?? undefined);
+    startBackupScheduler(scheduler);
     startCustomModelSync(getDb(), scheduler);
 
     // Post-sleep recovery: while the host was suspended (laptop lid, VM
