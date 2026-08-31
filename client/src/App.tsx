@@ -62,7 +62,8 @@ const navItems = [
   { to: '/agents', labelKey: 'nav.agents' },
   { to: '/analytics', labelKey: 'nav.analytics' },
   { to: '/sources', labelKey: 'nav.sources' },
-  { to: '/curate', labelKey: 'nav.curate' },
+  // { to: '/curate', labelKey: 'nav.curate' }, // Curate removed per user request
+
   { to: '/premium', labelKey: 'nav.premium' },
 ]
 
@@ -391,7 +392,8 @@ function App() {
                       <Route path="/keys" element={<KeysPage />} />
                       <Route path="/agents" element={<AgentsPage />} />
                       <Route path="/sources" element={<SourcesPage />} />
-                      <Route path="/curate" element={<CuratePage />} />
+                      // <Route path="/curate" element={<CuratePage />} /> // Curate removed per user request
+
                       <Route path="/fallback" element={<Navigate to="/models/chat" replace />} />
                       <Route path="/analytics" element={<AnalyticsPage />} />
                       <Route path="/premium" element={<PremiumPage />} />

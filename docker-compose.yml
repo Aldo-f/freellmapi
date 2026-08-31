@@ -1,6 +1,6 @@
 services:
   freellmapi:
-    image: freellmapi:local-002
+    image: ghcr.io/tashfeenahmed/freellmapi@sha256:aeb57c7e9599971000787023f1c02fdd7cc87aecdddd4cb07abe4945157afe50
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,22 +10,28 @@ services:
       NODE_ENV: production
       PORT: 3001
       HOST_BIND: 0.0.0.0
-    ports:
-      - "3001:3001"
+    # Removed host port publishing - accessed via sablier-proxy on 0.0.0.0:3001
     volumes:
       - freellmapi-data:/app/server/data
       - ./.env.template:/app/server/.env:ro
     restart: unless-stopped
+    stop_grace_period: 10s
     healthcheck:
-      test:
-        - CMD
-        - node
-        - -e
-        - "fetch('http://127.0.0.1:3001/api/ping').then((res) => { if (!res.ok) process.exit(1); }).catch(() => process.exit(1));"
-      interval: 30s
+      # Startup probe: wait for the FastAPI server to bind port 3001
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3001/ready').then((r)=>{ if(!r.ok) process.exit(1); }).catch(()=>process.exit(1));\""]
+      interval: 10s
       timeout: 5s
-      start_period: 30s
-      retries: 3
+      retries: 6
+      start_period: 20s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.freellmapi.rule=Host(`freellm.aldof.duckdns.org`)"
+      - "traefik.http.routers.freellmapi.entrypoints=websecure"
+      - "traefik.http.services.freellmapi.loadbalancer.server.port=3001"
+      # Readiness probe: Traefik removes backend from LB when this fails
+      - "traefik.http.services.freellmapi.loadbalancer.healthcheck.path=/readyz"
+      - "traefik.http.services.freellmapi.loadbalancer.healthcheck.interval=10s"
+      - "traefik.http.services.freellmapi.loadbalancer.healthcheck.timeout=5s"
     networks:
       - traefik_net
 
