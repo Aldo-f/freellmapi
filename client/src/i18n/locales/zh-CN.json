@@ -694,6 +694,14 @@
     "monthlyUsageLine": "本月 {requests} 次请求，{tokens} tokens",
     "quotaBalanceHint": "剩余 {remaining} / {limit} {metric}",
     "quotaBalanceLeft": "剩余 {remaining}"
+,
+    "groupLabel": "Group",
+    "groupLabelPlaceholder": "e.g. Relays, Work…",
+    "groupLabelHint": "Optional: endpoints in the same group are listed together, and a request can stay inside the group with custom:<model>#<group>. Leave blank for the default Custom group.",
+    "groupHandleHint": "Add #{handle} after a model id to route only to this group, e.g. custom:<model>#{handle}",
+    "copyGroupHandle": "Copy group handle",
+    "groupHandleCopied": "Copied {handle}",
+    "groupHandleCopyFailed": "Couldn't copy to the clipboard"
   },
   "backups": {
     "title": "备份",
