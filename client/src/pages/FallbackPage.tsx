@@ -21,6 +21,7 @@ import { useI18n } from '@/i18n'
 import { apiFetch } from '@/lib/api'
 import {
   buildGroups,
+  clampRankToIndex,
   isGroupDepleted,
   groupMatchesQuery,
   groupMaxContext,
@@ -47,6 +48,7 @@ import { ModelsTabs } from '@/components/models-tabs'
 import { Tooltip } from '@/components/tooltip'
 import { PenaltyInspector } from '@/components/penalty-inspector'
 import { PeakHoursControls } from '@/components/peak-hours-controls'
+import { ReliabilityFloorControl } from '@/components/reliability-floor-control'
 import { ChainManager } from '@/components/chain-manager'
 
 // `tKey` is the i18n suffix under `strategies.*` (label) and `strategies.*Blurb`.
@@ -304,6 +306,19 @@ export default function FallbackPage() {
     setLocalEntries(allEntries.map(e => ({ ...e, priority: prio.get(e.modelDbId) ?? e.priority })))
   }
 
+  // Jump-to-rank (#1317): type a target rank instead of dragging a model across
+  // a long chain. Same staging path as drag — persistGroupOrder serializes the
+  // new display order into localEntries and Save commits it. The typed rank is
+  // clamped to the chain, so 1 means "front of the queue" and an over-the-end
+  // number means "last" without needing a validation error.
+  function handleMoveGroupRank(key: string, toRank: number) {
+    const oldI = orderedGroups.findIndex(g => g.key === key)
+    if (oldI < 0) return
+    const newI = clampRankToIndex(toRank, orderedGroups.length)
+    if (newI === oldI) return
+    persistGroupOrder(arrayMove(orderedGroups, oldI, newI))
+  }
+
   // Reorder models (the failover priority order). Providers within a model are
   // ordered by the active strategy and managed on the model's own page.
   function handleGroupedDragEnd(event: DragEndEvent) {
@@ -474,6 +489,12 @@ export default function FallbackPage() {
                   onSave={p => strategyMutation.mutate({ strategy, ...p })}
                 />
               )}
+
+              {/* Minimum reliability floor (#filter): independent of the strategy
+                  snapshot — lives in settings, so it owns its own query/mutation.
+                  Shown in every mode; the floor pre-filters the candidate chain
+                  regardless of how models are ranked. */}
+              <ReliabilityFloorControl />
             </div>
           )}
 
@@ -599,7 +620,7 @@ export default function FallbackPage() {
                     <SortableContext items={renderedGroups.map(g => `grp:${g.key}`)} strategy={verticalListSortingStrategy}>
                       <tbody>
                         {renderedGroups.map(g => (
-                          <SortableGroupRow key={g.key} group={g} rank={rankByKey.get(g.key) ?? 0} onToggleGroup={handleGroupToggle} allRows={rows} rateUsage={rateUsageByModel} />
+                          <SortableGroupRow key={g.key} group={g} rank={rankByKey.get(g.key) ?? 0} editableRank onMoveRank={r => handleMoveGroupRank(g.key, r)} onToggleGroup={handleGroupToggle} allRows={rows} rateUsage={rateUsageByModel} />
                         ))}
                       </tbody>
                     </SortableContext>
